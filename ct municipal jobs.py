@@ -159,7 +159,7 @@ if not df.empty:
         col1, col2 = st.columns(2)
         with col1:
             st.markdown("""
-            <a href="https://ko-fi.com/yourkofiname" target="_blank" style="text-decoration: none;">
+            <a href="https://ko-fi.com/wmarmitage" target="_blank" style="text-decoration: none;">
                 <div style="background: #29abe0; color: white; padding: 10px; border-radius: 6px; text-align: center; font-weight: 600; margin-bottom: 10px;">
                     ☕ Ko-fi
                 </div>
@@ -168,7 +168,7 @@ if not df.empty:
         
         with col2:
             st.markdown("""
-            <a href="https://paypal.me/yourpaypalname" target="_blank" style="text-decoration: none;">
+            <a href="https://www.paypal.me/WmArmitage" target="_blank" style="text-decoration: none;">
                 <div style="background: #0070ba; color: white; padding: 10px; border-radius: 6px; text-align: center; font-weight: 600; margin-bottom: 10px;">
                     💳 PayPal
                 </div>
@@ -312,10 +312,10 @@ if not df.empty:
             free and up-to-date for everyone!
         </p>
         <div>
-            <a href="https://ko-fi.com/yourkofiname" target="_blank" class="donate-button kofi-button">
+            <a href="https://ko-fi.com/wmarmitage" target="_blank" class="donate-button kofi-button">
                 ☕ Support on Ko-fi
             </a>
-            <a href="https://paypal.me/yourpaypalname" target="_blank" class="donate-button paypal-button">
+            <a href="https://www.paypal.me/WmArmitage" target="_blank" class="donate-button paypal-button">
                 💳 Donate via PayPal
             </a>
         </div>
