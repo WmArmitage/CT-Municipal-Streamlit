@@ -1,11 +1,10 @@
 import streamlit as st
 import pandas as pd
 import json
-from datetime import datetime
 
 # Page configuration
 st.set_page_config(
-    page_title="Connecticut Municipal Employment Portal",
+    page_title="Connecticut Municipal Employment Directory",
     page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -15,14 +14,14 @@ st.set_page_config(
 st.markdown("""
 <style>
     .main-header {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
         font-weight: bold;
         color: #1f4788;
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
     .sub-header {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         color: #666;
         text-align: center;
         margin-bottom: 2rem;
@@ -35,18 +34,49 @@ st.markdown("""
         text-align: center;
         margin-bottom: 1rem;
     }
-    .donate-button {
-        background: #28a745;
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        text-align: center;
-        font-weight: bold;
-        margin: 2rem 0;
+    .stats-box h2 {
+        margin: 0;
+        font-size: 2.5rem;
     }
-    .stDataFrame {
-        border-radius: 10px;
-        overflow: hidden;
+    .stats-box p {
+        margin: 0.5rem 0 0 0;
+        font-size: 0.95rem;
+    }
+    .donate-section {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 12px;
+        text-align: center;
+        margin: 2rem 0;
+        border: 2px solid #e9ecef;
+    }
+    .donate-button {
+        display: inline-block;
+        padding: 12px 30px;
+        margin: 10px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: transform 0.2s;
+    }
+    .donate-button:hover {
+        transform: translateY(-2px);
+    }
+    .kofi-button {
+        background: #29abe0;
+        color: white;
+    }
+    .paypal-button {
+        background: #0070ba;
+        color: white;
+    }
+    .search-info {
+        background: #e3f2fd;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #2196f3;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -54,105 +84,96 @@ st.markdown("""
 # Load data
 @st.cache_data
 def load_employment_data():
-    """Load the CT municipal employment data from JSON file"""
+    """Load the CT municipal employment data from GitHub"""
+    url = "https://raw.githubusercontent.com/WmArmitage/municipal-employment-data/refs/heads/main/CT_Municipal_Employment_Pages.json"
+    
     try:
-        with open('CT_Municipal_Employment_Pages.json', 'r') as f:
-            data = json.load(f)
+        import urllib.request
+        with urllib.request.urlopen(url) as response:
+            data = json.loads(response.read().decode())
         df = pd.DataFrame(data)
         return df
-    except FileNotFoundError:
-        st.error("Data file not found. Please ensure CT_Municipal_Employment_Pages.json is in the same directory.")
+    except Exception as e:
+        st.error(f"Unable to load employment data from GitHub: {str(e)}")
         return pd.DataFrame()
 
-# Initialize session state for user subscriptions
-if 'subscribers' not in st.session_state:
-    st.session_state.subscribers = []
-
 # Main header
-st.markdown('<div class="main-header">🏛️ Connecticut Municipal Employment Portal</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Find job opportunities across all 169 Connecticut municipalities in one place</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">🏛️ Connecticut Municipal Employment Directory</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">Quick access to employment opportunities across all 169 Connecticut municipalities</div>', unsafe_allow_html=True)
 
 # Load data
 df = load_employment_data()
 
 if not df.empty:
-    # Sidebar - Filters and User Signup
+    # Sidebar - Filters
     with st.sidebar:
         st.header("🔍 Search & Filter")
         
         # Search box
-        search_term = st.text_input("Search by town name:", placeholder="e.g. Hartford, New Haven...")
-        
-        # Platform filter
-        platforms = ['All'] + sorted([p for p in df['ATS or Platform (if known)'].dropna().unique() if p])
-        selected_platform = st.selectbox("Filter by platform:", platforms)
-        
-        # Filter for towns with/without job pages
-        job_page_filter = st.radio(
-            "Show towns:",
-            ["All", "With job pages only", "Without job pages only"]
+        search_term = st.text_input(
+            "Search by town name:", 
+            placeholder="e.g. Hartford, New Haven...",
+            help="Type any town name to filter results"
         )
         
-        st.markdown("---")
+        # Platform filter
+        platforms = ['All Platforms'] + sorted([p for p in df['ATS or Platform (if known)'].dropna().unique() if p])
+        selected_platform = st.selectbox(
+            "Filter by platform:", 
+            platforms,
+            help="Filter by the employment application system used"
+        )
         
-        # User signup form
-        st.header("📧 Get Job Alerts")
-        st.write("Subscribe to receive notifications when new jobs are posted in your selected towns.")
-        
-        with st.form("subscribe_form"):
-            user_name = st.text_input("Your Name:")
-            user_email = st.text_input("Email Address:")
-            
-            # Multi-select for towns
-            selected_towns = st.multiselect(
-                "Select towns to follow:",
-                options=sorted(df['Town'].tolist()),
-                help="Choose one or more towns you're interested in"
-            )
-            
-            subscribe_button = st.form_submit_button("Subscribe for Updates")
-            
-            if subscribe_button:
-                if user_email and user_name and selected_towns:
-                    subscriber = {
-                        'name': user_name,
-                        'email': user_email,
-                        'towns': selected_towns,
-                        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    }
-                    st.session_state.subscribers.append(subscriber)
-                    st.success(f"✅ Thanks {user_name}! You're subscribed to {len(selected_towns)} town(s).")
-                else:
-                    st.error("Please fill in all fields.")
+        # Availability filters
+        st.subheader("Availability")
+        show_job_page = st.checkbox("Has employment page", value=True)
+        show_no_job_page = st.checkbox("No employment page", value=True)
+        show_app_form = st.checkbox("Has application form", value=True)
+        show_no_app_form = st.checkbox("No application form", value=True)
         
         st.markdown("---")
         
-        # Donation section
+        # About section
+        st.header("ℹ️ About")
+        st.markdown("""
+        This directory provides quick access to employment resources for all Connecticut municipalities.
+        
+        **Features:**
+        - Direct links to town websites
+        - Employment/career pages
+        - Downloadable application forms
+        - Platform information
+        
+        Data is updated regularly to ensure accuracy.
+        """)
+        
+        st.markdown("---")
+        
+        # Support section
         st.header("💝 Support This Project")
-        st.write("Help us maintain and improve this free resource!")
+        st.markdown("""
+        This directory is **free to use**. If you find it helpful, consider supporting its maintenance and development!
+        """)
         
-        # Replace these with your actual donation links
+        # Donation buttons
         col1, col2 = st.columns(2)
         with col1:
-            st.markdown("[☕ Buy Me a Coffee](https://buymeacoffee.com/yourlink)")
+            st.markdown("""
+            <a href="https://ko-fi.com/yourkofiname" target="_blank" style="text-decoration: none;">
+                <div style="background: #29abe0; color: white; padding: 10px; border-radius: 6px; text-align: center; font-weight: 600; margin-bottom: 10px;">
+                    ☕ Ko-fi
+                </div>
+            </a>
+            """, unsafe_allow_html=True)
+        
         with col2:
-            st.markdown("[💳 PayPal](https://paypal.me/yourlink)")
-        
-        st.markdown("---")
-        
-        # Download subscribers (admin feature)
-        if st.session_state.subscribers:
-            st.header("📊 Admin")
-            if st.button("Download Subscribers CSV"):
-                subscribers_df = pd.DataFrame(st.session_state.subscribers)
-                csv = subscribers_df.to_csv(index=False)
-                st.download_button(
-                    label="Download CSV",
-                    data=csv,
-                    file_name=f"subscribers_{datetime.now().strftime('%Y%m%d')}.csv",
-                    mime="text/csv"
-                )
-                st.info(f"Total subscribers: {len(st.session_state.subscribers)}")
+            st.markdown("""
+            <a href="https://paypal.me/yourpaypalname" target="_blank" style="text-decoration: none;">
+                <div style="background: #0070ba; color: white; padding: 10px; border-radius: 6px; text-align: center; font-weight: 600; margin-bottom: 10px;">
+                    💳 PayPal
+                </div>
+            </a>
+            """, unsafe_allow_html=True)
 
     # Main content area
     # Apply filters
@@ -165,16 +186,27 @@ if not df.empty:
         ]
     
     # Platform filter
-    if selected_platform != 'All':
+    if selected_platform != 'All Platforms':
         filtered_df = filtered_df[
             filtered_df['ATS or Platform (if known)'] == selected_platform
         ]
     
-    # Job page filter
-    if job_page_filter == "With job pages only":
-        filtered_df = filtered_df[filtered_df['Employment Page URL'].notna()]
-    elif job_page_filter == "Without job pages only":
-        filtered_df = filtered_df[filtered_df['Employment Page URL'].isna()]
+    # Availability filters
+    if not (show_job_page and show_no_job_page):
+        if show_job_page:
+            filtered_df = filtered_df[filtered_df['Employment Page URL'].notna()]
+        elif show_no_job_page:
+            filtered_df = filtered_df[filtered_df['Employment Page URL'].isna()]
+        else:
+            filtered_df = pd.DataFrame()  # Show nothing if both unchecked
+    
+    if not (show_app_form and show_no_app_form):
+        if show_app_form:
+            filtered_df = filtered_df[filtered_df['Application Form URL'].notna()]
+        elif show_no_app_form:
+            filtered_df = filtered_df[filtered_df['Application Form URL'].isna()]
+        else:
+            filtered_df = pd.DataFrame()  # Show nothing if both unchecked
     
     # Statistics
     col1, col2, col3, col4 = st.columns(4)
@@ -214,73 +246,102 @@ if not df.empty:
         </div>
         """, unsafe_allow_html=True)
     
+    # Search info box
+    if search_term or selected_platform != 'All Platforms':
+        filters_applied = []
+        if search_term:
+            filters_applied.append(f'"{search_term}"')
+        if selected_platform != 'All Platforms':
+            filters_applied.append(f'Platform: {selected_platform}')
+        
+        st.markdown(f"""
+        <div class="search-info">
+            <strong>🔍 Active Filters:</strong> {', '.join(filters_applied)}
+        </div>
+        """, unsafe_allow_html=True)
+    
     # Display results
-    st.subheader(f"📋 Showing {len(filtered_df)} Results")
+    st.subheader(f"📋 {len(filtered_df)} Result{'s' if len(filtered_df) != 1 else ''}")
     
-    # Prepare display dataframe with clickable links
-    display_df = filtered_df.copy()
+    if len(filtered_df) == 0:
+        st.warning("No municipalities match your current filters. Try adjusting your search criteria.")
+    else:
+        # Prepare display dataframe with clickable links
+        display_df = filtered_df.copy()
+        
+        # Function to create clickable links
+        def make_clickable(url, text, color="#007bff"):
+            if pd.isna(url) or url == '':
+                return '<span style="color: #999; font-style: italic;">Not Available</span>'
+            return f'<a href="{url}" target="_blank" rel="noopener noreferrer" style="color: {color}; text-decoration: none; font-weight: 500;">{text} →</a>'
+        
+        # Create display columns
+        display_df['Town Website'] = display_df.apply(
+            lambda row: make_clickable(row['Town Website'], 'Visit Website', '#1f4788'), 
+            axis=1
+        )
+        display_df['Employment Page'] = display_df.apply(
+            lambda row: make_clickable(row['Employment Page URL'], 'View Jobs', '#007bff'), 
+            axis=1
+        )
+        display_df['Application Form'] = display_df.apply(
+            lambda row: make_clickable(row['Application Form URL'], 'Download Form', '#28a745'), 
+            axis=1
+        )
+        
+        # Handle platform display
+        display_df['Platform/System'] = display_df['ATS or Platform (if known)'].fillna('—')
+        
+        # Select columns for display
+        final_display = display_df[['Town', 'Town Website', 'Employment Page', 'Application Form', 'Platform/System']]
+        
+        # Display as HTML table for clickable links
+        st.markdown(
+            final_display.to_html(escape=False, index=False), 
+            unsafe_allow_html=True
+        )
     
-    # Function to create clickable links
-    def make_clickable(url, text):
-        if pd.isna(url) or url == '':
-            return 'N/A'
-        return f'<a href="{url}" target="_blank">{text}</a>'
-    
-    # Create display columns
-    display_df['Jobs Page'] = display_df.apply(
-        lambda row: make_clickable(row['Employment Page URL'], '🔗 View Jobs'), 
-        axis=1
-    )
-    display_df['Application'] = display_df.apply(
-        lambda row: make_clickable(row['Application Form URL'], '📄 Get Form'), 
-        axis=1
-    )
-    display_df['Website'] = display_df.apply(
-        lambda row: make_clickable(row['Town Website'], '🌐 Visit Site'), 
-        axis=1
-    )
-    
-    # Select and reorder columns for display
-    display_cols = ['Town', 'Jobs Page', 'Application', 'Website', 'ATS or Platform (if known)']
-    display_df = display_df[display_cols]
-    display_df.columns = ['Town', 'Jobs Page', 'Application Form', 'Town Website', 'Platform']
-    
-    # Display as HTML table for clickable links
-    st.markdown(
-        display_df.to_html(escape=False, index=False), 
-        unsafe_allow_html=True
-    )
-    
-    # Download filtered results
+    # Large donation section at bottom
     st.markdown("---")
-    col1, col2, col3 = st.columns([1, 1, 2])
-    
-    with col1:
-        csv = filtered_df.to_csv(index=False)
-        st.download_button(
-            label="📥 Download as CSV",
-            data=csv,
-            file_name=f"ct_municipal_jobs_{datetime.now().strftime('%Y%m%d')}.csv",
-            mime="text/csv"
-        )
-    
-    with col2:
-        # Export to JSON
-        json_str = filtered_df.to_json(orient='records', indent=2)
-        st.download_button(
-            label="📥 Download as JSON",
-            data=json_str,
-            file_name=f"ct_municipal_jobs_{datetime.now().strftime('%Y%m%d')}.json",
-            mime="application/json"
-        )
+    st.markdown("""
+    <div class="donate-section">
+        <h2 style="color: #1f4788; margin-bottom: 1rem;">🙏 Support This Free Resource</h2>
+        <p style="font-size: 1.1rem; color: #555; max-width: 700px; margin: 0 auto 1.5rem;">
+            Maintaining this directory takes time and effort. If you found this helpful in your job search,
+            consider buying me a coffee or making a small donation. Every contribution helps keep this resource
+            free and up-to-date for everyone!
+        </p>
+        <div>
+            <a href="https://ko-fi.com/yourkofiname" target="_blank" class="donate-button kofi-button">
+                ☕ Support on Ko-fi
+            </a>
+            <a href="https://paypal.me/yourpaypalname" target="_blank" class="donate-button paypal-button">
+                💳 Donate via PayPal
+            </a>
+        </div>
+        <p style="font-size: 0.9rem; color: #999; margin-top: 1.5rem;">
+            100% of donations go toward maintaining and improving this directory
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Footer
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #666; padding: 2rem 0;'>
-        <p><strong>Connecticut Municipal Employment Portal</strong></p>
-        <p>Data is updated regularly. Please verify job postings on official town websites.</p>
-        <p>For questions or to report issues, contact us at: <a href='mailto:your-email@example.com'>your-email@example.com</a></p>
+        <p><strong>Connecticut Municipal Employment Directory</strong></p>
+        <p style="margin: 0.5rem 0;">
+            Data updated regularly • Covering all 169 Connecticut municipalities
+        </p>
+        <p style="margin: 1rem 0 0.5rem;">
+            Found a broken link or outdated information?
+        </p>
+        <p style="margin: 0;">
+            Contact: <a href='mailto:your-email@example.com' style='color: #007bff;'>your-email@example.com</a>
+        </p>
+        <p style='font-size: 0.85rem; color: #999; margin-top: 1.5rem;'>
+            Please verify all information on official municipal websites before applying
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
