@@ -1,0 +1,1354 @@
+[
+  {
+    "Town": "Andover",
+    "Town Website": "https://www.andoverconnecticut.org/",
+    "Employment Page URL": "https://www.andoverconnecticut.org/employment-volunteer-opportunities",
+    "Application Form URL": "https://www.andoverconnecticut.org/employment-volunteer-opportunities/files/employment-application-revised-111620",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Ansonia",
+    "Town Website": "https://www.cityofansonia.com/",
+    "Employment Page URL": null,
+    "Application Form URL": "https://www.cityofansonia.com/filestorage/8192/8194/8240/Job_Application.pdf",
+    "ATS or Platform (if known)": "Catalisgov",
+    "Notes": "No employment page, just posts to news list"
+  },
+  {
+    "Town": "Ashford",
+    "Town Website": "https://ashfordtownhall.org/",
+    "Employment Page URL": "https://ashfordtownhall.org/jobs.aspx",
+    "Application Form URL": "https://ct-ashford.civicplus.com/DocumentCenter/View/621/Ashford-Employment-Application-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Avon",
+    "Town Website": "https://www.avonct.gov/",
+    "Employment Page URL": "https://www.avonct.gov/departments/human_resources/employment_opportunities/employment.php",
+    "Application Form URL": "https://www.avonct.gov/Documents/Departments/Human%20Resources/Employment/employment_application_fillable_9-2021.pdf?t=202507101201100",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "Barkhamsted",
+    "Town Website": "https://www.barkhamsted.us/",
+    "Employment Page URL": "https://www.barkhamsted.us/job-postings",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicLift",
+    "Notes": null
+  },
+  {
+    "Town": "Beacon Falls",
+    "Town Website": "https://www.beaconfalls-ct.org/",
+    "Employment Page URL": "https://www.beaconfalls-ct.org/beacon-falls-town-hall/pages/employment-opportunities-0",
+    "Application Form URL": "https://www.beaconfalls-ct.org/sites/g/files/vyhlif4141/f/pages/town_of_beacon_falls_employment_application.docx",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Berlin",
+    "Town Website": "https://www.berlinct.gov/",
+    "Employment Page URL": "https://www.berlinct.gov/egov/apps/services/index.egov?view=detail;id=61",
+    "Application Form URL": "https://www.berlinct.gov/egov/apps/document/center.egov?view=item&id=8426",
+    "ATS or Platform (if known)": "CoreBT",
+    "Notes": "State's link is wrong, using third party for job listings, webpage has nothing listed - Paycor: https://recruitingbypaycor.com/career/CareerHomeSearch.action?isMobileDevice=null&sortField=jobTitle&descend=&sortFieldSecond=&descendSecond=&clickField=undefined&_csrf=&clientId=8a7883c6876de6fb0187960d756911a8&showAllJobs=true&internal=false&key=&fromAggregate=false&departmentId=&stateName="
+  },
+  {
+    "Town": "Bethany",
+    "Town Website": "https://bethany-ct.com/",
+    "Employment Page URL": "https://bethany-ct.com/employment",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Catalisgov",
+    "Notes": null
+  },
+  {
+    "Town": "Bethel",
+    "Town Website": "https://bethel-ct.gov/",
+    "Employment Page URL": "https://bethel-ct.gov/Employment",
+    "Application Form URL": "https://bethel-ct.gov/vertical/sites/%7B90B1B948-C443-4CA6-8B88-90B1EEA9B1E2%7D/uploads/Employment-App.pdf",
+    "ATS or Platform (if known)": "Catalisgov",
+    "Notes": null
+  },
+  {
+    "Town": "Bethlehem",
+    "Town Website": "https://bethlehemct.org/",
+    "Employment Page URL": "https://bethlehemct.org/employment",
+    "Application Form URL": "https://bethlehemct.org/vertical/sites/%7B5308EA3E-1589-494E-AA0B-0BABEF8025FD%7D/uploads/2024_Employment_Application.pdf",
+    "ATS or Platform (if known)": "Catalisgov",
+    "Notes": null
+  },
+  {
+    "Town": "Bloomfield",
+    "Town Website": "https://www.bloomfieldct.gov/",
+    "Employment Page URL": "https://www.governmentjobs.com/careers/bloomfieldct",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": null,
+    "Notes": "Using Neogov for job listings"
+  },
+  {
+    "Town": "Bolton",
+    "Town Website": "https://www.boltonct.gov/",
+    "Employment Page URL": "https://www.boltonct.gov/employment",
+    "Application Form URL": "https://files.aptuitivcdn.com/EzoynNLyL2-1704/docs/employment/Bolton_Employment_Application_2020_Fillable.pdf",
+    "ATS or Platform (if known)": null,
+    "Notes": "Website by Aptuitiv | Powered by Branch CMS"
+  },
+  {
+    "Town": "Bozrah",
+    "Town Website": "https://www.townofbozrah.org/",
+    "Employment Page URL": "https://www.townofbozrah.org/Jobs.aspx",
+    "Application Form URL": "https://www.townofbozrah.org/135/Employment-Opportunities",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Branford",
+    "Town Website": "https://www.branford-ct.gov/",
+    "Employment Page URL": "https://www.branford-ct.gov/273/Employment-Opportunities",
+    "Application Form URL": "https://www.branford-ct.gov/DocumentCenter/View/1839/Employment-Application-2025-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Bridgeport",
+    "Town Website": "https://www.bridgeportct.gov/",
+    "Employment Page URL": "https://www.bridgeportct.gov/government/departments/civil-service/city-careers",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "ifsight",
+    "Notes": null
+  },
+  {
+    "Town": "Bridgewater",
+    "Town Website": "https://www.bridgewater-ct.gov/",
+    "Employment Page URL": "https://www.bridgewater-ct.gov/1323/Employment-Opportunities",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Bristol",
+    "Town Website": "https://www.bristolct.gov/",
+    "Employment Page URL": "https://www.applitrack.com/bristolct/onlineapp/default.asp",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "aplitrack system"
+  },
+  {
+    "Town": "Brookfield",
+    "Town Website": "https://www.brookfieldct.gov/",
+    "Employment Page URL": "https://www.brookfieldct.gov/human-resources/pages/job-opportunities",
+    "Application Form URL": "https://brookfieldct.seamlessdocs.com/f/empapp",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Brooklyn",
+    "Town Website": "https://www.brooklynct.org/",
+    "Employment Page URL": "https://www.brooklynct.org/home/pages/employment-opportunities",
+    "Application Form URL": "https://brooklynct.seamlessdocs.com/f/ooqk8nzgsrv5",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Burlington",
+    "Town Website": "https://www.burlingtonct.gov/",
+    "Employment Page URL": "https://www.burlingtonct.gov/Jobs.aspx",
+    "Application Form URL": "https://www.burlingtonct.gov/DocumentCenter/View/162/Employment-Application-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Canaan",
+    "Town Website": "https://www.canaanfallsvillage.org/",
+    "Employment Page URL": "https://www.canaanfallsvillage.org/job-openings",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicLift",
+    "Notes": null
+  },
+  {
+    "Town": "Canterbury",
+    "Town Website": "http://canterburyct.org/",
+    "Employment Page URL": "https://www.canterburyct.org/jobs",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Canton",
+    "Town Website": "https://www.townofcantonct.org/",
+    "Employment Page URL": "https://www.townofcantonct.org/employment-opportunities",
+    "Application Form URL": "https://www.townofcantonct.org/filestorage/19342/19345/19524/19526/NEW_Employment_Application_Fillable_12-29-16.pdf",
+    "ATS or Platform (if known)": "Catalisgov",
+    "Notes": null
+  },
+  {
+    "Town": "Chaplin",
+    "Town Website": "https://www.chaplinct.org/",
+    "Employment Page URL": "https://www.chaplinct.org/jobs.htm",
+    "Application Form URL": "https://www.chaplinct.org/images/Employment%20application%20MASTER2.pdf",
+    "ATS or Platform (if known)": "Quasar ",
+    "Notes": "Website designed by Quasar Internet Solutions"
+  },
+  {
+    "Town": "Cheshire",
+    "Town Website": "https://www.cheshirect.gov/",
+    "Employment Page URL": "https://www.cheshirect.gov/Jobs.aspx",
+    "Application Form URL": "https://www.cheshirect.gov/DocumentCenter/View/580/Application-for-Employment-PDF",
+    "ATS or Platform (if known)": null,
+    "Notes": null
+  },
+  {
+    "Town": "Chester",
+    "Town Website": "https://www.chesterct.org/",
+    "Employment Page URL": "https://www.chesterct.org/about-chester/pages/employment",
+    "Application Form URL": "https://www.chesterct.org/sites/g/files/vyhlif8561/f/pages/employment_application_-_town_of_chester_revised_4_2_2024.pdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Clinton",
+    "Town Website": "https://clintonct.org/",
+    "Employment Page URL": "https://clintonct.org/Jobs.aspx",
+    "Application Form URL": "https://clintonct.org/DocumentCenter/View/11244/EMPLOYMENT-APPLICATION-REVISED-122020-Text-Fillable",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Colchester",
+    "Town Website": "https://www.colchesterct.gov/",
+    "Employment Page URL": "https://www.colchesterct.gov/human-resources/pages/employment-opportunities",
+    "Application Form URL": "https://www.colchesterct.gov/doing-business-colchester/files/job-application-revised-2025",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Colebrook",
+    "Town Website": "https://www.townofcolebrook.org/",
+    "Employment Page URL": null,
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Wordpress",
+    "Notes": "no apparent info"
+  },
+  {
+    "Town": "Columbia",
+    "Town Website": "https://www.columbiact.gov/",
+    "Employment Page URL": "https://www.columbiact.gov/jobs",
+    "Application Form URL": "https://www.columbiact.gov/media/27536",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Cornwall",
+    "Town Website": "https://cornwallct.org/",
+    "Employment Page URL": "https://cornwallct.org/employment-and-board-vacancies/",
+    "Application Form URL": "https://cornwallct.org/wp-content/uploads/2025/04/Town-of-Cornwall-Job-Application.pdf",
+    "ATS or Platform (if known)": null,
+    "Notes": "website seems to be self made/administered"
+  },
+  {
+    "Town": "Coventry",
+    "Town Website": "https://www.coventry-ct.gov/",
+    "Employment Page URL": "https://www.coventry-ct.gov/Jobs.aspx",
+    "Application Form URL": "https://www.coventry-ct.gov/DocumentCenter/View/272",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Cromwell",
+    "Town Website": "https://www.cromwellct.com/",
+    "Employment Page URL": "https://www.cromwellct.com/human-resources/pages/current-employment-opportunities",
+    "Application Form URL": "https://www.cromwellct.com/human-resources/files/town-cromwell-application-0",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Danbury",
+    "Town Website": "https://www.danbury-ct.gov/",
+    "Employment Page URL": "https://www.governmentjobs.com/careers/danburyct",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "Neogov employment portal"
+  },
+  {
+    "Town": "Darien",
+    "Town Website": "https://www.darienct.gov/",
+    "Employment Page URL": "https://www.darienct.gov/Jobs.aspx",
+    "Application Form URL": "https://ct-darien.civicplus.com/DocumentCenter/View/491/Employment-Application-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Deep River",
+    "Town Website": "https://www.deepriverct.us/",
+    "Employment Page URL": "https://www.deepriverct.us/jobs-bids-and-rfps",
+    "Application Form URL": "https://www.deepriverct.us/selectmens-office/files/employment-application-0",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Derby",
+    "Town Website": "https://www.derbyct.gov/",
+    "Employment Page URL": "https://www.derbyct.gov/jobs",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": null,
+    "Notes": null
+  },
+  {
+    "Town": "Durham",
+    "Town Website": "https://www.townofdurhamct.org/",
+    "Employment Page URL": "https://www.townofdurhamct.org/job-openings",
+    "Application Form URL": "https://cdn.prod.website-files.com/63d982687277ef4cf385a8e7/6480bf3f9742630ac2e34c47_APPLICATION_FOR_EMPLOYMENT_FORM_fillable_rev_March_2014.doc",
+    "ATS or Platform (if known)": "CivicLift",
+    "Notes": null
+  },
+  {
+    "Town": "East Granby",
+    "Town Website": "https://eastgranbyct.org/",
+    "Employment Page URL": "https://eastgranbyct.org/employment-opportunities/",
+    "Application Form URL": "https://eastgranbyct.org/wp-content/uploads/2024/09/Job-Application.pdf",
+    "ATS or Platform (if known)": null,
+    "Notes": "AWR Design"
+  },
+  {
+    "Town": "East Haddam",
+    "Town Website": "https://www.easthaddam.org/",
+    "Employment Page URL": "https://www.easthaddam.org/jobs",
+    "Application Form URL": "https://www.easthaddam.org/evo_jobs_paper_application_download/1317/",
+    "ATS or Platform (if known)": "EvoGov",
+    "Notes": null
+  },
+  {
+    "Town": "East Hampton",
+    "Town Website": "https://www.easthamptonct.gov/",
+    "Employment Page URL": "https://www.easthamptonct.gov/human-resources/pages/job-openings",
+    "Application Form URL": "https://www.easthamptonct.gov/human-resources/files/job-application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "East Hartford",
+    "Town Website": "https://www.easthartfordct.gov/",
+    "Employment Page URL": "https://www.governmentjobs.com/careers/easthartfordct",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "Neogov"
+  },
+  {
+    "Town": "East Haven",
+    "Town Website": "https://www.easthaven-ct.gov/",
+    "Employment Page URL": "https://www.easthaven-ct.gov/civil-service/pages/job-notices-and-tests",
+    "Application Form URL": "https://www.easthaven-ct.gov/civil-service-commission/files/standard-app",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "East Lyme",
+    "Town Website": "https://eltownhall.com/",
+    "Employment Page URL": "https://eltownhall.com/government/departments/human-resources/",
+    "Application Form URL": "https://eltownhall.com/wp-content/uploads/2025/05/Town-of-East-Lyme-Employment-Application.pdf",
+    "ATS or Platform (if known)": null,
+    "Notes": "Custom WordPress Theme by Brown Bear Creative."
+  },
+  {
+    "Town": "East Windsor",
+    "Town Website": "https://www.eastwindsor-ct.gov/",
+    "Employment Page URL": "https://www.eastwindsor-ct.gov/employment-opportunities",
+    "Application Form URL": "https://www.eastwindsor-ct.gov/employment-opportunities/files/town-east-windsor-employment-application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Eastford",
+    "Town Website": "https://www.eastfordct.gov/",
+    "Employment Page URL": null,
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Easton",
+    "Town Website": "https://www.eastonct.gov/",
+    "Employment Page URL": "https://www.eastonct.gov/home/pages/job-postings-all-job-postings-for-the-town-of-easton",
+    "Application Form URL": "https://www.eastonct.gov/sites/g/files/vyhlif3071/f/u236/easton_employment_application.pdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "Has 3 different application forms: general, Public Works and PD"
+  },
+  {
+    "Town": "Ellington",
+    "Town Website": "https://www.ellington-ct.gov/",
+    "Employment Page URL": "https://www.ellington-ct.gov/departments-and-services/human-resources/job-opportunities",
+    "Application Form URL": "https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=70dba418-861c-42ec-bf66-a276b06c75cc&ccId=19000101_000003&lang=en_US&$top=6&jwId=SYS:JW:001&joinTC=joinTC&jwId=SYS:JW:001",
+    "ATS or Platform (if known)": "finalsite",
+    "Notes": "Using ADP for aplication pool"
+  },
+  {
+    "Town": "Enfield",
+    "Town Website": "https://www.enfield-ct.gov/",
+    "Employment Page URL": "https://enfield.munisselfservice.com/employmentopportunities/default.aspx",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "Tyler Technologies Inc. automated job process"
+  },
+  {
+    "Town": "Essex",
+    "Town Website": "https://www.essexct.gov/home/pages/employment-opportunities",
+    "Employment Page URL": "https://www.essexct.gov/home/pages/employment-opportunities",
+    "Application Form URL": "https://www.essexct.gov/sites/g/files/vyhlif3116/f/pages/application_for_employment_-_fillable_2.pdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Fairfield",
+    "Town Website": "https://www.fairfieldct.org/",
+    "Employment Page URL": "https://www.governmentjobs.com/careers/fairfieldct",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Revize",
+    "Notes": "NeoGov"
+  },
+  {
+    "Town": "Farmington",
+    "Town Website": "https://www.farmington-ct.org/",
+    "Employment Page URL": "https://www.farmington-ct.org/about-farmington/employment",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Granicus",
+    "Notes": "Broken munisweb listings"
+  },
+  {
+    "Town": "Franklin",
+    "Town Website": "https://www.franklinct.gov/",
+    "Employment Page URL": "https://www.franklinct.gov/home/pages/job-openings",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Glastonbury",
+    "Town Website": "https://www.glastonburyct.gov/",
+    "Employment Page URL": "https://www.paycomonline.net/v4/ats/web.php/jobs?clientkey=D8B0164E5A6DABD9CC58F3275F055828",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Granicus",
+    "Notes": "Paycomonline application portal"
+  },
+  {
+    "Town": "Goshen",
+    "Town Website": "https://www.goshenct.gov/",
+    "Employment Page URL": "https://www.goshenct.gov/job-opportunities",
+    "Application Form URL": "https://www.goshenct.gov/sites/g/files/vyhlif626/f/uploads/jobappfill.docx",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Granby",
+    "Town Website": "https://www.granby-ct.gov/",
+    "Employment Page URL": "https://ct-granby.civicplus.com/Jobs.aspx",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Greenwich",
+    "Town Website": "https://www.greenwichct.gov/",
+    "Employment Page URL": "https://www.governmentjobs.com/careers/greenwichct",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "NeoGove"
+  },
+  {
+    "Town": "Griswold",
+    "Town Website": "https://www.griswold-ct.org/",
+    "Employment Page URL": "https://www.griswold-ct.org/how_do_i/apply_for_obtain/employment_opportunities.php",
+    "Application Form URL": "https://www.griswold-ct.org/employment%20app%20rev%202021%20non%20fillable.pdf?t=202510021326250",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "Groton",
+    "Town Website": "https://www.groton-ct.gov/",
+    "Employment Page URL": "https://www.irecruit-us.com/index.php?OrgID=I20101202",
+    "Application Form URL": "https://www.groton-ct.gov/document_center/Departments/Human%20Resource/Employment%20application%202021.pdf",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "Guilford",
+    "Town Website": "https://www.guilfordct.gov/",
+    "Employment Page URL": "https://www.guilfordct.gov/town_departments/human_resources/job_listings.php",
+    "Application Form URL": "https://www.guilfordct.gov/Document_Center/Department/Human%20Resources/Employment-Application-2-8.1.2018V6.pdf",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "Haddam",
+    "Town Website": "https://www.haddam.org/",
+    "Employment Page URL": null,
+    "Application Form URL": "https://www.haddam.org/DocumentCenter/View/627/Employment-Application-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Hamden",
+    "Town Website": "https://www.hamden.com/",
+    "Employment Page URL": "https://www.hamden.com/Jobs.aspx",
+    "Application Form URL": "https://www.hamden.com/DocumentCenter/View/1626/Hamden-Job-Application---April-2019---PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Hampton",
+    "Town Website": "https://www.hamptonct.org/",
+    "Employment Page URL": "https://www.hamptonct.org/help_wanted.htm",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Quasar Internet Solutions",
+    "Notes": "state has wrong website"
+  },
+  {
+    "Town": "Hartford",
+    "Town Website": "https://www.hartfordct.gov/Home",
+    "Employment Page URL": "https://www.governmentjobs.com/careers/hartfordct",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Granicus",
+    "Notes": "NeoGov"
+  },
+  {
+    "Town": "Hartland",
+    "Town Website": "https://www.hartlandct.org/",
+    "Employment Page URL": null,
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "AWR Web Design",
+    "Notes": "no furthur data available"
+  },
+  {
+    "Town": "Harwinton",
+    "Town Website": "https://www.harwinton.gov/",
+    "Employment Page URL": "https://www.harwinton.gov/820/Employment",
+    "Application Form URL": "https://www.harwinton.gov/DocumentCenter/View/702/Municipal-Employment-Application-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Hebron",
+    "Town Website": "https://www.hebronct.com/",
+    "Employment Page URL": "https://hebronct.com/contact-us/employment/",
+    "Application Form URL": "https://hebronct.com/uploads/2019/02/Hebron-Employment-Application-APPROVED-VERSION-WEB-and-DEPARTMENTS.pdf",
+    "ATS or Platform (if known)": null,
+    "Notes": "No website designer listed"
+  },
+  {
+    "Town": "Kent",
+    "Town Website": "https://www.townofkentct.gov/",
+    "Employment Page URL": "https://www.townofkentct.gov/home/pages/employment-opportunities",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Killingly",
+    "Town Website": "https://www.killinglyct.gov/",
+    "Employment Page URL": "https://www.killinglyct.gov/employment_opportunites/index.php",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "Killingworth",
+    "Town Website": "https://townofkillingworth.com/",
+    "Employment Page URL": "https://townofkillingworth.com/employment-opportunities/",
+    "Application Form URL": "https://townofkillingworth.com/wp-content/uploads/2025/02/Employment-application-Town-of-Killingworth.pdf",
+    "ATS or Platform (if known)": "PurpleDog",
+    "Notes": null
+  },
+  {
+    "Town": "Lebanon",
+    "Town Website": "https://www.lebanonct.gov/",
+    "Employment Page URL": "https://www.lebanonct.gov/home/pages/employment-opportunities",
+    "Application Form URL": "https://www.lebanonct.gov/sites/g/files/vyhlif4596/f/pages/employment_application_2023.pdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "state has wrong link"
+  },
+  {
+    "Town": "Ledyard",
+    "Town Website": "https://www.ledyardct.org/",
+    "Employment Page URL": "https://www.ledyardct.org/87/Job-Opportunities",
+    "Application Form URL": "https://www.ledyardct.org/DocumentCenter/View/217/Application-for-Employment",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "state has wrong link"
+  },
+  {
+    "Town": "Lisbon",
+    "Town Website": "https://www.lisbonct.gov/",
+    "Employment Page URL": "https://www.lisbonct.gov/jobs.aspx",
+    "Application Form URL": "https://www.lisbonct.gov/DocumentCenter/View/547/Application-for-Employment-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Litchfield",
+    "Town Website": "https://www.townoflitchfieldct.gov/",
+    "Employment Page URL": "https://www.townoflitchfieldct.gov/job-openings",
+    "Application Form URL": "https://cdn.prod.website-files.com/60217b2eafae3927ca1ca259/68d197e80f9bc98926ae2fdc_Town%2520of%2520Litchfield%2520Employment%2520Application%2520%25282%2529.pdf",
+    "ATS or Platform (if known)": "CivicLift",
+    "Notes": null
+  },
+  {
+    "Town": "Lyme",
+    "Town Website": "https://townlyme.org/",
+    "Employment Page URL": "https://townlyme.org/help-wanted/",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": null,
+    "Notes": "no named webdeveloper/builder"
+  },
+  {
+    "Town": "Madison",
+    "Town Website": "https://www.madisonct.org/",
+    "Employment Page URL": "https://www.madisonct.org/jobs.aspx",
+    "Application Form URL": "https://madisonct.org/FormCenter/Job-Applications-5/Employment-Application-54",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "online application"
+  },
+  {
+    "Town": "Manchester",
+    "Town Website": "https://www.manchesterct.gov/Home",
+    "Employment Page URL": "https://www.manchesterct.gov/Government/Departments/Human-Resources/Employment-Opportunities-with-the-Town-of-Manchester",
+    "Application Form URL": "https://jobs.keldair.com/manchesterct",
+    "ATS or Platform (if known)": "Granicus",
+    "Notes": "Keldair apllication system"
+  },
+  {
+    "Town": "Mansfield",
+    "Town Website": "https://www.mansfieldct.gov/",
+    "Employment Page URL": "https://www.applitrack.com/mansfieldct/onlineapp/jobpostings/view.asp?internaltransferform.Url=",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "Aplitrack system"
+  },
+  {
+    "Town": "Marlborough",
+    "Town Website": "https://www.marlboroughct.net/",
+    "Employment Page URL": "https://www.marlboroughct.net/government/open_positions.php",
+    "Application Form URL": "https://www.marlboroughct.net/Job_Application.pdf",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "Meriden",
+    "Town Website": "https://www.meridenct.gov/",
+    "Employment Page URL": "https://www.meridenct.gov/government/departments/human-resources/careers/",
+    "Application Form URL": "https://www.meridenct.gov/Customer-Content/www/CMS/files/Employment_Application_fillable_.pdf",
+    "ATS or Platform (if known)": "Web Solutions",
+    "Notes": "Web Solutions /https://www.exposure.com/"
+  },
+  {
+    "Town": "Middlebury",
+    "Town Website": "https://www.middlebury-ct.org/",
+    "Employment Page URL": "https://www.middlebury-ct.org/employment",
+    "Application Form URL": "https://www.middlebury-ct.org/sites/g/files/vyhlif6871/f/pages/town_of_middlebury_application_for_employment.pdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Middlefield",
+    "Town Website": "https://www.middlefieldct.org/",
+    "Employment Page URL": "https://www.middlefieldct.org/Jobs.aspx",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Middletown",
+    "Town Website": "https://www.middletownct.gov/",
+    "Employment Page URL": "https://www.governmentjobs.com/careers/middletownct",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "NeoGov"
+  },
+  {
+    "Town": "Milford",
+    "Town Website": "https://www.milfordct.us/",
+    "Employment Page URL": "https://www.milfordct.us/767/Employment-Opportunities",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Monroe",
+    "Town Website": "https://www.monroect.gov/",
+    "Employment Page URL": "https://www.monroect.gov/p/available-positions",
+    "Application Form URL": "https://www.monroect.gov/p/application-for-employment",
+    "ATS or Platform (if known)": "Catalis",
+    "Notes": null
+  },
+  {
+    "Town": "Montville",
+    "Town Website": "https://www.townofmontville.org/",
+    "Employment Page URL": "https://www.townofmontville.org/careers/",
+    "Application Form URL": "https://www.townofmontville.org/form-repository/DownloadFile.aspx?FileID=1031",
+    "ATS or Platform (if known)": "Web Solutions",
+    "Notes": null
+  },
+  {
+    "Town": "Morris",
+    "Town Website": "https://www.morrisct.gov/",
+    "Employment Page URL": "https://www.morrisct.gov/job-openings",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": null,
+    "Notes": null
+  },
+  {
+    "Town": "Naugatuck",
+    "Town Website": "http://www.naugatuck-ct.gov/",
+    "Employment Page URL": "http://www.naugatuck-ct.gov/human-resources/employment",
+    "Application Form URL": "http://www.naugatuck-ct.gov/filestorage/166/203/1586/ApplicationforEmployment.pdf",
+    "ATS or Platform (if known)": "Catalis",
+    "Notes": "website not secure"
+  },
+  {
+    "Town": "Newington",
+    "Town Website": "https://www.newingtonct.gov/",
+    "Employment Page URL": "https://www.newingtonct.gov/1179/Employment-Opportunities",
+    "Application Form URL": "https://www.newingtonct.gov/DocumentCenter/View/116/Employment-Application-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Newtown",
+    "Town Website": "https://www.newtown-ct.gov/",
+    "Employment Page URL": "https://www.newtown-ct.gov/human-resources/pages/employment-openings",
+    "Application Form URL": "https://www.newtown-ct.gov/human-resources/files/employment-application-0",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "New Britain",
+    "Town Website": "https://www.newbritainct.gov/",
+    "Employment Page URL": "https://www.newbritainct.gov/services/civil/employment/job-postingshtm",
+    "Application Form URL": "https://www.newbritainct.gov/fs/resource-manager/view/17872a85-abad-4c41-a629-4ad89bb25b00",
+    "ATS or Platform (if known)": "finalsite",
+    "Notes": null
+  },
+  {
+    "Town": "New Canaan",
+    "Town Website": "https://www.newcanaan.info/",
+    "Employment Page URL": "https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=cc5de7eb-4d8c-4b09-aafa-ddaefc2b33b3",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Revize",
+    "Notes": "using ADP workforce now"
+  },
+  {
+    "Town": "New Fairfield",
+    "Town Website": "https://www.newfairfield.org/",
+    "Employment Page URL": "https://www.applitrack.com/newfairfield/onlineapp/default.aspx",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Granicus",
+    "Notes": "Applitrak system"
+  },
+  {
+    "Town": "New Hartford",
+    "Town Website": "https://www.newhartfordct.gov/",
+    "Employment Page URL": null,
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "Incredibly there seems to be no data, no HR page, no form and no employment page"
+  },
+  {
+    "Town": "New Haven",
+    "Town Website": "https://www.newhavenct.gov/",
+    "Employment Page URL": "https://www.jobapscloud.com/oec/NewHaven/",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Granicus",
+    "Notes": "using jobappscloud for their ATS"
+  },
+  {
+    "Town": "New London",
+    "Town Website": "https://newlondonct.gov/",
+    "Employment Page URL": "https://newlondonct.gov/employment-opportunities",
+    "Application Form URL": "https://newlondonct.gov/filestorage/7495/7518/7798/9750/Employment_Application_Form.pdf",
+    "ATS or Platform (if known)": "Catalis",
+    "Notes": null
+  },
+  {
+    "Town": "New Milford",
+    "Town Website": "https://www.newmilford.org/",
+    "Employment Page URL": "https://www.newmilford.org/personnel/job-openings",
+    "Application Form URL": "https://www.newmilford.org/filestorage/3088/3126/Employment_Application_fillable_2021_%282%29.pdf",
+    "ATS or Platform (if known)": "Catalis",
+    "Notes": null
+  },
+  {
+    "Town": "Norfolk",
+    "Town Website": "https://norfolkct.org/",
+    "Employment Page URL": null,
+    "Application Form URL": "https://norfolkct.org/wp-content/uploads/2023/12/Application-for-Employment.pdf",
+    "ATS or Platform (if known)": null,
+    "Notes": "Looks like a specialy built Wordpress site"
+  },
+  {
+    "Town": "North Branford",
+    "Town Website": "https://www.northbranfordct.gov/",
+    "Employment Page URL": "https://www.northbranfordct.gov/jobs.aspx",
+    "Application Form URL": "https://www.northbranfordct.gov/FormCenter/General-Forms-4/Job-Application-47",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "North Canaan",
+    "Town Website": "https://www.northcanaan.org/",
+    "Employment Page URL": null,
+    "Application Form URL": "https://municipal-documents.s3.amazonaws.com/uploads/north-canaan-ct/board-of-selectmen/articles/announcements/4393/rich_text_field_file/17206348541/Town%20of%20North%20Canaan%20Employment%20Application.pdf",
+    "ATS or Platform (if known)": "CivicLift",
+    "Notes": "No employment page, they use notice post"
+  },
+  {
+    "Town": "North Haven",
+    "Town Website": "https://www.northhaven-ct.gov/",
+    "Employment Page URL": "https://www.northhaven-ct.gov/government/employment_opportunities.php",
+    "Application Form URL": "https://www.northhaven-ct.gov/Document%20Center/Government/employment/EmploymentApplicationFillable392022v1_3.pdf?t=202412181620010",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "North Stonington",
+    "Town Website": "https://www.northstoningtonct.gov/",
+    "Employment Page URL": "https://www.northstoningtonct.gov/home/pages/job-openings",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Norwalk",
+    "Town Website": "https://www.norwalkct.gov/",
+    "Employment Page URL": "https://www.governmentjobs.com/careers/norwalk",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "NeoGov"
+  },
+  {
+    "Town": "Norwich",
+    "Town Website": "https://www.norwichct.gov/",
+    "Employment Page URL": "https://www.norwichct.gov/718/Employment-Opportunities",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Old Lyme",
+    "Town Website": "https://www.oldlyme-ct.gov/",
+    "Employment Page URL": "https://www.oldlyme-ct.gov/Jobs.aspx",
+    "Application Form URL": "https://www.oldlyme-ct.gov/DocumentCenter/View/509/Job-Application-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Old Saybrook",
+    "Town Website": "https://www.oldsaybrookct.gov/",
+    "Employment Page URL": "https://www.oldsaybrookct.gov/selectmans-office/town-employee-information/pages/employment-opportunities",
+    "Application Form URL": "https://www.oldsaybrookct.gov/selectmans-office/files/employmentapplicationv2024-05-30writablepdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Orange",
+    "Town Website": "https://www.orange-ct.gov/",
+    "Employment Page URL": "https://www.orange-ct.gov/Jobs.aspx",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Oxford",
+    "Town Website": "https://www.oxford-ct.gov/",
+    "Employment Page URL": "https://www.oxford-ct.gov/home/pages/employment-opportunities",
+    "Application Form URL": "https://www.oxford-ct.gov/selectmans-office/files/employment-application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Plainfield",
+    "Town Website": "https://www.plainfieldct.org/",
+    "Employment Page URL": "https://www.plainfieldct.org/how_do_i/apply_for_obtain/job_opportunities.php",
+    "Application Form URL": "https://www.plainfieldct.org/Document%20Center/How%20Do%20I/Jobs/employmentapplication.pdf",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "Plainville",
+    "Town Website": "https://www.plainvillect.com/",
+    "Employment Page URL": "https://www.plainvillect.com/human-resources/pages/job-opportunities",
+    "Application Form URL": "https://www.applitrack.com/plainville/onlineapp/default.aspx",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "Applitrak system"
+  },
+  {
+    "Town": "Plymouth",
+    "Town Website": "https://www.plymouthct.gov/",
+    "Employment Page URL": "https://www.plymouthct.gov/jobs",
+    "Application Form URL": "https://www.plymouthct.gov/jobs/71/",
+    "ATS or Platform (if known)": "EvoGov",
+    "Notes": null
+  },
+  {
+    "Town": "Pomfret",
+    "Town Website": "https://www.pomfretct.gov/",
+    "Employment Page URL": "https://www.pomfretct.gov/first-selectmens-office/pages/employmentvolunteer-opportunities",
+    "Application Form URL": "https://www.pomfretct.gov/first-selectmans-office/files/application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Portland",
+    "Town Website": "https://www.portlandct.org/",
+    "Employment Page URL": "https://www.portlandct.org/employment-opportunities",
+    "Application Form URL": "https://www.portlandct.org/_files/ugd/9e6474_54bf1837850e4732ae85931cf4f79722.pdf",
+    "ATS or Platform (if known)": null,
+    "Notes": null
+  },
+  {
+    "Town": "Preston",
+    "Town Website": "https://www.preston-ct.org/",
+    "Employment Page URL": "https://www.preston-ct.org/Jobs.aspx",
+    "Application Form URL": "http://cp-stcity.civicplus.com/support/application.pdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Prospect",
+    "Town Website": "https://townofprospect.gov/",
+    "Employment Page URL": "https://townofprospect.gov/employment-opportunities/",
+    "Application Form URL": "https://cdn.townweb.com/townofprospect.gov/wp-content/uploads/2024/04/1Town_of_Prospect_Employment_Application_Revised_202122.pdf",
+    "ATS or Platform (if known)": "TownWeb",
+    "Notes": null
+  },
+  {
+    "Town": "Putnam",
+    "Town Website": "https://www.putnamct.us/",
+    "Employment Page URL": "https://www.putnamct.us/departments/human-resources/job-postings",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Finalsite",
+    "Notes": null
+  },
+  {
+    "Town": "Redding",
+    "Town Website": "https://reddingct.gov/",
+    "Employment Page URL": "https://reddingct.gov/about-redding/jobs/",
+    "Application Form URL": "https://reddingct.gov/wp-content/uploads/2025/04/employment_application_fillable_4_2025363627.pdf",
+    "ATS or Platform (if known)": null,
+    "Notes": "Wordpress site"
+  },
+  {
+    "Town": "Ridgefield",
+    "Town Website": "https://www.ridgefieldct.gov/",
+    "Employment Page URL": "https://www.ridgefieldct.gov/departments/human_resources/current_employment_opportunities.php",
+    "Application Form URL": "https://www.ridgefieldct.gov/Documents/Departments/Human%20Resources/Current%20Employment%20Opportunities/job_application_fillable_form_2024_1.pdf?t=202509181700240",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "Rocky Hill",
+    "Town Website": "https://www.rockyhillct.gov/",
+    "Employment Page URL": "https://www.rockyhillct.gov/300/Employment-Opportunities",
+    "Application Form URL": "https://www.rockyhillct.gov/DocumentCenter/View/349/Application-for-Employment-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Roxbury",
+    "Town Website": "https://www.roxburyct.com/",
+    "Employment Page URL": "https://www.roxburyct.com/Jobs.aspx",
+    "Application Form URL": "https://www.roxburyct.com/DocumentCenter/View/686/Employment-Application-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Salem",
+    "Town Website": "https://www.salemct.gov/",
+    "Employment Page URL": "https://www.salemct.gov/human-resources",
+    "Application Form URL": "https://www.salemct.gov/human-resources/files/employment-application-0",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Salisbury",
+    "Town Website": "https://www.salisburyct.us/",
+    "Employment Page URL": "https://www.salisburyct.us/employment/",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": null,
+    "Notes": "Township Wordpress theme"
+  },
+  {
+    "Town": "Scotland",
+    "Town Website": "https://www.scotlandct.org/",
+    "Employment Page URL": null,
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicLift",
+    "Notes": "Uses article postings for job listings"
+  },
+  {
+    "Town": "Seymour",
+    "Town Website": "https://www.seymourct.org/",
+    "Employment Page URL": "https://www.seymourct.org/jobs",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "EvoGov",
+    "Notes": null
+  },
+  {
+    "Town": "Sharon",
+    "Town Website": "https://www.sharonct.gov/",
+    "Employment Page URL": "https://www.sharonct.gov/Jobs.aspx",
+    "Application Form URL": "http://cp-stcity.civicplus.com/support/application.pdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Shelton",
+    "Town Website": "https://cityofshelton.org/",
+    "Employment Page URL": "https://cityofshelton.org/p/job-opportunities",
+    "Application Form URL": "http://cityofshelton.org/Home/DownloadDocument?docId=d3f41bf8-d2ce-4937-8811-cf8886fe9ce8",
+    "ATS or Platform (if known)": "Catalis",
+    "Notes": null
+  },
+  {
+    "Town": "Sherman",
+    "Town Website": "https://www.shermanct.gov/",
+    "Employment Page URL": "https://www.shermanct.gov/job-openings",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicLift",
+    "Notes": null
+  },
+  {
+    "Town": "Simsbury",
+    "Town Website": "https://www.simsbury-ct.gov/",
+    "Employment Page URL": "https://www.governmentjobs.com/careers/simsburyct",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": null,
+    "Notes": "NeoGov"
+  },
+  {
+    "Town": "Somers",
+    "Town Website": "https://www.somersct.gov/",
+    "Employment Page URL": "https://www.somersct.gov/employment-opportunities/",
+    "Application Form URL": "https://www.somersct.gov/download/zz_unpublished_documents/Jobs%20and%20Human%20Resources/employment%20applic.pdf",
+    "ATS or Platform (if known)": "egovlink",
+    "Notes": null
+  },
+  {
+    "Town": "South Windsor",
+    "Town Website": "https://www.southwindsor-ct.gov/",
+    "Employment Page URL": "https://www.southwindsor-ct.gov/jobs",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "Paychex aplication system"
+  },
+  {
+    "Town": "Southbury",
+    "Town Website": "https://www.southbury-ct.org/",
+    "Employment Page URL": "https://www.southbury-ct.org/employment",
+    "Application Form URL": "https://www.southbury-ct.org/filestorage/20558/20703/Southbury-employment-application-2025-fillable.pdf",
+    "ATS or Platform (if known)": "Catalis",
+    "Notes": null
+  },
+  {
+    "Town": "Southington",
+    "Town Website": "https://www.southington.org/",
+    "Employment Page URL": "https://www.southington.org/departments/human_resources/index.php",
+    "Application Form URL": "https://jobs.appone.com/townofsouthington-humanresources",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "Sprague",
+    "Town Website": "https://www.ctsprague.org/",
+    "Employment Page URL": null,
+    "Application Form URL": "https://www.ctsprague.org/resources/application_for_employment_revised_2-26-25.pdf",
+    "ATS or Platform (if known)": "Quasar Internet Solutions, they use news page to post job listings",
+    "Notes": null
+  },
+  {
+    "Town": "Stafford",
+    "Town Website": "https://www.staffordct.org/",
+    "Employment Page URL": "https://www.staffordct.org/departments/human_resources.php",
+    "Application Form URL": "https://www.staffordct.org/Departments/Human%20Resources/Town%20of%20Stafford%20employment%20application%20fillable%20pdf%20rev%2002%2013%2024.pdf?t=202502101105290",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "Stamford",
+    "Town Website": "https://www.stamfordct.gov/",
+    "Employment Page URL": null,
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Granicus",
+    "Notes": "Broken governmentjobs.com link"
+  },
+  {
+    "Town": "Sterling",
+    "Town Website": "https://www.sterlingct.us/",
+    "Employment Page URL": "https://www.sterlingct.us/231/Employment",
+    "Application Form URL": "https://www.sterlingct.us/DocumentCenter/View/566/Application-for-Employment",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Stonington",
+    "Town Website": "https://www.stonington-ct.gov/",
+    "Employment Page URL": "https://www.stonington-ct.gov/administrative-services/pages/employment-opportunities",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "has individual prefilled job tilte applications"
+  },
+  {
+    "Town": "Stratford",
+    "Town Website": "https://www.townofstratford.com/",
+    "Employment Page URL": "https://townofstratfordct.sites.thrillshare.com/documents/town-hall/town-departments-%26-services/human-resources/employment-opportunities/415588",
+    "Application Form URL": "https://core-docs.s3.amazonaws.com/documents/asset/uploaded_file/3632/Stratford/2768288/APPLICATION_FOR_EMPLOYMENT.pdf",
+    "ATS or Platform (if known)": "Apptegy",
+    "Notes": null
+  },
+  {
+    "Town": "Suffield",
+    "Town Website": "https://www.suffieldct.gov/",
+    "Employment Page URL": "https://www.suffieldct.gov/departments/hr",
+    "Application Form URL": "https://resources.finalsite.net/images/v1591199569/suffieldctgov/uastjpqguqv8mv8y9mm9/EmploymentApplication.pdf",
+    "ATS or Platform (if known)": "Finalsite",
+    "Notes": "Jobs are listing in small column on right side fo screen"
+  },
+  {
+    "Town": "Thomaston",
+    "Town Website": "https://www.thomastonct.org/",
+    "Employment Page URL": "https://www.thomastonct.org/job-openings",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicLift",
+    "Notes": null
+  },
+  {
+    "Town": "Thompson",
+    "Town Website": "https://www.thompsonct.org/",
+    "Employment Page URL": "https://www.thompsonct.org/human-resources/pages/employment-volunteer-opportunities",
+    "Application Form URL": "https://www.thompsonct.org/human-resources/files/employment-application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Tolland",
+    "Town Website": "https://www.tollandct.gov/",
+    "Employment Page URL": "https://www.tollandct.gov/human-resources/pages/employment-opportunities",
+    "Application Form URL": "https://www.tollandct.gov/human-resources/files/town-tolland-application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Torrington",
+    "Town Website": "https://www.torringtonct.org/",
+    "Employment Page URL": "https://www.torringtonct.org/human-resources-department/pages/career-opportunities",
+    "Application Form URL": "https://www.torringtonct.org/sites/g/files/vyhlif12226/f/pages/regular_employment_application_revised_8-1-24_fillable_form_9.pdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Trumbull",
+    "Town Website": "https://www.trumbull-ct.gov/",
+    "Employment Page URL": "https://www.trumbull-ct.gov/210/Human-Resources-Civil-Service",
+    "Application Form URL": "https://www.governmentjobs.com/careers/trumbullct",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "NeoGov"
+  },
+  {
+    "Town": "Union",
+    "Town Website": "https://www.unionconnecticut.org/",
+    "Employment Page URL": null,
+    "Application Form URL": null,
+    "ATS or Platform (if known)": null,
+    "Notes": "A Your Page Today LLC Production, Uses Events to list jobs"
+  },
+  {
+    "Town": "Vernon",
+    "Town Website": "https://www.vernon-ct.gov/",
+    "Employment Page URL": "https://www.applitrack.com/vernonct/onlineapp/default.aspx",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "Apptegy",
+    "Notes": "Applitrak ATS"
+  },
+  {
+    "Town": "Voluntown",
+    "Town Website": "https://www.voluntown.gov/",
+    "Employment Page URL": "https://www.voluntown.gov/239/Employment-Opportunities",
+    "Application Form URL": "https://docs.google.com/forms/d/e/1FAIpQLSc2J2VskxFaZiCpBRy_3jGH-bHyRaYPhCQmMJ5cbq0cWL3jOw/viewform",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Wallingford",
+    "Town Website": "https://www.wallingfordct.gov/",
+    "Employment Page URL": "https://www.wallingfordct.gov/government/departments/human-resources/",
+    "Application Form URL": "https://www.governmentjobs.com/careers/wallingfordct/",
+    "ATS or Platform (if known)": "Web Solutions",
+    "Notes": "NeoGov"
+  },
+  {
+    "Town": "Warren",
+    "Town Website": "https://www.warrenct.gov/",
+    "Employment Page URL": "https://www.warrenct.gov/home/pages/employment-opportunities",
+    "Application Form URL": "https://www.warrenct.gov/home/files/job-appllication",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Washington",
+    "Town Website": "https://www.washingtonct.org/",
+    "Employment Page URL": "https://www.washingtonct.org/board-of-selectmen/pages/employment",
+    "Application Form URL": "https://www.washingtonct.org/sites/g/files/vyhlif1396/f/pages/application_for_employment_-_general.pdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Waterbury",
+    "Town Website": "https://www.waterburyct.org/",
+    "Employment Page URL": "https://www.waterburyct.org/services/human-resources/employment-information",
+    "Application Form URL": "https://www.waterburyct.org/filestorage/103431/106857/106915/106917/City_of_Waterbury_General_Job_Application_v2024.pdf",
+    "ATS or Platform (if known)": "Catalis",
+    "Notes": null
+  },
+  {
+    "Town": "Waterford",
+    "Town Website": "https://www.waterfordct.org/",
+    "Employment Page URL": "https://www.waterfordct.org/Jobs.aspx",
+    "Application Form URL": "https://www.waterfordct.org/DocumentCenter/View/2470/Town-of-Waterford-Application-Revised-Oct-2023",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Watertown",
+    "Town Website": "https://www.watertownct.org/",
+    "Employment Page URL": "https://www.watertownct.org/how_do_i/apply_for_obtain/job_opportunities.php",
+    "Application Form URL": "https://www.watertownct.org/Employment/Job_Application_7-2020.editablepdf.pdf?t=202506171048240",
+    "ATS or Platform (if known)": "Revize",
+    "Notes": null
+  },
+  {
+    "Town": "West Hartford",
+    "Town Website": "https://www.westhartfordct.gov/",
+    "Employment Page URL": "https://www.westhartfordct.gov/town-departments/human-resources/job-openings",
+    "Application Form URL": "https://www.applitrack.com/westhartford/onlineapp/default.aspx?all=1",
+    "ATS or Platform (if known)": "Finalsite",
+    "Notes": "Applitrak"
+  },
+  {
+    "Town": "West Haven",
+    "Town Website": "https://www.cityofwesthaven.com/",
+    "Employment Page URL": "https://www.cityofwesthaven.com/Jobs.aspx",
+    "Application Form URL": "https://www.cityofwesthaven.com/DocumentCenter/View/5426/City-of-West-Haven-Employment-Application-PDF",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Westbrook",
+    "Town Website": "https://www.westbrookct.us/",
+    "Employment Page URL": "https://www.westbrookct.us/Jobs.aspx",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Weston",
+    "Town Website": "https://www.westonct.gov/",
+    "Employment Page URL": "https://www.westonct.gov/about-us/town-hall/municipal-job-openings",
+    "Application Form URL": "https://www.westonct.gov/home/showpublisheddocument/15257/638900795188300000",
+    "ATS or Platform (if known)": "Granicus",
+    "Notes": null
+  },
+  {
+    "Town": "Westport",
+    "Town Website": "https://www.westportct.gov/",
+    "Employment Page URL": "https://www.westportct.gov/government/departments-a-z/personnel-department/town-employment-opportunities",
+    "Application Form URL": "https://www.westportct.gov/home/showpublisheddocument/100418/638702975798870000",
+    "ATS or Platform (if known)": "Granicus",
+    "Notes": null
+  },
+  {
+    "Town": "Wethersfield",
+    "Town Website": "https://wethersfieldct.gov/",
+    "Employment Page URL": "https://ct-wethersfield.civicplus.com/Jobs.aspx",
+    "Application Form URL": "https://www.wethersfieldct.gov/DocumentCenter/View/1310/Employment-Application?bidId=",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Willington",
+    "Town Website": "https://www.willingtonct.gov/",
+    "Employment Page URL": "https://www.willingtonct.gov/home/pages/employment",
+    "Application Form URL": "https://www.willingtonct.gov/home/files/town-willington-employment-application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Wilton",
+    "Town Website": "https://www.wiltonct.gov/",
+    "Employment Page URL": "https://www.wiltonct.gov/node/36/subscriber-topic/employment-opportunities",
+    "Application Form URL": "https://www.wiltonct.gov/human-resources-department/files/employment-application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Winchester",
+    "Town Website": "https://www.townofwinchester.org/",
+    "Employment Page URL": "https://www.townofwinchester.org/job-openings",
+    "Application Form URL": "https://municipal-documents.s3.amazonaws.com/uploads/winchester-ct/town-manager/documents/applications/68597/Town%20of%20Winchester%20Employment%20Application%202023%20Fillable.pdf",
+    "ATS or Platform (if known)": "CivicLift",
+    "Notes": null
+  },
+  {
+    "Town": "Windham",
+    "Town Website": "https://www.windhamct.gov/",
+    "Employment Page URL": "https://www.windhamct.gov/522/Employment-Opportunities",
+    "Application Form URL": "https://www.windhamct.gov/DocumentCenter/View/453",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Windsor",
+    "Town Website": "https://www.windsorct.gov/",
+    "Employment Page URL": "https://www.windsorct.gov/718/Career-Opportunities",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "Clearcompany ATS"
+  },
+  {
+    "Town": "Windsor Locks",
+    "Town Website": "https://windsorlocksct.org/",
+    "Employment Page URL": "https://windsorlocksct.org/current-job-opportunities/",
+    "Application Form URL": "https://cdn.townweb.com/windsorlocksct.org/wp-content/uploads/2022/11/0097_001.pdf",
+    "ATS or Platform (if known)": "Town Web",
+    "Notes": null
+  },
+  {
+    "Town": "Wolcott",
+    "Town Website": "https://wolcottct.org/",
+    "Employment Page URL": "https://wolcottct.org/Jobs.aspx",
+    "Application Form URL": "https://wolcottct.org/FormCenter/General-Forms-4/Job-Application-57",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Woodbridge",
+    "Town Website": "https://www.woodbridgect.org/",
+    "Employment Page URL": "https://www.woodbridgect.org/357/Employment",
+    "Application Form URL": "https://www.woodbridgect.org/DocumentCenter/View/6294/Employment-Application-wth-Applicants-Certifications-and-Agreements-with-Employment-Info-Authorization-04-23-2024",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  },
+  {
+    "Town": "Woodbury",
+    "Town Website": "https://woodburyct.org/",
+    "Employment Page URL": "https://woodburyct.org/jobs",
+    "Application Form URL": "https://woodburyct.org/vertical/Sites/%7B59751637-3DF2-41D3-B20A-866E470B1D1D%7D/uploads/Employment_Application_eff_2018_Fillable_Form.pdf",
+    "ATS or Platform (if known)": "Catalis",
+    "Notes": null
+  },
+  {
+    "Town": "Woodstock",
+    "Town Website": "https://www.woodstockct.gov/",
+    "Employment Page URL": "https://www.woodstockct.gov/services/employment-volunteer-opportunities",
+    "Application Form URL": "https://www.woodstockct.gov/services/employment/files/employment-application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null
+  }
+]
