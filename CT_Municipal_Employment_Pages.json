@@ -1074,10 +1074,19 @@
   {
     "Town": "Stamford",
     "Town Website": "https://www.stamfordct.gov/",
-    "Employment Page URL": null,
+    "Employment Page URL": "https://www.governmentjobs.com/careers/stamfordct",
     "Application Form URL": null,
     "ATS or Platform (if known)": "Granicus",
-    "Notes": "Broken governmentjobs.com link"
+    "Notes": "Broken governmentjobs.com link",
+    "platform_detected": "granicus",
+    "employment_page_type": "ats_vendor",
+    "employment_url_final": "https://www.governmentjobs.com/careers/stamfordct",
+    "employment_url_last_checked_at": "2026-01-29T21:59:40.093842+00:00",
+    "employment_url_change_reason": "rediscovered_from_ats_fallback",
+    "employment_url_confidence": 85,
+    "employment_url_discovery_method": "ats_fallback",
+    "employment_url_discovery_score": 105,
+    "employment_url_validation_reason": "ok"
   },
   {
     "Town": "Sterling",
