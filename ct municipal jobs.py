@@ -337,7 +337,7 @@ if not df.empty:
             Found a broken link or outdated information?
         </p>
         <p style="margin: 0;">
-            Contact: <a href='mailto:your-email@example.com' style='color: #007bff;'>your-email@example.com</a>
+            Contact: <a href='mailto:william@armitagewilliam.com' style='color: #007bff;'>your-email@example.com</a>
         </p>
         <p style='font-size: 0.85rem; color: #999; margin-top: 1.5rem;'>
             Please verify all information on official municipal websites before applying
