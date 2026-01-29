@@ -30,7 +30,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
-from urllib.parse import urljoin, urlparse, urlencode
+from urllib.parse import urljoin, urlparse, urlencode, parse_qs, unquote
 
 import requests
 from bs4 import BeautifulSoup
@@ -371,6 +371,21 @@ def validate_candidate(url: str, base_home: str) -> Tuple[bool, Optional[str], s
 
     final = resp.url or url
 
+    # Preserve ATS careers path if the request normalized to the root
+    if is_ats(url):
+        parsed_orig = urlparse(url)
+        parsed_final = urlparse(final)
+
+    # If final URL collapsed to site root but original had a careers path, keep original
+        if (parsed_orig.path or "").startswith("/careers/") and (parsed_final.path or "") in {"", "/"}:
+            final = url
+
+
+    # If Granicus "splash" wrapper points to an ATS vendor, accept the ATS URL directly
+    splash_target = unwrap_granicus_splash(final)
+    if splash_target and is_ats(splash_target):
+        return True, splash_target, "ok_granicus_splash_to_ats", None
+
     if resp.status_code >= 400:
         return False, final, f"status_{resp.status_code}", None
 
@@ -379,6 +394,12 @@ def validate_candidate(url: str, base_home: str) -> Tuple[bool, Optional[str], s
     html = resp.text if resp.text else ""
     if ("text/html" in ctype or ctype == ""):
         block = blocked_reason(html)
+        
+# Many legit ATS pages include "enable javascript" in <noscript>.
+# Don't treat that as a hard block for ATS targets.
+        if block in {"enable javascript", "please enable javascript"} and is_ats(final):
+            block = None
+
         if block:
             return False, final, "blocked_or_interstitial", block
 
@@ -441,6 +462,38 @@ def find_application_pdf(employment_url: str, base_home: str) -> Tuple[Optional[
         return None, f"application_pdf_candidate_invalid:{reason}"
 
     return None, "no_confident_application_pdf_found"
+
+# NeoGov specific
+def unwrap_granicus_splash(url: str) -> Optional[str]:
+    try:
+        u = urlparse(url)
+        qs = parse_qs(u.query or "")
+        splash = qs.get("splash", [None])[0]
+        if not splash:
+            return None
+        splash = unquote(splash)
+        if is_url(splash):
+            return splash
+        return None
+    except Exception:
+        return None
+
+def granicus_ats_fallback_candidates(town: str) -> List[Tuple[str, str, str]]:
+    """
+    If a Granicus site blocks requests (403), try common GovernmentJobs (NEOGOV) patterns.
+    This is a best-effort fallback; some towns use different slugs.
+    """
+    slug = re.sub(r"[^a-z0-9]+", "", (town or "").lower())
+def granicus_ats_fallback_candidates(town: str) -> List[Tuple[str, str, str]]:
+    """
+    If a Granicus site blocks requests (403), try common GovernmentJobs (NEOGOV) patterns.
+    """
+    slug = re.sub(r"[^a-z0-9]+", "", (town or "").lower())
+    return [
+        (f"https://www.governmentjobs.com/careers/{slug}ct", "ATS_FALLBACK:governmentjobs_slug_ct", "ats_fallback"),
+        (f"https://www.governmentjobs.com/careers/{slug}", "ATS_FALLBACK:governmentjobs_slug", "ats_fallback"),
+    ]
+
 
 
 # -------------------- Platform-specific discovery --------------------
@@ -632,6 +685,9 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
         cand = discover_civiclift(base_home)
     elif platform == "granicus":
         cand = discover_granicus(base_home)
+
+    # If the Granicus site is bot-blocked, still try ATS fallbacks
+        cand.extend(granicus_ats_fallback_candidates(town))
     else:
         cand = discover_other(base_home)
 
