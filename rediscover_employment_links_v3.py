@@ -72,6 +72,26 @@ KW_EMPLOYMENT = [
     "vacancies", "openings",
     "apply", "application",
 ]
+KW_STRONG_LABELS = [
+    "employment opportunities",
+    "job openings",
+    "career opportunities",
+    "human resources",
+]
+KW_NEGATIVE = [
+    "departments",
+    "department",
+    "about",
+    "contact",
+    "news",
+    "calendar",
+    "events",
+    "agenda",
+    "minutes",
+    "meetings",
+    "boards",
+    "commissions",
+]
 
 # ATS/Vendor hints (allow off-site canonical if it matches)
 ATS_HINTS = [
@@ -130,9 +150,12 @@ def is_pdf(url: str) -> bool:
     return (url or "").lower().split("?")[0].endswith(".pdf")
 
 
-def looks_blocked(html: str) -> bool:
+def blocked_reason(html: str) -> Optional[str]:
     h = (html or "").lower()
-    return any(p in h for p in BLOCKED_PATTERNS)
+    for p in BLOCKED_PATTERNS:
+        if p in h:
+            return p
+    return None
 
 
 def looks_soft404(resp: requests.Response) -> bool:
@@ -222,6 +245,26 @@ def extract_links(base_url: str, html: str) -> List[Tuple[str, str]]:
     return out
 
 
+def extract_links_with_selector(base_url: str, html: str, selector: str) -> List[Tuple[str, str]]:
+    soup = BeautifulSoup(html or "", "html.parser")
+    out: List[Tuple[str, str]] = []
+
+    for a in soup.select(selector):
+        href = (a.get("href") or "").strip()
+        if not href or href.startswith("#"):
+            continue
+        abs_url = urljoin(base_url, href)
+
+        txt = " ".join(a.get_text(" ", strip=True).split())
+        aria = (a.get("aria-label") or "").strip()
+        title = (a.get("title") or "").strip()
+        combined = " ".join([x for x in [txt, aria, title] if x]).strip()
+
+        out.append((abs_url, combined))
+
+    return out
+
+
 def civicplus_search_urls(base_home: str) -> List[str]:
     # CivicPlus internal search endpoint
     # /Search?searchPhrase=employment
@@ -262,7 +305,7 @@ def detect_platform(rec: Dict[str, Any]) -> str:
     return "other"
 
 
-def score_candidate(url: str, label: str, base_home: str) -> int:
+def score_candidate(url: str, label: str, base_home: str, source: str) -> int:
     """
     Higher is better.
     Prefers same-site employment pages, allows ATS vendors, avoids social.
@@ -277,10 +320,15 @@ def score_candidate(url: str, label: str, base_home: str) -> int:
     if same_site(url, base_home):
         s += 40
     if is_ats(url):
-        s += 30
+        s += 45
+
+    if source in {"civicplus_path", "civiclift_path", "granicus_path"}:
+        s += 20
 
     if kw_hit(u) or kw_hit(t):
         s += 50
+    if any(k in t for k in KW_STRONG_LABELS):
+        s += 15
 
     # CivicPlus page-id is a strong signal for real content pages
     try:
@@ -297,13 +345,20 @@ def score_candidate(url: str, label: str, base_home: str) -> int:
     # prefer "employment/jobs/careers" in path
     if any(x in u for x in ["employment", "jobs", "careers", "human-resources"]):
         s += 10
+    if "jobs.aspx" in u:
+        s += 20
+
+    if any(bad in u for bad in KW_NEGATIVE) and not kw_hit(u):
+        s -= 15
+    if any(bad in t for bad in KW_NEGATIVE) and not kw_hit(t):
+        s -= 10
 
     return s
 
 
-def validate_candidate(url: str, base_home: str) -> Tuple[bool, Optional[str], str]:
+def validate_candidate(url: str, base_home: str) -> Tuple[bool, Optional[str], str, Optional[str]]:
     """
-    Returns (ok, final_url, reason)
+    Returns (ok, final_url, reason, blocked_reason)
     Acceptable:
     - same-site HTML page
     - ATS vendor page
@@ -312,31 +367,33 @@ def validate_candidate(url: str, base_home: str) -> Tuple[bool, Optional[str], s
     resp, err = get(url)
     time.sleep(SLEEP_BETWEEN_REQUESTS_SECS)
     if resp is None:
-        return False, None, f"fetch_error: {err}"
+        return False, None, f"fetch_error: {err}", None
 
     final = resp.url or url
 
     if resp.status_code >= 400:
-        return False, final, f"status_{resp.status_code}"
+        return False, final, f"status_{resp.status_code}", None
 
     # if HTML looks blocked/interstitial, mark explicitly so we understand failures
     ctype = (resp.headers.get("Content-Type") or "").lower()
     html = resp.text if resp.text else ""
-    if ("text/html" in ctype or ctype == "") and looks_blocked(html):
-        return False, final, "blocked_or_interstitial"
+    if ("text/html" in ctype or ctype == ""):
+        block = blocked_reason(html)
+        if block:
+            return False, final, "blocked_or_interstitial", block
 
     if looks_soft404(resp):
-        return False, final, "soft404"
+        return False, final, "soft404", None
 
     # Reject social
     if is_social(final):
-        return False, final, "social_blocked"
+        return False, final, "social_blocked", None
 
     # Require same-site unless ATS vendor
     if not same_site(final, base_home) and not is_ats(final):
-        return False, final, "offsite_not_ats"
+        return False, final, "offsite_not_ats", None
 
-    return True, final, "ok"
+    return True, final, "ok", None
 
 
 def find_application_pdf(employment_url: str, base_home: str) -> Tuple[Optional[str], str]:
@@ -378,7 +435,7 @@ def find_application_pdf(employment_url: str, base_home: str) -> Tuple[Optional[
 
     if best and best_score >= 35:
         # validate the pdf is alive
-        ok, final, reason = validate_candidate(best, base_home)
+        ok, final, reason, _ = validate_candidate(best, base_home)
         if ok:
             return final, "application_pdf_found_on_employment_page"
         return None, f"application_pdf_candidate_invalid:{reason}"
@@ -401,10 +458,15 @@ def discover_civicplus(base_home: str) -> List[Tuple[str, str, str]]:
     h_resp, _ = get(base_home)
     time.sleep(SLEEP_BETWEEN_REQUESTS_SECS)
     if h_resp and h_resp.status_code < 400 and not looks_soft404(h_resp):
-        for u, t in extract_links(h_resp.url or base_home, h_resp.text or ""):
+        page_url = h_resp.url or base_home
+        html = h_resp.text or ""
+        for u, t in extract_links(page_url, html):
             # keep anything with keyword OR civicplus page-id
             if kw_hit(u) or kw_hit(t) or CIVICPLUS_PAGEID_RE.match(urlparse(u).path or ""):
                 cand.append((u, t, "homepage_link"))
+        for u, t in extract_links_with_selector(page_url, html, "nav a[href], footer a[href]"):
+            if kw_hit(u) or kw_hit(t) or CIVICPLUS_PAGEID_RE.match(urlparse(u).path or ""):
+                cand.append((u, t, "nav_footer_link"))
 
     # 3) quicklinks page crawl (often contains Jobs.aspx)
     ql = urljoin(base_home, "QuickLinks.aspx")
@@ -442,9 +504,14 @@ def discover_civiclift(base_home: str) -> List[Tuple[str, str, str]]:
     h_resp, _ = get(base_home)
     time.sleep(SLEEP_BETWEEN_REQUESTS_SECS)
     if h_resp and h_resp.status_code < 400 and not looks_soft404(h_resp):
-        for u, t in extract_links(h_resp.url or base_home, h_resp.text or ""):
+        page_url = h_resp.url or base_home
+        html = h_resp.text or ""
+        for u, t in extract_links(page_url, html):
             if kw_hit(u) or kw_hit(t):
                 cand.append((u, t, "homepage_link"))
+        for u, t in extract_links_with_selector(page_url, html, "nav a[href], footer a[href]"):
+            if kw_hit(u) or kw_hit(t):
+                cand.append((u, t, "nav_footer_link"))
 
     # civic lift often has a site search; generic fallback: use internal civicplus-style Search if present
     # otherwise keep homepage as fallback and mark ephemeral in final decision.
@@ -462,9 +529,14 @@ def discover_granicus(base_home: str) -> List[Tuple[str, str, str]]:
     h_resp, _ = get(base_home)
     time.sleep(SLEEP_BETWEEN_REQUESTS_SECS)
     if h_resp and h_resp.status_code < 400 and not looks_soft404(h_resp):
-        for u, t in extract_links(h_resp.url or base_home, h_resp.text or ""):
+        page_url = h_resp.url or base_home
+        html = h_resp.text or ""
+        for u, t in extract_links(page_url, html):
             if is_ats(u) or kw_hit(u) or kw_hit(t):
                 cand.append((u, t, "homepage_link"))
+        for u, t in extract_links_with_selector(page_url, html, "nav a[href], footer a[href]"):
+            if is_ats(u) or kw_hit(u) or kw_hit(t):
+                cand.append((u, t, "nav_footer_link"))
 
     # also try common HR/jobs pages
     for p in ["/government/human-resources", "/government/human-resources/city-jobs", "/jobs"]:
@@ -481,10 +553,16 @@ def discover_other(base_home: str) -> List[Tuple[str, str, str]]:
     h_resp, _ = get(base_home)
     time.sleep(SLEEP_BETWEEN_REQUESTS_SECS)
     if h_resp and h_resp.status_code < 400 and not looks_soft404(h_resp):
-        for u, t in extract_links(h_resp.url or base_home, h_resp.text or ""):
+        page_url = h_resp.url or base_home
+        html = h_resp.text or ""
+        for u, t in extract_links(page_url, html):
             lt = (t or "").lower()
             if kw_hit(u) or kw_hit(t) or "human resources" in lt:
                 cand.append((u, t, "homepage_link"))
+        for u, t in extract_links_with_selector(page_url, html, "nav a[href], footer a[href]"):
+            lt = (t or "").lower()
+            if kw_hit(u) or kw_hit(t) or "human resources" in lt:
+                cand.append((u, t, "nav_footer_link"))
     return cand
 
 
@@ -501,13 +579,25 @@ def should_attempt(rec: Dict[str, Any]) -> bool:
     return False
 
 
-def update_record(rec: Dict[str, Any], new_emp: str, platform: str, change_reason: str, confidence: int) -> None:
+def update_record(
+    rec: Dict[str, Any],
+    new_emp: str,
+    platform: str,
+    change_reason: str,
+    confidence: int,
+    discovery_method: str,
+    discovery_score: int,
+    validation_reason: str,
+) -> None:
     rec["platform_detected"] = platform
     rec["Employment Page URL"] = new_emp
     rec["employment_url_final"] = new_emp
     rec["employment_url_last_checked_at"] = now_utc_iso()
     rec["employment_url_change_reason"] = change_reason
     rec["employment_url_confidence"] = confidence
+    rec["employment_url_discovery_method"] = discovery_method
+    rec["employment_url_discovery_score"] = discovery_score
+    rec["employment_url_validation_reason"] = validation_reason
 
 
 def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
@@ -558,11 +648,12 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
         deduped.append((u, t, src))
 
     # Score + validate best candidates
-    scored = [(score_candidate(u, t, base_home), u, t, src) for (u, t, src) in deduped]
+    scored = [(score_candidate(u, t, base_home, src), u, t, src) for (u, t, src) in deduped]
     scored.sort(reverse=True, key=lambda x: x[0])
 
     best_html: Optional[Tuple[int, str, str, str]] = None  # (score, final_url, src, reason)
     best_pdf: Optional[Tuple[int, str, str, str]] = None
+    last_blocked_reason: Optional[str] = None
 
     # Validate up to top N
     for s, u, t, src in scored[:40]:
@@ -571,7 +662,9 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
         if is_social(u):
             continue
 
-        ok, final, why = validate_candidate(u, base_home)
+        ok, final, why, blocked = validate_candidate(u, base_home)
+        if blocked:
+            last_blocked_reason = blocked
         if not ok or not final:
             continue
 
@@ -597,6 +690,15 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
                 "new_employment_url": base_home,
                 "confidence": 60,
                 "employment_page_type": "ephemeral_posts",
+            }
+        if last_blocked_reason:
+            rec["employment_url_last_blocked_reason"] = last_blocked_reason
+            return {
+                "Town": town,
+                "action": "needs_review",
+                "reason": "no_candidate_validated",
+                "platform": platform,
+                "blocked_reason": last_blocked_reason,
             }
         return {"Town": town, "action": "needs_review", "reason": "no_candidate_validated", "platform": platform}
 
@@ -628,7 +730,16 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
     else:
         rec["employment_page_type"] = "page"
 
-    update_record(rec, new_emp, platform, f"rediscovered_from_{src}", conf)
+    update_record(
+        rec,
+        new_emp,
+        platform,
+        f"rediscovered_from_{src}",
+        conf,
+        src,
+        s,
+        why,
+    )
 
     # Optionally refresh application PDF if employment is HTML and same-site
     if not is_pdf(new_emp) and same_site(new_emp, base_home):
