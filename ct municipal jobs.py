@@ -85,7 +85,7 @@ st.markdown("""
 @st.cache_data
 def load_employment_data():
     """Load the CT municipal employment data from GitHub"""
-    url = "https://raw.githubusercontent.com/WmArmitage/municipal-employment-data/refs/heads/main/CT_Municipal_Employment_Pages.json"
+    url = "https://raw.githubusercontent.com/WmArmitage/CT-Municipal-Streamlit/refs/heads/main/CT_Municipal_Employment_Pages.json"
     
     try:
         import urllib.request
