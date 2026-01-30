@@ -104,8 +104,13 @@ st.markdown("""
     Quick access to employment opportunities across all 169 Connecticut municipalities
 </div>
 <div class="sub-note">
-    Some towns use third-party hiring platforms (such as governmentjobs.com) where the employment page itself serves as the application.
-    In these cases, a separate PDF application is not available and will appear as “Not Available.”
+    “Not Available” does not necessarily indicate missing or broken information.
+    Connecticut municipalities use a wide variety of website structures and hiring systems,
+    including third-party applicant tracking platforms where the employment page itself serves as the application.
+    In these cases, a separate application form does not exist and will always appear as “Not Available.”
+    <br><br>
+    In other instances, data may be unavailable due to non-standard page layouts, dynamically generated content,
+    or frequent structural changes on municipal websites.
 </div>
 """, unsafe_allow_html=True)
 
@@ -315,7 +320,7 @@ if not df.empty:
     st.markdown("""
     <div class="donate-section">
         <h2 style="color: #1f4788; margin-bottom: 1rem;">🙏 Support This Free Resource</h2>
-        <p style="font-size: 1.1rem; color: #555; max-width: 700px; margin: 0 auto 1.5rem;">
+        <p style="font-size: 1.1rem; color: #444; max-width: 700px; margin: 0 auto 1.5rem;">
             This directory is independently built and maintained. 
                 If you found it useful in your job search, 
                 you’re welcome to support its continued development with a donation.
