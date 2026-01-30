@@ -319,7 +319,7 @@ if not df.empty:
                 💳 Donate via PayPal
             </a>
         </div>
-        <p style="font-size: 0.9rem; color: #999; margin-top: 1.5rem;">
+        <p style="font-size: 0.9rem; color: #444; margin-top: 1.5rem;">
             100% of donations go toward maintaining and improving this directory
         </p>
     </div>
