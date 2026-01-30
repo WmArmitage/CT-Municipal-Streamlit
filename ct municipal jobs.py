@@ -361,8 +361,7 @@ if not df.empty:
         <h2 style="color: #1f4788; margin-bottom: 1rem;">🙏 Support This Free Resource</h2>
         <p style="font-size: 1.1rem; color: #444; max-width: 700px; margin: 0 auto 1.5rem;">
             This directory is independently built and maintained. 
-                If you found it useful in your job search, 
-                you’re welcome to support its continued development with a donation.
+                If you found it useful, you’re welcome to support its continued development with a donation.
         </p>
         <div>
             <a href="https://ko-fi.com/wmarmitage" target="_blank" class="donate-button kofi-button">
