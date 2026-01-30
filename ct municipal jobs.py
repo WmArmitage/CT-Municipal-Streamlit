@@ -315,6 +315,45 @@ if not df.empty:
             unsafe_allow_html=True
         )
     
+    # --- Donation button CSS (define once) ---
+    st.markdown("""
+    <style>
+    .donate-section {
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+
+    .donate-button {
+        display: inline-block;
+        padding: 0.9rem 1.4rem;
+        margin: 0.5rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none !important;
+        color: #ffffff !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .donate-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .kofi-button {
+        background-color: #29abe0;
+    }
+
+    .paypal-button {
+        background-color: #0070ba;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    
+    
+    
     # Large donation section at bottom
     st.markdown("---")
     st.markdown("""
