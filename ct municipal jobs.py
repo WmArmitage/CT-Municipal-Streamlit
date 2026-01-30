@@ -99,7 +99,16 @@ def load_employment_data():
 
 # Main header
 st.markdown('<div class="main-header">🏛️ Connecticut Municipal Employment Directory</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Quick access to employment opportunities across all 169 Connecticut municipalities</div>', unsafe_allow_html=True)
+st.markdown("""
+<div class="sub-header">
+    Quick access to employment opportunities across all 169 Connecticut municipalities
+</div>
+<div class="sub-note">
+    Some towns use third-party hiring platforms (such as governmentjobs.com) where the employment page itself serves as the application.
+    In these cases, a separate PDF application is not available and will appear as “Not Available.”
+</div>
+""", unsafe_allow_html=True)
+
 
 # Load data
 df = load_employment_data()
@@ -144,7 +153,7 @@ if not df.empty:
         - Downloadable application forms
         - Platform information
         
-        Data is updated regularly to ensure accuracy.
+        
         """)
         
         st.markdown("---")
@@ -307,9 +316,9 @@ if not df.empty:
     <div class="donate-section">
         <h2 style="color: #1f4788; margin-bottom: 1rem;">🙏 Support This Free Resource</h2>
         <p style="font-size: 1.1rem; color: #555; max-width: 700px; margin: 0 auto 1.5rem;">
-            Maintaining this directory takes time and effort. If you found this helpful in your job search,
-            consider buying me a coffee or making a small donation. Every contribution helps keep this resource
-            free and up-to-date for everyone!
+            This directory is independently built and maintained. 
+                If you found it useful in your job search, 
+                you’re welcome to support its continued development with a donation.
         </p>
         <div>
             <a href="https://ko-fi.com/wmarmitage" target="_blank" class="donate-button kofi-button">
@@ -320,7 +329,7 @@ if not df.empty:
             </a>
         </div>
         <p style="font-size: 0.9rem; color: #444; margin-top: 1.5rem;">
-            100% of donations go toward maintaining and improving this directory
+            Donations support the time and effort required to maintain and improve this directory.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -331,16 +340,16 @@ if not df.empty:
     <div style='text-align: center; color: #666; padding: 2rem 0;'>
         <p><strong>Connecticut Municipal Employment Directory</strong></p>
         <p style="margin: 0.5rem 0;">
-            Data updated regularly • Covering all 169 Connecticut municipalities
+            Coverage includes all 169 Connecticut municipalities
         </p>
         <p style="margin: 1rem 0 0.5rem;">
             Found a broken link or outdated information?
         </p>
         <p style="margin: 0;">
-            Contact: <a href='mailto:william@armitagewilliam.com' style='color: #007bff;'>your-email@example.com</a>
+            Submit with this form: <a href='https://tally.so/r/eqR5Dq' style='color: #007bff;'>Tally Form</a>
         </p>
         <p style='font-size: 0.85rem; color: #999; margin-top: 1.5rem;'>
-            Please verify all information on official municipal websites before applying
+            Applicants should always confirm details directly on official municipal websites before applying
         </p>
     </div>
     """, unsafe_allow_html=True)
