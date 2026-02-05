@@ -13,7 +13,7 @@
     "Employment Page URL": null,
     "Application Form URL": "https://www.cityofansonia.com/filestorage/8192/8194/8240/Job_Application.pdf",
     "ATS or Platform (if known)": "Catalisgov",
-    "Notes": "No employment page, just posts to news list"
+    "Notes": null
   },
   {
     "Town": "Ashford",
@@ -50,10 +50,10 @@
   {
     "Town": "Berlin",
     "Town Website": "https://www.berlinct.gov/",
-    "Employment Page URL": "https://www.berlinct.gov/egov/apps/services/index.egov?view=detail;id=61",
+    "Employment Page URL": "https://www.berlinct.gov/category/index.php?categoryid=51",
     "Application Form URL": "https://www.berlinct.gov/egov/apps/document/center.egov?view=item&id=8426",
     "ATS or Platform (if known)": "CoreBT",
-    "Notes": "State's link is wrong, using third party for job listings, webpage has nothing listed - Paycor: https://recruitingbypaycor.com/career/CareerHomeSearch.action?isMobileDevice=null&sortField=jobTitle&descend=&sortFieldSecond=&descendSecond=&clickField=undefined&_csrf=&clientId=8a7883c6876de6fb0187960d756911a8&showAllJobs=true&internal=false&key=&fromAggregate=false&departmentId=&stateName="
+    "Notes": "Using third party for job listings, - Paycor: https://recruitingbypaycor.com/career/CareerHomeSearch.action?isMobileDevice=null&sortField=jobTitle&descend=&sortFieldSecond=&descendSecond=&clickField=undefined&_csrf=&clientId=8a7883c6876de6fb0187960d756911a8&showAllJobs=true&internal=false&key=&fromAggregate=false&departmentId=&stateName="
   },
   {
     "Town": "Bethany",
@@ -85,7 +85,7 @@
     "Employment Page URL": "https://www.governmentjobs.com/careers/bloomfieldct",
     "Application Form URL": null,
     "ATS or Platform (if known)": null,
-    "Notes": "Using Neogov for job listings"
+    "Notes": "Neogov"
   },
   {
     "Town": "Bolton",
@@ -133,7 +133,7 @@
     "Employment Page URL": "https://www.applitrack.com/bristolct/onlineapp/default.asp",
     "Application Form URL": null,
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "aplitrack system"
+    "Notes": "Applitrack"
   },
   {
     "Town": "Brookfield",
@@ -229,7 +229,7 @@
     "Employment Page URL": null,
     "Application Form URL": null,
     "ATS or Platform (if known)": "Wordpress",
-    "Notes": "no apparent info"
+    "Notes": null
   },
   {
     "Town": "Columbia",
@@ -245,7 +245,7 @@
     "Employment Page URL": "https://cornwallct.org/employment-and-board-vacancies/",
     "Application Form URL": "https://cornwallct.org/wp-content/uploads/2025/04/Town-of-Cornwall-Job-Application.pdf",
     "ATS or Platform (if known)": null,
-    "Notes": "website seems to be self made/administered"
+    "Notes": null
   },
   {
     "Town": "Coventry",
@@ -269,7 +269,7 @@
     "Employment Page URL": "https://www.governmentjobs.com/careers/danburyct",
     "Application Form URL": null,
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "Neogov employment portal"
+    "Notes": "Neogov"
   },
   {
     "Town": "Darien",
@@ -381,7 +381,7 @@
     "Employment Page URL": "https://www.ellington-ct.gov/departments-and-services/human-resources/job-opportunities",
     "Application Form URL": "https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=70dba418-861c-42ec-bf66-a276b06c75cc&ccId=19000101_000003&lang=en_US&$top=6&jwId=SYS:JW:001&joinTC=joinTC&jwId=SYS:JW:001",
     "ATS or Platform (if known)": "finalsite",
-    "Notes": "Using ADP for aplication pool"
+    "Notes": "ADP workforcenow"
   },
   {
     "Town": "Enfield",
@@ -389,7 +389,7 @@
     "Employment Page URL": "https://enfield.munisselfservice.com/employmentopportunities/default.aspx",
     "Application Form URL": null,
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "Tyler Technologies Inc. automated job process"
+    "Notes": "Tyler Technologies Inc. ATS"
   },
   {
     "Town": "Essex",
@@ -413,7 +413,7 @@
     "Employment Page URL": "https://www.farmington-ct.org/about-farmington/employment",
     "Application Form URL": null,
     "ATS or Platform (if known)": "Granicus",
-    "Notes": "Broken munisweb listings"
+    "Notes": null
   },
   {
     "Town": "Franklin",
@@ -453,7 +453,7 @@
     "Employment Page URL": "https://www.governmentjobs.com/careers/greenwichct",
     "Application Form URL": null,
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "NeoGove"
+    "Notes": "NeoGov"
   },
   {
     "Town": "Griswold",
@@ -501,7 +501,7 @@
     "Employment Page URL": "https://www.hamptonct.org/help_wanted.htm",
     "Application Form URL": null,
     "ATS or Platform (if known)": "Quasar Internet Solutions",
-    "Notes": "state has wrong website"
+    "Notes": null
   },
   {
     "Town": "Hartford",
@@ -517,7 +517,7 @@
     "Employment Page URL": null,
     "Application Form URL": null,
     "ATS or Platform (if known)": "AWR Web Design",
-    "Notes": "no furthur data available"
+    "Notes": null
   },
   {
     "Town": "Harwinton",
@@ -533,7 +533,7 @@
     "Employment Page URL": "https://hebronct.com/contact-us/employment/",
     "Application Form URL": "https://hebronct.com/uploads/2019/02/Hebron-Employment-Application-APPROVED-VERSION-WEB-and-DEPARTMENTS.pdf",
     "ATS or Platform (if known)": null,
-    "Notes": "No website designer listed"
+    "Notes": null
   },
   {
     "Town": "Kent",
@@ -565,7 +565,7 @@
     "Employment Page URL": "https://www.lebanonct.gov/home/pages/employment-opportunities",
     "Application Form URL": "https://www.lebanonct.gov/sites/g/files/vyhlif4596/f/pages/employment_application_2023.pdf",
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "state has wrong link"
+    "Notes": null
   },
   {
     "Town": "Ledyard",
@@ -573,7 +573,7 @@
     "Employment Page URL": "https://www.ledyardct.org/87/Job-Opportunities",
     "Application Form URL": "https://www.ledyardct.org/DocumentCenter/View/217/Application-for-Employment",
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "state has wrong link"
+    "Notes": null
   },
   {
     "Town": "Lisbon",
@@ -597,7 +597,7 @@
     "Employment Page URL": "https://townlyme.org/help-wanted/",
     "Application Form URL": null,
     "ATS or Platform (if known)": null,
-    "Notes": "no named webdeveloper/builder"
+    "Notes": null
   },
   {
     "Town": "Madison",
@@ -613,7 +613,7 @@
     "Employment Page URL": "https://www.manchesterct.gov/Government/Departments/Human-Resources/Employment-Opportunities-with-the-Town-of-Manchester",
     "Application Form URL": "https://jobs.keldair.com/manchesterct",
     "ATS or Platform (if known)": "Granicus",
-    "Notes": "Keldair apllication system"
+    "Notes": "Keldair application system"
   },
   {
     "Town": "Mansfield",
@@ -621,7 +621,7 @@
     "Employment Page URL": "https://www.applitrack.com/mansfieldct/onlineapp/jobpostings/view.asp?internaltransferform.Url=",
     "Application Form URL": null,
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "Aplitrack system"
+    "Notes": "Applitrack"
   },
   {
     "Town": "Marlborough",
@@ -701,7 +701,7 @@
     "Employment Page URL": "http://www.naugatuck-ct.gov/human-resources/employment",
     "Application Form URL": "http://www.naugatuck-ct.gov/filestorage/166/203/1586/ApplicationforEmployment.pdf",
     "ATS or Platform (if known)": "Catalis",
-    "Notes": "website not secure"
+    "Notes": null
   },
   {
     "Town": "Newington",
@@ -733,7 +733,7 @@
     "Employment Page URL": "https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=cc5de7eb-4d8c-4b09-aafa-ddaefc2b33b3",
     "Application Form URL": null,
     "ATS or Platform (if known)": "Revize",
-    "Notes": "using ADP workforce now"
+    "Notes": "ADP workforcenow"
   },
   {
     "Town": "New Fairfield",
@@ -741,7 +741,7 @@
     "Employment Page URL": "https://www.applitrack.com/newfairfield/onlineapp/default.aspx",
     "Application Form URL": null,
     "ATS or Platform (if known)": "Granicus",
-    "Notes": "Applitrak system"
+    "Notes": "Applitrack"
   },
   {
     "Town": "New Hartford",
@@ -749,7 +749,7 @@
     "Employment Page URL": null,
     "Application Form URL": null,
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "Incredibly there seems to be no data, no HR page, no form and no employment page"
+    "Notes": null
   },
   {
     "Town": "New Haven",
@@ -757,7 +757,7 @@
     "Employment Page URL": "https://www.jobapscloud.com/oec/NewHaven/",
     "Application Form URL": null,
     "ATS or Platform (if known)": "Granicus",
-    "Notes": "using jobappscloud for their ATS"
+    "Notes": "jobapscloud ATS"
   },
   {
     "Town": "New London",
@@ -781,7 +781,7 @@
     "Employment Page URL": null,
     "Application Form URL": "https://norfolkct.org/wp-content/uploads/2023/12/Application-for-Employment.pdf",
     "ATS or Platform (if known)": null,
-    "Notes": "Looks like a specialy built Wordpress site"
+    "Notes": null
   },
   {
     "Town": "North Branford",
@@ -797,7 +797,7 @@
     "Employment Page URL": null,
     "Application Form URL": "https://municipal-documents.s3.amazonaws.com/uploads/north-canaan-ct/board-of-selectmen/articles/announcements/4393/rich_text_field_file/17206348541/Town%20of%20North%20Canaan%20Employment%20Application.pdf",
     "ATS or Platform (if known)": "CivicLift",
-    "Notes": "No employment page, they use notice post"
+    "Notes": null
   },
   {
     "Town": "North Haven",
@@ -877,7 +877,7 @@
     "Employment Page URL": "https://www.plainvillect.com/human-resources/pages/job-opportunities",
     "Application Form URL": "https://www.applitrack.com/plainville/onlineapp/default.aspx",
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "Applitrak system"
+    "Notes": "Applitrack"
   },
   {
     "Town": "Plymouth",
@@ -933,7 +933,7 @@
     "Employment Page URL": "https://reddingct.gov/about-redding/jobs/",
     "Application Form URL": "https://reddingct.gov/wp-content/uploads/2025/04/employment_application_fillable_4_2025363627.pdf",
     "ATS or Platform (if known)": null,
-    "Notes": "Wordpress site"
+    "Notes": null
   },
   {
     "Town": "Ridgefield",
@@ -981,7 +981,7 @@
     "Employment Page URL": null,
     "Application Form URL": null,
     "ATS or Platform (if known)": "CivicLift",
-    "Notes": "Uses article postings for job listings"
+    "Notes": null
   },
   {
     "Town": "Seymour",
@@ -1037,7 +1037,7 @@
     "Employment Page URL": "https://www.southwindsor-ct.gov/jobs",
     "Application Form URL": null,
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "Paychex aplication system"
+    "Notes": "Paychex application system"
   },
   {
     "Town": "Southbury",
@@ -1077,16 +1077,8 @@
     "Employment Page URL": "https://www.governmentjobs.com/careers/stamfordct",
     "Application Form URL": null,
     "ATS or Platform (if known)": "Granicus",
-    "Notes": "Broken governmentjobs.com link",
-    "platform_detected": "granicus",
-    "employment_page_type": "ats_vendor",
-    "employment_url_final": "https://www.governmentjobs.com/careers/stamfordct",
-    "employment_url_last_checked_at": "2026-01-29T21:59:40.093842+00:00",
-    "employment_url_change_reason": "rediscovered_from_ats_fallback",
-    "employment_url_confidence": 85,
-    "employment_url_discovery_method": "ats_fallback",
-    "employment_url_discovery_score": 105,
-    "employment_url_validation_reason": "ok"
+    "Notes": null
+
   },
   {
     "Town": "Sterling",
@@ -1102,7 +1094,7 @@
     "Employment Page URL": "https://www.stonington-ct.gov/administrative-services/pages/employment-opportunities",
     "Application Form URL": null,
     "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "has individual prefilled job tilte applications"
+    "Notes": null
   },
   {
     "Town": "Stratford",
@@ -1118,7 +1110,7 @@
     "Employment Page URL": "https://www.suffieldct.gov/departments/hr",
     "Application Form URL": "https://resources.finalsite.net/images/v1591199569/suffieldctgov/uastjpqguqv8mv8y9mm9/EmploymentApplication.pdf",
     "ATS or Platform (if known)": "Finalsite",
-    "Notes": "Jobs are listing in small column on right side fo screen"
+    "Notes": null
   },
   {
     "Town": "Thomaston",
@@ -1166,7 +1158,7 @@
     "Employment Page URL": null,
     "Application Form URL": null,
     "ATS or Platform (if known)": null,
-    "Notes": "A Your Page Today LLC Production, Uses Events to list jobs"
+    "Notes": "A Your Page Today LLC Production"
   },
   {
     "Town": "Vernon",
@@ -1174,7 +1166,7 @@
     "Employment Page URL": "https://www.applitrack.com/vernonct/onlineapp/default.aspx",
     "Application Form URL": null,
     "ATS or Platform (if known)": "Apptegy",
-    "Notes": "Applitrak ATS"
+    "Notes": "Applitrack"
   },
   {
     "Town": "Voluntown",
@@ -1238,7 +1230,7 @@
     "Employment Page URL": "https://www.westhartfordct.gov/town-departments/human-resources/job-openings",
     "Application Form URL": "https://www.applitrack.com/westhartford/onlineapp/default.aspx?all=1",
     "ATS or Platform (if known)": "Finalsite",
-    "Notes": "Applitrak"
+    "Notes": "Applitrack"
   },
   {
     "Town": "West Haven",
