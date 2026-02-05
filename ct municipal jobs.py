@@ -377,6 +377,37 @@ if not df.empty:
     </div>
     """, unsafe_allow_html=True)
     
+    # Streamlit “For Agencies” Section (drop-in)
+    st.markdown("---")
+    st.markdown("### 🏛️ For Agencies, Researchers, and Vendors")
+
+    st.markdown(
+    """
+    This directory is provided as a free public resource for job seekers.
+
+    For professional, research, or commercial use, a **licensed dataset snapshot**
+    of the Connecticut Municipal Employment Directory is available.
+    
+    The dataset includes a structured JSON export, documentation, and notes on known limitations.
+    """
+)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.link_button(
+        "📦 Purchase Dataset",
+        "https://ko-fi.com/YOUR_SHOP_LINK"
+    )
+
+    with col2:
+        st.link_button(
+        "✉️ Questions or Invoice Request",
+        "mailto:YOUREMAIL@example.com"
+    )
+
+
+
     # Footer
     st.markdown("---")
     st.markdown("""
