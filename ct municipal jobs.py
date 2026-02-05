@@ -388,22 +388,18 @@ if not df.empty:
     For professional, research, or commercial use, a **licensed dataset snapshot**
     of the Connecticut Municipal Employment Directory is available.
     
-    The dataset includes a structured JSON export, documentation, and notes on known limitations.
+    Purchases are handled securely through Ko-fi and include immediate access to
+    the dataset, documentation, and license.
     """
 )
 
-    col1, col2 = st.columns(2)
+    st.link_button(
+    "📦 Purchase Licensed Dataset",
+    "https://ko-fi.com/s/814c806c0b"
+)
 
-    with col1:
-        st.link_button(
-        "📦 Purchase Dataset",
-        "https://ko-fi.com/YOUR_SHOP_LINK"
-    )
-
-    with col2:
-        st.link_button(
-        "✉️ Questions or Invoice Request",
-        "mailto:YOUREMAIL@example.com"
+    st.caption(
+    "Ko-fi provides receipts and handles applicable taxes for digital purchases."
     )
 
 
@@ -420,7 +416,7 @@ if not df.empty:
             Found a broken link or outdated information?
         </p>
         <p style="margin: 0;">
-            Submit with this form: <a href='https://tally.so/r/eqR5Dq' style='color: #007bff;'>Tally Form</a>
+            Submit with this form: <a href='https://tally.so/r/eqR5Dq' style='color: #007bff;'>Form</a>
         </p>
         <p style='font-size: 0.85rem; color: #999; margin-top: 1.5rem;'>
             Applicants should always confirm details directly on official municipal websites before applying
