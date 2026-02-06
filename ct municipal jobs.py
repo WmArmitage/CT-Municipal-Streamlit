@@ -367,9 +367,6 @@ if not df.empty:
             <a href="https://ko-fi.com/wmarmitage" target="_blank" class="donate-button kofi-button">
                 ☕ Support on Ko-fi
             </a>
-            <a href="https://www.paypal.me/WmArmitage" target="_blank" class="donate-button paypal-button">
-                💳 Donate via PayPal
-            </a>
         </div>
         <p style="font-size: 0.9rem; color: #444; margin-top: 1.5rem;">
             Donations support the time and effort required to maintain and improve this directory.
