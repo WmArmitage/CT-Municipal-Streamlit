@@ -67,9 +67,7 @@ st.markdown("""
         background: #29abe0;
         color: white;
     }
-    .paypal-button {
-        background: #0070ba;
-        color: white;
+
     }
     .search-info {
         background: #e3f2fd;
@@ -180,14 +178,7 @@ if not df.empty:
             </a>
             """, unsafe_allow_html=True)
         
-        with col2:
-            st.markdown("""
-            <a href="https://www.paypal.me/WmArmitage" target="_blank" style="text-decoration: none;">
-                <div style="background: #0070ba; color: white; padding: 10px; border-radius: 6px; text-align: center; font-weight: 600; margin-bottom: 10px;">
-                    💳 PayPal
-                </div>
-            </a>
-            """, unsafe_allow_html=True)
+        
 
     # Main content area
     # Apply filters
@@ -345,8 +336,7 @@ if not df.empty:
         background-color: #29abe0;
     }
 
-    .paypal-button {
-        background-color: #0070ba;
+ 
     }
     </style>
     """, unsafe_allow_html=True)
