@@ -383,13 +383,13 @@ if not df.empty:
         <p><strong>Connecticut Municipal Employment Directory</strong></p>
         <p style="margin: 0.5rem 0;">
             Coverage includes all 169 Connecticut municipalities
-        </p>
+        #</p>
         #<p style="margin: 1rem 0 0.5rem;">
-            Found a broken link or outdated information?
-        </p>
+            #Found a broken link or outdated information?
+        #</p>
         #<p style="margin: 0;">
-            Submit with this form: <a href='https://tally.so/r/eqR5Dq' style='color: #007bff;'>Form</a>
-        </p>
+            #Submit with this form: <a href='https://tally.so/r/eqR5Dq' style='color: #007bff;'>Form</a>
+        #</p>
         <p style='font-size: 0.85rem; color: #999; margin-top: 1.5rem;'>
             Applicants should always confirm details directly on official municipal websites before applying
         </p>
