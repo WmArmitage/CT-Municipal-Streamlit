@@ -333,7 +333,7 @@ if not df.empty:
     st.markdown("---")
     st.markdown("""
     <div class="donate-section">
-        <h2 style="color: #1f4788; margin-bottom: 1rem;">🙏 Support This Free Resource</h2>
+        <h2 style="color: #1f4788; margin-bottom: 1rem;"> Support This Free Resource</h2>
         <p style="font-size: 1.1rem; color: #444; max-width: 700px; margin: 0 auto 1.5rem;">
             This directory is independently built and maintained. 
                 If you found it useful, you’re welcome to support its continued development with a donation.
