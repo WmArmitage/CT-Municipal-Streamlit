@@ -378,6 +378,9 @@ if not df.empty:
 
     # Footer
     st.markdown("---")
+
+    st.caption("Employment page links may change periodically as municipalities update their websites.")
+    
     st.markdown("""
     <div style='text-align: center; color: #666; padding: 2rem 0;'>
     <p><strong>Connecticut Municipal Employment Directory</strong></p>
