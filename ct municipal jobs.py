@@ -161,22 +161,7 @@ if not df.empty:
         
         st.markdown("---")
         
-        # Support section
-        st.header("💝 Support This Project")
-        st.markdown("""
-        This directory is **free to use**. If you find it helpful, consider supporting its maintenance and development!
-        """)
-        
-        # Donation buttons
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("""
-            <a href="https://ko-fi.com/wmarmitage" target="_blank" style="text-decoration: none;">
-                <div style="background: #29abe0; color: white; padding: 10px; border-radius: 6px; text-align: center; font-weight: 600; margin-bottom: 10px;">
-                    ☕ Ko-fi
-                </div>
-            </a>
-            """, unsafe_allow_html=True)
+
         
         
 
