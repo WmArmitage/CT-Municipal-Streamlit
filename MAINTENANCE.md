@@ -193,3 +193,46 @@ safe merge
 updated dataset
    ↓
 Streamlit app display
+---
+
+## Maintenance Runner (Semi-Automated)
+
+Use `run_link_maintenance.py` to run validation, targeted rediscovery, and a safe test merge without overwriting the canonical dataset.
+
+### Full run (recommended)
+
+```bash
+python run_link_maintenance.py
+```
+
+This will:
+- run `check_urls.py` against `CT_Municipal_Employment_Pages.json`
+- read `reports/link_health_report.csv`
+- target only `broken` / `suspicious` towns for rediscovery
+- run test merge to `reports/CT_Municipal_Employment_Pages.merged.test.json`
+- write/update:
+  - `reports/link_health_report.csv`
+  - `reports/merge_report.csv`
+  - `reports/merge_audit.json`
+
+### Validate only
+
+```bash
+python run_link_maintenance.py --validate-only
+```
+
+### Dry run (no child scripts executed)
+
+```bash
+python run_link_maintenance.py --dry-run
+```
+
+### Explicit rediscovery flag
+
+```bash
+python run_link_maintenance.py --include-rediscovery
+```
+
+Manual-by-design:
+- Canonical writes remain manual. The runner does not overwrite `CT_Municipal_Employment_Pages.json`.
+- To apply reviewed changes, run `merge_rediscovered_into_canonical.py` yourself with `--out CT_Municipal_Employment_Pages.json` after review.
