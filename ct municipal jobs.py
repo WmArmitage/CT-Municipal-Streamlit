@@ -1,20 +1,27 @@
-﻿import streamlit as st
+import streamlit as st
 import pandas as pd
 import json
 import os
+import csv
+import urllib.request
 
 # Page configuration
 st.set_page_config(
     page_title="Connecticut Municipal Employment Directory",
-    page_icon="ðŸ›ï¸",
+    page_icon="CT",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
+def _env_url(name):
+    value = (os.getenv(name) or "").strip()
+    return value if value else None
+
+
 DATASET_CTA_LINKS = {
-    "request_full_dataset": os.getenv("CT_DATASET_REQUEST_URL", "https://example.com/request-full-dataset"),
-    "get_verified_export": os.getenv("CT_VERIFIED_EXPORT_URL", "https://example.com/get-verified-export"),
-    "custom_filtered_list": os.getenv("CT_CUSTOM_LIST_CONTACT_URL", "https://example.com/contact-custom-list"),
+    "request_full_dataset": _env_url("CT_DATASET_REQUEST_URL"),
+    "get_verified_export": _env_url("CT_VERIFIED_EXPORT_URL"),
+    "custom_filtered_list": _env_url("CT_CUSTOM_LIST_CONTACT_URL"),
 }
 
 # Custom CSS
@@ -93,7 +100,6 @@ def load_employment_data():
     url = "https://raw.githubusercontent.com/WmArmitage/CT-Municipal-Streamlit/refs/heads/main/CT_Municipal_Employment_Pages.json"
     
     try:
-        import urllib.request
         with urllib.request.urlopen(url) as response:
             data = json.loads(response.read().decode())
         df = pd.DataFrame(data)
@@ -101,6 +107,55 @@ def load_employment_data():
     except Exception as e:
         st.error(f"Unable to load employment data from GitHub: {str(e)}")
         return pd.DataFrame()
+
+
+@st.cache_data
+def load_link_health_lookup():
+    """Load link-health metadata from GitHub report CSV when available."""
+    sources = [
+        "https://raw.githubusercontent.com/WmArmitage/CT-Municipal-Streamlit/refs/heads/main/reports/link_health_report.csv",
+        "reports/link_health_report.csv",
+    ]
+    lookup = {}
+    for source in sources:
+        try:
+            if source.startswith("http"):
+                with urllib.request.urlopen(source) as response:
+                    content = response.read().decode("utf-8")
+            else:
+                with open(source, "r", encoding="utf-8", newline="") as handle:
+                    content = handle.read()
+
+            reader = csv.DictReader(content.splitlines())
+            for row in reader:
+                town = str(row.get("Town") or "").strip().lower()
+                field_name = str(row.get("field_name") or "").strip().lower()
+                if not field_name:
+                    field_alias = str(row.get("Field") or "").strip().lower()
+                    if "employment" in field_alias:
+                        field_name = "employment_page"
+                    elif "application" in field_alias:
+                        field_name = "application_form"
+                if not town or not field_name:
+                    continue
+
+                original_url = str(row.get("original_url") or row.get("Original URL") or "").strip()
+                metadata = {
+                    "validation_status": str(row.get("validation_status") or "").strip().lower(),
+                    "status_code": row.get("status_code") or row.get("Status"),
+                    "final_url": (row.get("final_url") or row.get("Final URL") or "").strip() or None,
+                    "soft404": row.get("soft404") if "soft404" in row else row.get("Soft404"),
+                    "checked_at": (row.get("checked_at") or row.get("checked_at_utc") or "").strip() or None,
+                }
+                lookup[(town, field_name)] = metadata
+                if original_url:
+                    lookup[("url", original_url.rstrip("/").lower())] = metadata
+
+            if lookup:
+                return lookup
+        except Exception:
+            continue
+    return lookup
 
 
 def _first_non_empty(row, keys):
@@ -138,14 +193,29 @@ def _normalize_url(url):
 
 
 def get_link_meta(row, url_field, prefix):
+    town = str(_first_non_empty(row, ["Town", "town"]) or "").strip().lower()
+    field_name = "employment_page" if prefix == "employment" else "application_form"
+    lookup = LINK_HEALTH_LOOKUP.get((town, field_name), {}) if town else {}
+
     original_url = _first_non_empty(row, [url_field])
-    final_url = _first_non_empty(row, [f"{prefix}_url_final", f"{prefix}_final_url"])
+    if (
+        not lookup
+        and isinstance(original_url, str)
+        and original_url.strip()
+    ):
+        lookup = LINK_HEALTH_LOOKUP.get(("url", _normalize_url(original_url)), {})
+    final_url = _first_non_empty(row, [f"{prefix}_url_final", f"{prefix}_final_url"]) or lookup.get("final_url")
     status_code = _to_int(_first_non_empty(row, [f"{prefix}_url_status_code", f"{prefix}_status_code"]))
-    soft404 = _to_bool(_first_non_empty(row, [f"{prefix}_url_soft404", f"{prefix}_soft404"]))
-    checked_at = _first_non_empty(row, [f"{prefix}_url_last_checked_at", f"{prefix}_last_checked_at", "checked_at"])
+    if status_code is None:
+        status_code = _to_int(lookup.get("status_code"))
+    soft404_value = _first_non_empty(row, [f"{prefix}_url_soft404", f"{prefix}_soft404"])
+    soft404 = _to_bool(soft404_value) if soft404_value is not None else _to_bool(lookup.get("soft404"))
+    checked_at = _first_non_empty(row, [f"{prefix}_url_last_checked_at", f"{prefix}_last_checked_at", "checked_at"]) or lookup.get("checked_at")
     validation_status = str(
         _first_non_empty(row, [f"{prefix}_validation_status", f"{prefix}_url_validation_status", "validation_status"]) or ""
     ).strip().lower()
+    if not validation_status:
+        validation_status = str(lookup.get("validation_status") or "").strip().lower()
 
     if not isinstance(original_url, str) or not original_url.strip():
         status = "unavailable"
@@ -236,16 +306,16 @@ def recently_checked_count(frame):
     return int(checked.sum())
 
 # Main header
-st.markdown('<div class="main-header">ðŸ›ï¸ Connecticut Municipal Employment Directory</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">Connecticut Municipal Employment Directory</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="sub-header">
     Quick access to employment opportunities across all 169 Connecticut municipalities
 </div>
 <div class="sub-note">
-    â€œNot Availableâ€ does not necessarily indicate missing or broken information.
+    "Not Available" does not necessarily indicate missing or broken information.
     Connecticut municipalities use a wide variety of website structures and hiring systems,
     including third-party applicant tracking platforms where the employment page itself serves as the application.
-    In these cases, a separate application form does not exist and will always appear as â€œNot Available.â€
+    In these cases, a separate application form does not exist and will always appear as "Not Available."
     <br><br>
     In other instances, data may be unavailable due to non-standard page layouts, dynamically generated content,
     or frequent structural changes on municipal websites.
@@ -255,6 +325,7 @@ st.markdown("""
 
 # Load data
 df = load_employment_data()
+LINK_HEALTH_LOOKUP = load_link_health_lookup()
 
 if not df.empty:
     # Dataset-wide product signals for positioning
@@ -298,11 +369,20 @@ if not df.empty:
     st.markdown("#### Dataset Access")
     cta_cols = st.columns(3)
     with cta_cols[0]:
-        st.link_button("Request Full Dataset", DATASET_CTA_LINKS["request_full_dataset"])
+        if DATASET_CTA_LINKS["request_full_dataset"]:
+            st.link_button("Request Full Dataset", DATASET_CTA_LINKS["request_full_dataset"])
+        else:
+            st.caption("Request link not configured.")
     with cta_cols[1]:
-        st.link_button("Get Verified Export", DATASET_CTA_LINKS["get_verified_export"])
+        if DATASET_CTA_LINKS["get_verified_export"]:
+            st.link_button("Get Verified Export", DATASET_CTA_LINKS["get_verified_export"])
+        else:
+            st.caption("Verified export link not configured.")
     with cta_cols[2]:
-        st.link_button("Contact for Custom List", DATASET_CTA_LINKS["custom_filtered_list"])
+        if DATASET_CTA_LINKS["custom_filtered_list"]:
+            st.link_button("Contact for Custom List", DATASET_CTA_LINKS["custom_filtered_list"])
+        else:
+            st.caption("Custom list contact link not configured.")
     st.caption(
         "Configure dataset-access links via environment variables: "
         "CT_DATASET_REQUEST_URL, CT_VERIFIED_EXPORT_URL, CT_CUSTOM_LIST_CONTACT_URL."
@@ -310,7 +390,7 @@ if not df.empty:
 
     # Sidebar - Filters
     with st.sidebar:
-        st.header("ðŸ” Search & Filter")
+        st.header("Search & Filter")
         
         # Search box
         search_term = st.text_input(
@@ -371,7 +451,7 @@ if not df.empty:
         st.markdown("---")
         
         # About section
-        st.header("â„¹ï¸ About")
+        st.header("About")
         st.markdown("""
         This directory provides quick access to employment resources for all Connecticut municipalities.
         
@@ -512,12 +592,12 @@ if not df.empty:
         
         st.markdown(f"""
         <div class="search-info">
-            <strong>ðŸ” Active Filters:</strong> {', '.join(filters_applied)}
+            <strong>Active Filters:</strong> {', '.join(filters_applied)}
         </div>
         """, unsafe_allow_html=True)
     
     # Display results
-    st.subheader(f"ðŸ“‹ {len(filtered_df)} Result{'s' if len(filtered_df) != 1 else ''}")
+    st.subheader(f"{len(filtered_df)} Result{'s' if len(filtered_df) != 1 else ''}")
     
     if len(filtered_df) == 0:
         st.warning("No municipalities match your current filters. Try adjusting your search criteria.")
@@ -599,7 +679,7 @@ if not df.empty:
         )
         
         # Handle platform display
-        display_df['Platform/System'] = display_df['ATS or Platform (if known)'].fillna('â€”')
+        display_df['Platform/System'] = display_df['ATS or Platform (if known)'].fillna('-')
         
         # Select columns for display
         final_display = display_df[
@@ -671,11 +751,11 @@ if not df.empty:
         <h2 style="color: #1f4788; margin-bottom: 1rem;"> Support This Free Resource</h2>
         <p style="font-size: 1.1rem; color: #444; max-width: 700px; margin: 0 auto 1.5rem;">
             This directory is independently built and maintained. 
-                If you found it useful, youâ€™re welcome to support its continued development with a donation.
+                If you found it useful, you are welcome to support its continued development with a donation.
         </p>
         <div>
             <a href="https://ko-fi.com/wmarmitage" target="_blank" class="donate-button kofi-button">
-                â˜• Support on Ko-fi
+                Support on Ko-fi
             </a>
         </div>
         <p style="font-size: 0.9rem; color: #444; margin-top: 1.5rem;">
@@ -684,9 +764,9 @@ if not df.empty:
     </div>
     """, unsafe_allow_html=True)
     
-    # Streamlit â€œFor Agenciesâ€ Section (drop-in)
+    # Streamlit "For Agencies" section
     st.markdown("---")
-    st.markdown("### ðŸ›ï¸ For Agencies, Researchers, and Vendors")
+    st.markdown("### For Agencies, Researchers, and Vendors")
 
     st.markdown(
     """
@@ -701,7 +781,7 @@ if not df.empty:
 )
 
     st.link_button(
-    "ðŸ“¦ Purchase Licensed Dataset",
+    "Purchase Licensed Dataset",
     "https://ko-fi.com/s/814c806c0b"
 )
 
