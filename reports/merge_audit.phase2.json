@@ -1,23 +1,22 @@
 {
-  "generated_at": "2026-04-16T13:45:20",
-  "applied": {
-    "Chester::Employment Page URL": {
-      "before": "https://www.chesterct.org/1196/Employment-Opportunities",
-      "after": "https://www.chesterct.org/about-chester/pages/employment",
-      "reason": "link_health_broken;same_original_host;same_town_host"
-    },
-    "Chester::Application Form URL": {
-      "before": "https://www.chesterct.org/DocumentCenter/View/416/Town-of-Chester-Employment-Application",
-      "after": "https://www.chesterct.org/sites/g/files/vyhlif8561/f/pages/employment_application_-_town_of_chester_revised_4_2_2024.pdf",
-      "reason": "link_health_broken;same_original_host;same_town_host"
-    }
-  },
+  "generated_at": "2026-04-16T13:56:30",
+  "applied": {},
   "manual_review_needed": {},
   "skipped": {
     "Berlin::Employment Page URL": {
       "before": "https://www.berlinct.gov/category/index.php?categoryid=51",
       "after": "https://www.berlinct.gov/egov/apps/services/index.egov?view=detail;id=61",
-      "reason": "original_not_marked_broken:link_health_working"
+      "reason": "candidate_not_clearly_better_than_canonical"
+    },
+    "Chester::Employment Page URL": {
+      "before": "https://www.chesterct.org/1196/Employment-Opportunities",
+      "after": "https://www.chesterct.org/about-chester/pages/employment",
+      "reason": "candidate_weaker_than_canonical"
+    },
+    "Chester::Application Form URL": {
+      "before": "https://www.chesterct.org/DocumentCenter/View/416/Town-of-Chester-Employment-Application",
+      "after": "https://www.chesterct.org/sites/g/files/vyhlif8561/f/pages/employment_application_-_town_of_chester_revised_4_2_2024.pdf",
+      "reason": "candidate_weaker_than_canonical"
     }
   }
 }

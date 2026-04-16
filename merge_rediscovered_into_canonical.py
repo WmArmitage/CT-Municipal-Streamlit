@@ -24,7 +24,11 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple, Union
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
+from urllib.request import Request, urlopen
+
+from utils.url_utils import detect_soft404, is_html_content_type
 
 JsonObj = Dict[str, Any]
 Json = Union[JsonObj, List[Any]]
@@ -57,6 +61,10 @@ FIELD_RULES: Dict[str, Dict[str, str]] = {
         "validation_reason_key": "",
     },
 }
+
+LIVE_TIMEOUT_SECS = 20
+MAX_BYTES_TO_SCAN = 250_000
+USER_AGENT = "CT-MuniJobs-MergeValidator/1.0 (+github.com/WmArmitage/municipal-employment-data)"
 
 
 def load_json(path: str) -> Json:
@@ -101,6 +109,112 @@ def parse_int(value: Any) -> Optional[int]:
         return int(float(str(value).strip()))
     except Exception:
         return None
+
+
+@dataclass
+class LiveURLCheck:
+    url: str
+    final_url: Optional[str]
+    status_code: Optional[int]
+    redirected: bool
+    soft404: bool
+    validation_status: str
+    error: Optional[str]
+
+
+def normalize_url_for_compare(url: Optional[str]) -> str:
+    if not isinstance(url, str):
+        return ""
+    return url.strip().rstrip("/")
+
+
+def validate_url_live(url: str, cache: Dict[str, LiveURLCheck]) -> LiveURLCheck:
+    normalized = normalize_url_for_compare(url)
+    if normalized in cache:
+        return cache[normalized]
+
+    result = LiveURLCheck(
+        url=url,
+        final_url=None,
+        status_code=None,
+        redirected=False,
+        soft404=False,
+        validation_status="broken",
+        error=None,
+    )
+    try:
+        request = Request(
+            url,
+            headers={
+                "User-Agent": USER_AGENT,
+                "Accept": "*/*",
+            },
+            method="GET",
+        )
+        with urlopen(request, timeout=LIVE_TIMEOUT_SECS) as response:
+            final_url = response.geturl() or url
+            status_code = int(response.getcode() or 0)
+            content_type = response.headers.get("Content-Type", "")
+            body = b""
+            soft404 = False
+            if status_code == 200 and is_html_content_type(content_type):
+                body = response.read(MAX_BYTES_TO_SCAN)
+                text = body.decode("utf-8", errors="ignore")
+                soft404 = detect_soft404(text)
+
+            redirected = normalize_url_for_compare(url) != normalize_url_for_compare(final_url)
+            if status_code >= 400:
+                validation_status = "broken"
+            elif soft404:
+                validation_status = "suspicious"
+            elif redirected:
+                validation_status = "redirected"
+            else:
+                validation_status = "working"
+
+            result = LiveURLCheck(
+                url=url,
+                final_url=final_url,
+                status_code=status_code,
+                redirected=redirected,
+                soft404=soft404,
+                validation_status=validation_status,
+                error=None,
+            )
+    except HTTPError as exc:
+        final_url = exc.geturl() or url
+        result = LiveURLCheck(
+            url=url,
+            final_url=final_url,
+            status_code=exc.code,
+            redirected=normalize_url_for_compare(url) != normalize_url_for_compare(final_url),
+            soft404=False,
+            validation_status="broken",
+            error=str(exc),
+        )
+    except URLError as exc:
+        result = LiveURLCheck(
+            url=url,
+            final_url=None,
+            status_code=None,
+            redirected=False,
+            soft404=False,
+            validation_status="broken",
+            error=str(exc),
+        )
+    except Exception as exc:  # pragma: no cover
+        result = LiveURLCheck(
+            url=url,
+            final_url=None,
+            status_code=None,
+            redirected=False,
+            soft404=False,
+            validation_status="broken",
+            error=str(exc),
+        )
+
+    cache[normalized] = result
+    return result
 
 
 def host_norm(url: str) -> str:
@@ -328,17 +442,26 @@ def decide_field_action(
     field_label: str,
     rule: Dict[str, str],
     link_health: Dict[Tuple[str, str], Dict[str, Any]],
-) -> Tuple[str, str]:
+    live_cache: Dict[str, LiveURLCheck],
+) -> Tuple[str, str, Dict[str, Any]]:
     original = canonical_rec.get(field_label)
     candidate = rediscovered_rec.get(field_label)
     field_name = rule["report_field_name"]
+    evidence: Dict[str, Any] = {
+        "canonical_live_status": "",
+        "canonical_live_status_code": "",
+        "canonical_live_final_url": "",
+        "candidate_live_status": "",
+        "candidate_live_status_code": "",
+        "candidate_live_final_url": "",
+    }
 
     if original == candidate:
-        return "skipped", "candidate_equals_original"
+        return "skipped", "candidate_equals_original", evidence
     if candidate in (None, ""):
-        return "skipped", "candidate_missing"
+        return "skipped", "candidate_missing", evidence
     if not looks_like_url(candidate):
-        return "manual_review_needed", "candidate_not_url"
+        return "manual_review_needed", "candidate_not_url", evidence
 
     town_site = canonical_rec.get("Town Website")
     same_original_host = looks_like_url(original) and same_host(candidate, str(original))
@@ -347,10 +470,75 @@ def decide_field_action(
 
     # Missing/blank original can be filled with a valid candidate.
     if not looks_like_url(original):
-        if same_town_host or ats_candidate:
-            return "applied", "original_missing_or_non_url_with_safe_candidate"
-        return "manual_review_needed", "original_missing_candidate_offsite"
+        candidate_live = validate_url_live(str(candidate), live_cache)
+        evidence["candidate_live_status"] = candidate_live.validation_status
+        evidence["candidate_live_status_code"] = (
+            str(candidate_live.status_code) if candidate_live.status_code is not None else ""
+        )
+        evidence["candidate_live_final_url"] = candidate_live.final_url or ""
+        if candidate_live.validation_status in {"working", "redirected"} and (same_town_host or ats_candidate):
+            return "applied", "original_missing_with_validated_safe_candidate", evidence
+        return "manual_review_needed", "original_missing_candidate_not_safe_or_not_working", evidence
 
+    canonical_live = validate_url_live(str(original), live_cache)
+    candidate_live = validate_url_live(str(candidate), live_cache)
+    evidence["canonical_live_status"] = canonical_live.validation_status
+    evidence["canonical_live_status_code"] = (
+        str(canonical_live.status_code) if canonical_live.status_code is not None else ""
+    )
+    evidence["canonical_live_final_url"] = canonical_live.final_url or ""
+    evidence["candidate_live_status"] = candidate_live.validation_status
+    evidence["candidate_live_status_code"] = (
+        str(candidate_live.status_code) if candidate_live.status_code is not None else ""
+    )
+    evidence["candidate_live_final_url"] = candidate_live.final_url or ""
+
+    canonical_ok = canonical_live.validation_status in {"working", "redirected"}
+    candidate_ok = candidate_live.validation_status in {"working", "redirected"}
+
+    status_rank = {"working": 3, "redirected": 3, "suspicious": 2, "broken": 1}
+    canonical_rank = status_rank.get(canonical_live.validation_status, 1)
+    candidate_rank = status_rank.get(candidate_live.validation_status, 1)
+    if candidate_rank < canonical_rank:
+        return "skipped", "candidate_weaker_than_canonical", evidence
+
+    # Protect known/manual canonical links from weaker candidates.
+    if canonical_ok and not candidate_ok:
+        return "skipped", "candidate_weaker_than_canonical", evidence
+
+    # If canonical works, only replace with a clearly better candidate.
+    if canonical_ok and candidate_ok:
+        canonical_final = normalize_url_for_compare(canonical_live.final_url or str(original))
+        candidate_final = normalize_url_for_compare(candidate_live.final_url or str(candidate))
+
+        # Strict better rule: canonical redirects to the same destination as candidate,
+        # and candidate is the stable direct URL.
+        if (
+            canonical_live.validation_status == "redirected"
+            and canonical_final == candidate_final
+            and normalize_url_for_compare(str(candidate)) == candidate_final
+        ):
+            return "applied", "candidate_is_direct_stable_target_of_canonical_redirect", evidence
+        return "skipped", "candidate_not_clearly_better_than_canonical", evidence
+
+    # If canonical is not working, candidate must be working and reasonably safe.
+    if not canonical_ok and candidate_ok:
+        if same_original_host or same_town_host or ats_candidate:
+            return "applied", "candidate_stronger_than_broken_canonical", evidence
+
+        confidence = numeric_evidence(rediscovered_rec, rule.get("confidence_key", ""))
+        score = numeric_evidence(rediscovered_rec, rule.get("score_key", ""))
+        validation_reason_key = rule.get("validation_reason_key", "")
+        validation_reason = str(rediscovered_rec.get(validation_reason_key) or "").lower() if validation_reason_key else ""
+        if (
+            (confidence is not None and confidence >= 90)
+            or (score is not None and score >= 90)
+            or validation_reason == "ok"
+        ):
+            return "manual_review_needed", "candidate_working_but_offsite_requires_manual_review", evidence
+        return "manual_review_needed", "candidate_working_but_not_safe_enough", evidence
+
+    # If both fail live checks, keep prior conservative fallback evidence.
     broken, broken_reason = broken_or_suspicious_evidence(
         town_norm=town_norm,
         canonical_rec=canonical_rec,
@@ -359,31 +547,8 @@ def decide_field_action(
         link_health=link_health,
     )
     if not broken:
-        return "skipped", f"original_not_marked_broken:{broken_reason}"
-
-    confidence = numeric_evidence(rediscovered_rec, rule.get("confidence_key", ""))
-    score = numeric_evidence(rediscovered_rec, rule.get("score_key", ""))
-    validation_reason_key = rule.get("validation_reason_key", "")
-    validation_reason = str(rediscovered_rec.get(validation_reason_key) or "").lower() if validation_reason_key else ""
-    confidence_ok = bool(
-        (confidence is not None and confidence >= 80)
-        or (score is not None and score >= 80)
-        or validation_reason == "ok"
-    )
-
-    if same_original_host or same_town_host or ats_candidate or confidence_ok:
-        reason_bits = [broken_reason]
-        if same_original_host:
-            reason_bits.append("same_original_host")
-        if same_town_host:
-            reason_bits.append("same_town_host")
-        if ats_candidate:
-            reason_bits.append("ats_candidate")
-        if confidence_ok:
-            reason_bits.append("rediscovery_confident")
-        return "applied", ";".join(reason_bits)
-
-    return "manual_review_needed", f"{broken_reason};candidate_not_safe_enough"
+        return "skipped", f"candidate_weaker_than_canonical:{broken_reason}", evidence
+    return "manual_review_needed", f"both_urls_not_working:{broken_reason}", evidence
 
 
 def write_report_csv(path: str, rows: List[Dict[str, Any]]) -> None:
@@ -443,6 +608,7 @@ def main() -> int:
     merged_map: Dict[str, JsonObj] = copy.deepcopy(canon_norm.map)
     report_rows: List[Dict[str, Any]] = []
     audit: Dict[str, Any] = {"generated_at": now, "applied": {}, "manual_review_needed": {}, "skipped": {}}
+    live_cache: Dict[str, LiveURLCheck] = {}
 
     for town_norm, redisc_rec in redisc_norm.map.items():
         town_label = town_label_from_norm(town_norm, canon_norm)
@@ -475,13 +641,14 @@ def main() -> int:
             if original == candidate:
                 continue
 
-            action, reason = decide_field_action(
+            action, reason, evidence = decide_field_action(
                 town_norm=town_norm,
                 canonical_rec=canonical_rec,
                 rediscovered_rec=redisc_rec,
                 field_label=field_label,
                 rule=rule,
                 link_health=link_health,
+                live_cache=live_cache,
             )
 
             if action == "applied":
@@ -502,6 +669,12 @@ def main() -> int:
                     "reason": reason,
                     "timestamp": now,
                     "report_field_name": rule["report_field_name"],
+                    "canonical_live_status": evidence.get("canonical_live_status", ""),
+                    "canonical_live_status_code": evidence.get("canonical_live_status_code", ""),
+                    "canonical_live_final_url": evidence.get("canonical_live_final_url", ""),
+                    "candidate_live_status": evidence.get("candidate_live_status", ""),
+                    "candidate_live_status_code": evidence.get("candidate_live_status_code", ""),
+                    "candidate_live_final_url": evidence.get("candidate_live_final_url", ""),
                 }
             )
             audit[action][f"{town_label}::{field_label}"] = {
