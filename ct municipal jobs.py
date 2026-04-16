@@ -1,6 +1,7 @@
 ﻿import streamlit as st
 import pandas as pd
 import json
+import os
 
 # Page configuration
 st.set_page_config(
@@ -9,6 +10,12 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+DATASET_CTA_LINKS = {
+    "request_full_dataset": os.getenv("CT_DATASET_REQUEST_URL", "https://example.com/request-full-dataset"),
+    "get_verified_export": os.getenv("CT_VERIFIED_EXPORT_URL", "https://example.com/get-verified-export"),
+    "custom_filtered_list": os.getenv("CT_CUSTOM_LIST_CONTACT_URL", "https://example.com/contact-custom-list"),
+}
 
 # Custom CSS
 st.markdown("""
@@ -192,6 +199,42 @@ def format_checked_at(value):
         return str(value)
     return dt.strftime("%Y-%m-%d")
 
+
+def has_application_pdf(url):
+    if not isinstance(url, str) or not url.strip():
+        return False
+    lowered = url.strip().lower()
+    return lowered.split("?")[0].endswith(".pdf") or "pdf" in lowered
+
+
+def is_third_party_platform(value):
+    if not isinstance(value, str) or not value.strip():
+        return False
+    lowered = value.strip().lower()
+    non_vendor_tokens = {"none", "n/a", "na", "manual", "unknown", "-"}
+    return lowered not in non_vendor_tokens
+
+
+def manual_or_pdf_process(row):
+    app_url = row.get('Application Form URL')
+    platform = row.get('ATS or Platform (if known)')
+    if not isinstance(app_url, str) or not app_url.strip():
+        return False
+    return has_application_pdf(app_url) or not is_third_party_platform(platform)
+
+
+def recently_checked_count(frame):
+    if frame.empty:
+        return 0
+    checked = frame.apply(
+        lambda row: (
+            get_link_meta(row, 'Employment Page URL', 'employment')['checked_at'] not in (None, "")
+            or get_link_meta(row, 'Application Form URL', 'application')['checked_at'] not in (None, "")
+        ),
+        axis=1
+    )
+    return int(checked.sum())
+
 # Main header
 st.markdown('<div class="main-header">ðŸ›ï¸ Connecticut Municipal Employment Directory</div>', unsafe_allow_html=True)
 st.markdown("""
@@ -214,6 +257,57 @@ st.markdown("""
 df = load_employment_data()
 
 if not df.empty:
+    # Dataset-wide product signals for positioning
+    profile_df = df.copy()
+    profile_df['__employment_status'] = profile_df.apply(
+        lambda row: get_link_meta(row, 'Employment Page URL', 'employment')['status'],
+        axis=1
+    )
+    profile_df['__application_status'] = profile_df.apply(
+        lambda row: get_link_meta(row, 'Application Form URL', 'application')['status'],
+        axis=1
+    )
+    profile_df['__has_application_pdf'] = profile_df['Application Form URL'].apply(has_application_pdf)
+    profile_df['__is_third_party_platform'] = profile_df['ATS or Platform (if known)'].apply(is_third_party_platform)
+
+    towns_total = len(profile_df)
+    towns_verified_employment = int(profile_df['__employment_status'].isin(['verified', 'redirected']).sum())
+    towns_with_application = int(profile_df['Application Form URL'].apply(lambda v: isinstance(v, str) and v.strip() != "").sum())
+    towns_with_platform = int(profile_df['__is_third_party_platform'].sum())
+    towns_recently_checked = recently_checked_count(profile_df)
+
+    st.markdown("""
+    <div style="background:#f8f9fa;border:1px solid #e9ecef;border-radius:10px;padding:0.9rem 1rem;margin-bottom:1rem;">
+        <strong>Connecticut-wide hiring intelligence</strong><br>
+        169-municipality coverage with verified employment/application links, ATS or platform visibility,
+        and maintenance metadata where available.
+    </div>
+    """, unsafe_allow_html=True)
+
+    signal_cols = st.columns(4)
+    with signal_cols[0]:
+        st.metric("Verified Employment Links", f"{towns_verified_employment}/{towns_total}")
+    with signal_cols[1]:
+        st.metric("Towns With Application Forms", f"{towns_with_application}")
+    with signal_cols[2]:
+        st.metric("Towns Using ATS/Platforms", f"{towns_with_platform}")
+    with signal_cols[3]:
+        checked_label = f"{towns_recently_checked}" if towns_recently_checked > 0 else "Not Available"
+        st.metric("Recently Checked Towns", checked_label)
+
+    st.markdown("#### Dataset Access")
+    cta_cols = st.columns(3)
+    with cta_cols[0]:
+        st.link_button("Request Full Dataset", DATASET_CTA_LINKS["request_full_dataset"])
+    with cta_cols[1]:
+        st.link_button("Get Verified Export", DATASET_CTA_LINKS["get_verified_export"])
+    with cta_cols[2]:
+        st.link_button("Contact for Custom List", DATASET_CTA_LINKS["custom_filtered_list"])
+    st.caption(
+        "Configure dataset-access links via environment variables: "
+        "CT_DATASET_REQUEST_URL, CT_VERIFIED_EXPORT_URL, CT_CUSTOM_LIST_CONTACT_URL."
+    )
+
     # Sidebar - Filters
     with st.sidebar:
         st.header("ðŸ” Search & Filter")
@@ -250,6 +344,28 @@ if not df.empty:
             "Hide suspicious links",
             value=False,
             help="Exclude towns with suspicious/broken employment or application links.",
+        )
+
+        st.subheader("Advanced Use Cases")
+        filter_verified_employment = st.checkbox(
+            "Verified employment links",
+            value=False,
+            help="Show municipalities where the employment link is verified or redirected.",
+        )
+        filter_application_pdf = st.checkbox(
+            "Application PDF available",
+            value=False,
+            help="Show municipalities with an application link that appears to be a PDF.",
+        )
+        filter_third_party_platform = st.checkbox(
+            "Uses third-party ATS/platform",
+            value=False,
+            help="Show municipalities with a known ATS/platform vendor.",
+        )
+        filter_manual_pdf_process = st.checkbox(
+            "Manual/PDF application process",
+            value=False,
+            help="Show municipalities that appear to use a manual or PDF application workflow.",
         )
         
         st.markdown("---")
@@ -318,6 +434,9 @@ if not df.empty:
             lambda row: get_link_meta(row, 'Application Form URL', 'application')['status'],
             axis=1
         )
+        filtered_df['__has_application_pdf'] = filtered_df['Application Form URL'].apply(has_application_pdf)
+        filtered_df['__is_third_party_platform'] = filtered_df['ATS or Platform (if known)'].apply(is_third_party_platform)
+        filtered_df['__manual_pdf_process'] = filtered_df.apply(manual_or_pdf_process, axis=1)
 
         if hide_suspicious_links:
             filtered_df = filtered_df[
@@ -335,6 +454,15 @@ if not df.empty:
                 return len(statuses) > 0 and all(s in {'verified', 'redirected'} for s in statuses)
 
             filtered_df = filtered_df[filtered_df.apply(row_verified_only, axis=1)]
+
+        if filter_verified_employment:
+            filtered_df = filtered_df[filtered_df['__employment_status'].isin(['verified', 'redirected'])]
+        if filter_application_pdf:
+            filtered_df = filtered_df[filtered_df['__has_application_pdf']]
+        if filter_third_party_platform:
+            filtered_df = filtered_df[filtered_df['__is_third_party_platform']]
+        if filter_manual_pdf_process:
+            filtered_df = filtered_df[filtered_df['__manual_pdf_process']]
     
     # Statistics
     col1, col2, col3, col4 = st.columns(4)
