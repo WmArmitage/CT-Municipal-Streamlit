@@ -468,7 +468,6 @@ def main() -> int:
             continue
 
         canonical_rec = copy.deepcopy(merged_map[town_norm])
-        mutable_rec = merged_map[town_norm]
 
         for field_label, rule in FIELD_RULES.items():
             original = canonical_rec.get(field_label)
@@ -486,7 +485,12 @@ def main() -> int:
             )
 
             if action == "applied":
-                mutable_rec[field_label] = candidate
+                merged_map[town_norm][field_label] = candidate
+                if merged_map[town_norm].get(field_label) != candidate:
+                    raise RuntimeError(
+                        f"Failed to apply merge for {town_label} {field_label}: "
+                        "assignment did not persist in merged map."
+                    )
 
             report_rows.append(
                 {
