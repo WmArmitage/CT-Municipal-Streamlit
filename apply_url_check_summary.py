@@ -2,7 +2,7 @@
 """
 apply_url_check_summary.py
 
-Applies url_check_summary.csv (or url_check_failures.csv) results back into your JSON.
+Applies link-health CSV results back into your JSON.
 
 What it does:
 - Writes status/final/last_checked metadata for employment + application URLs.
@@ -15,7 +15,7 @@ What it does NOT do:
 - Guess new URLs when truly dead (that's the next script: rediscovery).
 
 Usage:
-  python apply_url_check_summary.py CT_Municipal_Employment_Pages.migrated.json url_check_summary.csv CT_Municipal_Employment_Pages.updated.json
+  python apply_url_check_summary.py CT_Municipal_Employment_Pages.migrated.json reports/link_health_report.csv CT_Municipal_Employment_Pages.updated.json
 """
 
 from __future__ import annotations
@@ -26,8 +26,10 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 from urllib.parse import urlparse
+
+from utils.url_utils import normalize_homepage
 
 
 CIVICPLUS_PAGEID_RE = re.compile(r"^/(\d{2,6})/[^/]+", re.IGNORECASE)
@@ -45,15 +47,6 @@ def parse_iso_any(s: str) -> str:
     if isinstance(s, str) and s.strip():
         return s.strip()
     return datetime.now().isoformat()
-
-
-def homepage(url: str) -> Optional[str]:
-    if not isinstance(url, str) or not url.strip():
-        return None
-    u = urlparse(url.strip())
-    if not u.scheme or not u.netloc:
-        return None
-    return f"{u.scheme}://{u.netloc}/"
 
 
 def civicplus_pageid_path(u: str) -> Optional[str]:
@@ -76,9 +69,33 @@ def field_to_prefix(field: str) -> Optional[str]:
     return None
 
 
+def canonical_field_name_to_dataset_key(field_name: str) -> Optional[str]:
+    normalized = (field_name or "").strip().lower()
+    if normalized == "employment_page":
+        return "Employment Page URL"
+    if normalized in {"application_form", "application_pdf"}:
+        return "Application Form URL"
+    return None
+
+
+def row_first_value(row: Dict[str, Any], keys: Tuple[str, ...]) -> Any:
+    for key in keys:
+        if key in row and row.get(key) not in (None, ""):
+            return row.get(key)
+    return None
+
+
+def parse_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)):
+        return bool(value)
+    return str(value).strip().lower() == "true"
+
+
 def main() -> int:
     if len(sys.argv) != 4:
-        print("Usage: python apply_url_check_summary.py <input.json> <url_check_summary.csv> <output.json>")
+        print("Usage: python apply_url_check_summary.py <input.json> <link_health_report.csv> <output.json>")
         return 2
 
     json_in = Path(sys.argv[1])
@@ -101,6 +118,8 @@ def main() -> int:
         for row in reader:
             town = (row.get("Town") or "").strip()
             field = (row.get("Field") or "").strip()
+            if not field:
+                field = canonical_field_name_to_dataset_key(str(row.get("field_name") or "")) or ""
             prefix = field_to_prefix(field)
             if not town or not prefix:
                 continue
@@ -109,11 +128,11 @@ def main() -> int:
                 continue
 
             # Stamp metadata
-            checked_at = parse_iso_any(row.get("checked_at_utc") or row.get("checked_at") or "")
-            status_str = (row.get("Status") or "").strip()
-            final_url = (row.get("Final URL") or "").strip() or None
-            soft404 = (row.get("Soft404") or "").strip().lower() == "true"
-            err = (row.get("Error") or "").strip() or None
+            checked_at = parse_iso_any(str(row_first_value(row, ("checked_at", "checked_at_utc")) or ""))
+            status_str = str(row_first_value(row, ("status_code", "Status")) or "").strip()
+            final_url = str(row_first_value(row, ("final_url", "Final URL")) or "").strip() or None
+            soft404 = parse_bool(row_first_value(row, ("soft404", "Soft404")))
+            err = str(row_first_value(row, ("error", "Error")) or "").strip() or None
 
             try:
                 status = int(float(status_str)) if status_str else None
@@ -128,12 +147,12 @@ def main() -> int:
 
             # Ensure Town Website homepage
             if isinstance(rec.get("Town Website"), str):
-                rec["Town Website"] = homepage(rec["Town Website"]) or rec["Town Website"]
+                rec["Town Website"] = normalize_homepage(rec["Town Website"]) or rec["Town Website"]
             else:
                 # derive from current URL
                 cur = rec.get(field)
                 if isinstance(cur, str):
-                    rec["Town Website"] = homepage(cur) or rec.get("Town Website")
+                    rec["Town Website"] = normalize_homepage(cur) or rec.get("Town Website")
 
             # Optionally rewrite canonical URLs on safe conditions
             cur_url = rec.get(field)

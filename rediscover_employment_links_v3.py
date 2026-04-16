@@ -35,6 +35,8 @@ from urllib.parse import urljoin, urlparse, urlencode, parse_qs, unquote
 import requests
 from bs4 import BeautifulSoup
 
+from utils.url_utils import detect_soft404, is_html_content_type, is_url, normalize_homepage
+
 
 # -------------------- Config --------------------
 TIMEOUT_SECS = 25
@@ -110,10 +112,6 @@ SOCIAL_BLOCK = [
 ]
 
 # Soft-404 and interstitial detection
-SOFT404_RE = re.compile(
-    r"(page not found|404|the page you requested|does not exist|not be found)",
-    re.IGNORECASE,
-)
 BLOCKED_PATTERNS = [
     "checking your browser",
     "ddos protection",
@@ -142,10 +140,6 @@ def now_utc_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def is_url(v: Any) -> bool:
-    return isinstance(v, str) and v.strip().lower().startswith(("http://", "https://"))
-
-
 def is_pdf(url: str) -> bool:
     return (url or "").lower().split("?")[0].endswith(".pdf")
 
@@ -162,19 +156,10 @@ def looks_soft404(resp: requests.Response) -> bool:
     if resp is None or resp.status_code != 200:
         return False
     ctype = (resp.headers.get("Content-Type") or "").lower()
-    if "text/html" not in ctype and "application/xhtml" not in ctype and ctype != "":
+    if not is_html_content_type(ctype):
         return False
     text = resp.text[:250_000] if resp.text else ""
-    return bool(SOFT404_RE.search(text))
-
-
-def homepage(url: str) -> Optional[str]:
-    if not isinstance(url, str) or not url.strip():
-        return None
-    u = urlparse(url.strip())
-    if not u.scheme or not u.netloc:
-        return None
-    return f"{u.scheme}://{u.netloc}/"
+    return detect_soft404(text)
 
 
 def host_norm(url: str) -> str:
@@ -658,10 +643,10 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
 
     # Ensure Town Website is homepage
     if is_url(rec.get("Town Website")):
-        rec["Town Website"] = homepage(rec["Town Website"]) or rec["Town Website"]
+        rec["Town Website"] = normalize_homepage(rec["Town Website"]) or rec["Town Website"]
     else:
         if is_url(rec.get("Employment Page URL")):
-            rec["Town Website"] = homepage(rec["Employment Page URL"]) or rec.get("Town Website")
+            rec["Town Website"] = normalize_homepage(rec["Employment Page URL"]) or rec.get("Town Website")
 
     base_home = rec.get("Town Website")
     if not is_url(base_home):
