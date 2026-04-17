@@ -425,7 +425,7 @@ if not df.empty:
             st.caption("Coming soon")
     st.caption(
         "Configure export links via environment variables: "
-        "CT_DATASET_REQUEST_URL and CT_VERIFIED_EXPORT_URL."
+        "CT_DATASET_REQUEST_URL and CT_VERIFIED_EXPORT_URL=https://buy.stripe.com/28E9AS90VesterOdWw0co00."
     )
 
     # Sidebar - Filters
