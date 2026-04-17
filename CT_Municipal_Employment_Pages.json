@@ -42,8 +42,8 @@
   {
     "Town": "Beacon Falls",
     "Town Website": "https://www.beaconfalls-ct.org/",
-    "Employment Page URL": "https://www.beaconfalls-ct.org/beacon-falls-town-hall/pages/employment-opportunities-0",
-    "Application Form URL": "https://www.beaconfalls-ct.org/sites/g/files/vyhlif4141/f/pages/town_of_beacon_falls_employment_application.docx",
+    "Employment Page URL": null,
+    "Application Form URL": "https://www.beaconfalls-ct.org/DocumentCenter/View/932/Employment-Application-PDF",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
   },
@@ -339,7 +339,7 @@
     "Town": "East Haven",
     "Town Website": "https://www.easthaven-ct.gov/",
     "Employment Page URL": "https://www.easthaven-ct.gov/Jobs.aspx",
-    "Application Form URL": "https://www.easthaven-ct.gov/civil-service-commission/files/standard-app",
+    "Application Form URL": "https://www.easthaven-ct.gov/DocumentCenter/View/657",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
   },
