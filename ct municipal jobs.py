@@ -261,13 +261,52 @@ def status_badge_html(status):
     )
 
 
-def format_checked_at(value):
+def _parse_checked_at(value):
     if value is None or value == "":
-        return "-"
+        return None
     dt = pd.to_datetime(value, errors="coerce", utc=True)
     if pd.isna(dt):
-        return str(value)
-    return dt.strftime("%Y-%m-%d")
+        return None
+    return dt
+
+
+def format_checked_at(value):
+    dt = _parse_checked_at(value)
+    if dt is None:
+        return "Unverified"
+    now_utc = pd.Timestamp.now(tz="UTC")
+    if dt.year == now_utc.year:
+        return f"{dt.strftime('%b')} {dt.day}"
+    return f"{dt.strftime('%b')} {dt.day}, {dt.year}"
+
+
+def freshness_label(value):
+    dt = _parse_checked_at(value)
+    if dt is None:
+        return "Needs verification"
+    days_old = (pd.Timestamp.now(tz="UTC").normalize() - dt.normalize()).days
+    days_old = max(0, int(days_old))
+    if days_old <= 7:
+        return "Verified"
+    if days_old <= 30:
+        return "Recently checked"
+    return "Needs verification"
+
+
+def verification_summary_html(meta):
+    freshness = freshness_label(meta.get("checked_at"))
+    checked_text = format_checked_at(meta.get("checked_at"))
+    freshness_colors = {
+        "Verified": "#2e7d32",
+        "Recently checked": "#1565c0",
+        "Needs verification": "#6c757d",
+    }
+    freshness_color = freshness_colors.get(freshness, "#6c757d")
+    return (
+        f'{status_badge_html(meta.get("status"))}'
+        f'<div style="font-size:0.8rem;color:{freshness_color};font-weight:600;margin-top:4px;">{freshness}</div>'
+        f'<div style="font-size:0.78rem;color:#555;">Last checked: {checked_text}</div>'
+    )
 
 
 def has_application_pdf(url):
@@ -630,7 +669,7 @@ if not df.empty:
 
             caution_note = ""
             if meta['status'] == 'suspicious':
-                caution_note = '<div style="font-size:0.78rem;color:#b85c00;">Use caution: link may be outdated.</div>'
+                caution_note = '<div style="font-size:0.78rem;color:#6c757d;">Needs verification.</div>'
 
             return f"{link_html}{final_note}{caution_note}"
         # Create display columns
@@ -661,20 +700,12 @@ if not df.empty:
             ),
             axis=1
         )
-        display_df['Employment Status'] = display_df.apply(
-            lambda row: status_badge_html(get_link_meta(row, 'Employment Page URL', 'employment')['status']),
+        display_df['Employment Verification'] = display_df.apply(
+            lambda row: verification_summary_html(get_link_meta(row, 'Employment Page URL', 'employment')),
             axis=1
         )
-        display_df['Employment Last Verified'] = display_df.apply(
-            lambda row: format_checked_at(get_link_meta(row, 'Employment Page URL', 'employment')['checked_at']),
-            axis=1
-        )
-        display_df['Application Status'] = display_df.apply(
-            lambda row: status_badge_html(get_link_meta(row, 'Application Form URL', 'application')['status']),
-            axis=1
-        )
-        display_df['Application Last Verified'] = display_df.apply(
-            lambda row: format_checked_at(get_link_meta(row, 'Application Form URL', 'application')['checked_at']),
+        display_df['Application Verification'] = display_df.apply(
+            lambda row: verification_summary_html(get_link_meta(row, 'Application Form URL', 'application')),
             axis=1
         )
         
@@ -687,11 +718,9 @@ if not df.empty:
                 'Town',
                 'Town Website',
                 'Employment Page',
-                'Employment Status',
-                'Employment Last Verified',
+                'Employment Verification',
                 'Application Form',
-                'Application Status',
-                'Application Last Verified',
+                'Application Verification',
                 'Platform/System'
             ]
         ]
