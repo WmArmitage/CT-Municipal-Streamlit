@@ -1,73 +1,17 @@
 {
-  "generated_at": "2026-04-16T20:20:14",
+  "generated_at": "2026-04-17T12:26:54",
   "applied": {
-    "Beacon Falls::Employment Page URL": {
-      "before": "https://www.beaconfalls-ct.org/beacon-falls-town-hall/pages/employment-opportunities-0",
-      "after": "https://www.beaconfalls-ct.org/formcenter",
-      "reason": "candidate_stronger_than_broken_canonical"
+    "New Milford::Application Form URL": {
+      "before": "https://www.newmilford.org/filestorage/3088/3126/Employment_Application_fillable_2021_%282%29.pdf",
+      "after": "https://www.newmilford.org/filestorage/3088/3126/Employment_Application_fillable_2025.pdf",
+      "reason": "candidate_stronger_than_nonworking_canonical"
     },
-    "Brookfield::Employment Page URL": {
-      "before": "https://www.brookfieldct.gov/human-resources/pages/job-opportunities",
-      "after": "https://www.brookfieldct.gov/Jobs.aspx",
-      "reason": "candidate_stronger_than_broken_canonical"
-    },
-    "Brooklyn::Employment Page URL": {
-      "before": "https://www.brooklynct.org/home/pages/employment-opportunities",
-      "after": "https://www.brooklynct.org/Jobs.aspx",
-      "reason": "candidate_stronger_than_broken_canonical"
-    },
-    "Chester::Employment Page URL": {
-      "before": "https://www.chesterct.org/1196/Employment-Opportunities",
-      "after": "https://www.chesterct.org/QuickLinks.aspx",
-      "reason": "candidate_stronger_than_broken_canonical"
-    },
-    "East Hampton::Employment Page URL": {
-      "before": "https://www.easthamptonct.gov/human-resources/pages/job-openings",
-      "after": "https://www.easthamptonct.gov/QuickLinks.aspx",
-      "reason": "candidate_stronger_than_broken_canonical"
-    },
-    "East Haven::Employment Page URL": {
-      "before": "https://www.easthaven-ct.gov/civil-service/pages/job-notices-and-tests",
-      "after": "https://www.easthaven-ct.gov/Jobs.aspx",
-      "reason": "candidate_stronger_than_broken_canonical"
-    },
-    "Essex::Employment Page URL": {
-      "before": "https://www.essexct.gov/home/pages/employment-opportunities",
-      "after": "https://www.essexct.gov/354/Employment-Opportunities",
-      "reason": "candidate_stronger_than_broken_canonical"
-    },
-    "Franklin::Employment Page URL": {
-      "before": "https://www.franklinct.gov/home/pages/job-openings",
-      "after": "https://www.franklinct.gov/sites/g/files/vyhlif586/f/uploads/building_permit_app_form-7-19-24_portrait_fillable.pdf",
-      "reason": "candidate_stronger_than_broken_canonical"
-    },
-    "Old Saybrook::Employment Page URL": {
-      "before": "https://www.oldsaybrookct.gov/selectmans-office/town-employee-information/pages/employment-opportunities",
-      "after": "https://www.oldsaybrookct.gov/Jobs.aspx",
-      "reason": "candidate_stronger_than_broken_canonical"
-    },
-    "Oxford::Employment Page URL": {
-      "before": "https://www.oxford-ct.gov/home/pages/employment-opportunities",
-      "after": "https://www.oxford-ct.gov/1197/Employment-Opportunities",
-      "reason": "candidate_stronger_than_broken_canonical"
-    },
-    "Washington::Employment Page URL": {
-      "before": "https://www.washingtonct.org/board-of-selectmen/pages/employment",
-      "after": "https://www.washingtonct.org/1359/Employment",
-      "reason": "candidate_stronger_than_broken_canonical"
-    },
-    "Willington::Employment Page URL": {
-      "before": "https://www.willingtonct.gov/home/pages/employment",
-      "after": "https://www.willingtonct.gov/Jobs.aspx",
-      "reason": "candidate_stronger_than_broken_canonical"
+    "Southbury::Application Form URL": {
+      "before": "https://www.southbury-ct.org/filestorage/20558/20703/Southbury-employment-application-2025-fillable.pdf",
+      "after": "https://www.southbury-ct.org/filestorage/20558/20703/Southbury-employment-application_2026-fillable.pdf",
+      "reason": "candidate_stronger_than_nonworking_canonical"
     }
   },
   "manual_review_needed": {},
-  "skipped": {
-    "Trumbull::Employment Page URL": {
-      "before": "https://www.trumbull-ct.gov/210/Human-Resources-Civil-Service",
-      "after": "https://www.trumbull-ct.gov/Jobs.aspx",
-      "reason": "candidate_not_clearly_better_than_canonical"
-    }
-  }
+  "skipped": {}
 }

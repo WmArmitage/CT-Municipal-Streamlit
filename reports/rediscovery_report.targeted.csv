@@ -1,56 +1,23 @@
-Town,action,blocked_reason,confidence,employment_page_type,new_employment_url,old_employment_url,platform,reason,source
-Andover,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Beacon Falls,updated,,70,page,https://www.beaconfalls-ct.org/formcenter,https://www.beaconfalls-ct.org/beacon-falls-town-hall/pages/employment-opportunities-0,civicplus,,homepage_link
-Bolton,needs_review,,,,,,other,no_candidate_validated,
-Brookfield,updated,,85,module_page,https://www.brookfieldct.gov/Jobs.aspx,https://www.brookfieldct.gov/human-resources/pages/job-opportunities,civicplus,,civicplus_path
-Brooklyn,updated,,85,module_page,https://www.brooklynct.org/Jobs.aspx,https://www.brooklynct.org/home/pages/employment-opportunities,civicplus,,civicplus_path
-Canterbury,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Chester,updated,,70,page,https://www.chesterct.org/QuickLinks.aspx,https://www.chesterct.org/1196/Employment-Opportunities,civicplus,,civicplus_path
-Cromwell,needs_review,,,,,,civicplus,no_candidate_validated,
-Deep River,no_change,,,,,,civicplus,status_403_bot_block_likely,
-East Hampton,updated,,70,page,https://www.easthamptonct.gov/QuickLinks.aspx,https://www.easthamptonct.gov/human-resources/pages/job-openings,civicplus,,civicplus_path
-East Haven,updated,,85,module_page,https://www.easthaven-ct.gov/Jobs.aspx,https://www.easthaven-ct.gov/civil-service/pages/job-notices-and-tests,civicplus,,civicplus_path
-East Lyme,needs_review,,,,,,other,no_candidate_validated,
-East Windsor,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Easton,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Essex,updated,,95,module_page,https://www.essexct.gov/354/Employment-Opportunities,https://www.essexct.gov/home/pages/employment-opportunities,civicplus,,homepage_link
-Farmington,no_change,,,,,,granicus,status_403_bot_block_likely,
-Franklin,updated,,70,pdf_posting,https://www.franklinct.gov/sites/g/files/vyhlif586/f/uploads/building_permit_app_form-7-19-24_portrait_fillable.pdf,https://www.franklinct.gov/home/pages/job-openings,civicplus,,homepage_link
-Goshen,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Kent,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Lebanon,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Middlebury,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Newtown,no_change,,,,,,civicplus,status_403_bot_block_likely,
-New Milford,no_change,,,,,,other,employment_not_marked_broken,
-North Stonington,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Old Lyme,no_change,,,,,,civicplus,employment_not_marked_broken,
-Old Saybrook,updated,,85,module_page,https://www.oldsaybrookct.gov/Jobs.aspx,https://www.oldsaybrookct.gov/selectmans-office/town-employee-information/pages/employment-opportunities,civicplus,,civicplus_path
-Oxford,updated,,95,module_page,https://www.oxford-ct.gov/1197/Employment-Opportunities,https://www.oxford-ct.gov/home/pages/employment-opportunities,civicplus,,homepage_link
-Plainfield,no_change,,,,,,other,employment_not_marked_broken,
-Plainville,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Pomfret,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Preston,no_change,,,,,,civicplus,employment_not_marked_broken,
-Salem,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Sharon,no_change,,,,,,civicplus,employment_not_marked_broken,
-Somers,needs_review,enable javascript,,,,,other,no_candidate_validated,
-South Windsor,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Southbury,no_change,,,,,,other,employment_not_marked_broken,
-Southington,no_change,,,,,,other,employment_not_marked_broken,
-Stonington,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Stratford,needs_review,,,,,,other,no_candidate_validated,
-Suffield,needs_review,cloudflare,,,,,other,no_candidate_validated,
-Thomaston,updated,,60,ephemeral_posts,https://www.thomastonct.org/,,civiclift,no_stable_employment_page_detected_ephemeral_posts,
-Thompson,needs_review,,,,,,civicplus,no_candidate_validated,
-Tolland,needs_review,,,,,,civicplus,no_candidate_validated,
-Torrington,needs_review,,,,,,civicplus,no_candidate_validated,
-Trumbull,updated,,85,module_page,https://www.trumbull-ct.gov/Jobs.aspx,https://www.trumbull-ct.gov/210/Human-Resources-Civil-Service,civicplus,,civicplus_path
-Voluntown,no_change,,,,,,civicplus,employment_not_marked_broken,
-Washington,updated,,95,module_page,https://www.washingtonct.org/1359/Employment,https://www.washingtonct.org/board-of-selectmen/pages/employment,civicplus,,quicklinks
-Watertown,no_change,,,,,,other,employment_not_marked_broken,
-West Hartford,needs_review,,,,,,other,no_candidate_validated,
-Weston,no_change,,,,,,granicus,status_403_bot_block_likely,
-Westport,no_change,,,,,,granicus,status_403_bot_block_likely,
-Willington,updated,,85,module_page,https://www.willingtonct.gov/Jobs.aspx,https://www.willingtonct.gov/home/pages/employment,civicplus,,civicplus_path
-Wilton,no_change,,,,,,civicplus,status_403_bot_block_likely,
-Winchester,updated,,60,ephemeral_posts,https://www.townofwinchester.org/,,civiclift,no_stable_employment_page_detected_ephemeral_posts,
-Woodstock,no_change,,,,,,civicplus,status_403_bot_block_likely,
+Town,action,application_updated,employment_page_type,employment_updated,new_application_url,new_employment_url,old_application_url,old_employment_url,platform,reason,source
+Beacon Falls,needs_review,False,,False,,,,,civicplus,no_candidate_validated,
+Bolton,needs_review,False,,False,,,,,other,no_candidate_validated,
+Chester,needs_review,False,,False,,,,,civicplus,no_candidate_validated,
+Cromwell,needs_review,False,,False,,,,,civicplus,no_candidate_validated,
+East Haven,no_change,False,,False,,,,,civicplus,application_not_improved,
+East Lyme,needs_review,False,,False,,,,,other,no_candidate_validated,
+Franklin,needs_review,False,,False,,,,,civicplus,no_candidate_validated,
+New Milford,updated,True,,False,https://www.newmilford.org/filestorage/3088/3126/Employment_Application_fillable_2025.pdf,https://www.newmilford.org/personnel/job-openings,https://www.newmilford.org/filestorage/3088/3126/Employment_Application_fillable_2021_%282%29.pdf,https://www.newmilford.org/personnel/job-openings,other,,
+Old Lyme,no_change,False,,False,,,,,civicplus,application_not_improved,
+Plainfield,no_change,False,,False,,,,,other,application_not_improved,
+Preston,no_change,False,,False,,,,,civicplus,application_not_improved,
+Sharon,no_change,False,,False,,,,,civicplus,application_not_improved,
+Somers,needs_review,False,,False,,,,,other,no_candidate_validated:enable javascript,
+Southbury,updated,True,,False,https://www.southbury-ct.org/filestorage/20558/20703/Southbury-employment-application_2026-fillable.pdf,https://www.southbury-ct.org/employment,https://www.southbury-ct.org/filestorage/20558/20703/Southbury-employment-application-2025-fillable.pdf,https://www.southbury-ct.org/employment,other,,
+Southington,no_change,False,,False,,,,,other,application_not_improved,
+Thomaston,needs_review,False,,False,,,,,civiclift,no_candidate_validated,
+Torrington,needs_review,False,,False,,,,,civicplus,no_candidate_validated,
+Voluntown,no_change,,,,,,,,civicplus,not_marked_for_rediscovery,
+Watertown,no_change,False,,False,,,,,other,application_not_improved,
+West Hartford,needs_review,False,,False,,,,,other,no_candidate_validated,
+Willington,no_change,False,,False,,,,,civicplus,application_not_improved,
+Winchester,needs_review,False,,False,,,,,civiclift,no_candidate_validated,

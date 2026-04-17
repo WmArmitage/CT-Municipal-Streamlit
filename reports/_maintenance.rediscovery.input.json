@@ -1,15 +1,5 @@
 [
   {
-    "Town": "Andover",
-    "Town Website": "https://www.andoverconnecticut.org/",
-    "Employment Page URL": "https://www.andoverconnecticut.org/employment-volunteer-opportunities",
-    "Application Form URL": "https://www.andoverconnecticut.org/employment-volunteer-opportunities/files/employment-application-revised-111620",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
     "Town": "Beacon Falls",
     "Town Website": "https://www.beaconfalls-ct.org/",
     "Employment Page URL": "https://www.beaconfalls-ct.org/beacon-falls-town-hall/pages/employment-opportunities-0",
@@ -17,7 +7,9 @@
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null,
     "employment_url_status_code": 404,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "Bolton",
@@ -28,36 +20,6 @@
     "Notes": "Website by Aptuitiv | Powered by Branch CMS",
     "employment_url_status_code": 200,
     "employment_url_soft404": true
-  },
-  {
-    "Town": "Brookfield",
-    "Town Website": "https://www.brookfieldct.gov/",
-    "Employment Page URL": "https://www.brookfieldct.gov/human-resources/pages/job-opportunities",
-    "Application Form URL": "https://brookfieldct.seamlessdocs.com/f/empapp",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 404,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Brooklyn",
-    "Town Website": "https://www.brooklynct.org/",
-    "Employment Page URL": "https://www.brooklynct.org/home/pages/employment-opportunities",
-    "Application Form URL": "https://brooklynct.seamlessdocs.com/f/ooqk8nzgsrv5",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 404,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Canterbury",
-    "Town Website": "http://canterburyct.org/",
-    "Employment Page URL": "https://www.canterburyct.org/jobs",
-    "Application Form URL": null,
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
   },
   {
     "Town": "Chester",
@@ -77,37 +39,21 @@
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null,
     "employment_url_status_code": 404,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Deep River",
-    "Town Website": "https://www.deepriverct.us/",
-    "Employment Page URL": "https://www.deepriverct.us/jobs-bids-and-rfps",
-    "Application Form URL": "https://www.deepriverct.us/selectmens-office/files/employment-application-0",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "East Hampton",
-    "Town Website": "https://www.easthamptonct.gov/",
-    "Employment Page URL": "https://www.easthamptonct.gov/human-resources/pages/job-openings",
-    "Application Form URL": "https://www.easthamptonct.gov/human-resources/files/job-application",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 404,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "East Haven",
     "Town Website": "https://www.easthaven-ct.gov/",
-    "Employment Page URL": "https://www.easthaven-ct.gov/civil-service/pages/job-notices-and-tests",
+    "Employment Page URL": "https://www.easthaven-ct.gov/Jobs.aspx",
     "Application Form URL": "https://www.easthaven-ct.gov/civil-service-commission/files/standard-app",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null,
-    "employment_url_status_code": 404,
-    "employment_url_soft404": false
+    "employment_url_status_code": 200,
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "East Lyme",
@@ -117,47 +63,9 @@
     "ATS or Platform (if known)": null,
     "Notes": "Custom WordPress Theme by Brown Bear Creative.",
     "employment_url_status_code": null,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "East Windsor",
-    "Town Website": "https://www.eastwindsor-ct.gov/",
-    "Employment Page URL": "https://www.eastwindsor-ct.gov/employment-opportunities",
-    "Application Form URL": "https://www.eastwindsor-ct.gov/employment-opportunities/files/town-east-windsor-employment-application",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Easton",
-    "Town Website": "https://www.eastonct.gov/",
-    "Employment Page URL": "https://www.eastonct.gov/home/pages/job-postings-all-job-postings-for-the-town-of-easton",
-    "Application Form URL": "https://www.eastonct.gov/sites/g/files/vyhlif3071/f/u236/easton_employment_application.pdf",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "Has 3 different application forms: general, Public Works and PD",
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Essex",
-    "Town Website": "https://www.essexct.gov/home/pages/employment-opportunities",
-    "Employment Page URL": "https://www.essexct.gov/home/pages/employment-opportunities",
-    "Application Form URL": "https://www.essexct.gov/sites/g/files/vyhlif3116/f/pages/application_for_employment_-_fillable_2.pdf",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 404,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Farmington",
-    "Town Website": "https://www.farmington-ct.org/",
-    "Employment Page URL": "https://www.farmington-ct.org/about-farmington/employment",
-    "Application Form URL": null,
-    "ATS or Platform (if known)": "Granicus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": null,
+    "application_url_soft404": false
   },
   {
     "Town": "Franklin",
@@ -170,56 +78,6 @@
     "employment_url_soft404": false
   },
   {
-    "Town": "Goshen",
-    "Town Website": "https://www.goshenct.gov/",
-    "Employment Page URL": "https://www.goshenct.gov/job-opportunities",
-    "Application Form URL": "https://www.goshenct.gov/sites/g/files/vyhlif626/f/uploads/jobappfill.docx",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Kent",
-    "Town Website": "https://www.townofkentct.gov/",
-    "Employment Page URL": "https://www.townofkentct.gov/home/pages/employment-opportunities",
-    "Application Form URL": null,
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Lebanon",
-    "Town Website": "https://www.lebanonct.gov/",
-    "Employment Page URL": "https://www.lebanonct.gov/home/pages/employment-opportunities",
-    "Application Form URL": "https://www.lebanonct.gov/sites/g/files/vyhlif4596/f/pages/employment_application_2023.pdf",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Middlebury",
-    "Town Website": "https://www.middlebury-ct.org/",
-    "Employment Page URL": "https://www.middlebury-ct.org/employment",
-    "Application Form URL": "https://www.middlebury-ct.org/sites/g/files/vyhlif6871/f/pages/town_of_middlebury_application_for_employment.pdf",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Newtown",
-    "Town Website": "https://www.newtown-ct.gov/",
-    "Employment Page URL": "https://www.newtown-ct.gov/human-resources/pages/employment-openings",
-    "Application Form URL": "https://www.newtown-ct.gov/human-resources/files/employment-application-0",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
     "Town": "New Milford",
     "Town Website": "https://www.newmilford.org/",
     "Employment Page URL": "https://www.newmilford.org/personnel/job-openings",
@@ -227,17 +85,9 @@
     "ATS or Platform (if known)": "Catalis",
     "Notes": null,
     "employment_url_status_code": 200,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "North Stonington",
-    "Town Website": "https://www.northstoningtonct.gov/",
-    "Employment Page URL": "https://www.northstoningtonct.gov/home/pages/job-openings",
-    "Application Form URL": null,
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "Old Lyme",
@@ -247,27 +97,9 @@
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null,
     "employment_url_status_code": 200,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Old Saybrook",
-    "Town Website": "https://www.oldsaybrookct.gov/",
-    "Employment Page URL": "https://www.oldsaybrookct.gov/selectmans-office/town-employee-information/pages/employment-opportunities",
-    "Application Form URL": "https://www.oldsaybrookct.gov/selectmans-office/files/employmentapplicationv2024-05-30writablepdf",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 404,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Oxford",
-    "Town Website": "https://www.oxford-ct.gov/",
-    "Employment Page URL": "https://www.oxford-ct.gov/home/pages/employment-opportunities",
-    "Application Form URL": "https://www.oxford-ct.gov/selectmans-office/files/employment-application",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 404,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "Plainfield",
@@ -277,27 +109,9 @@
     "ATS or Platform (if known)": "Revize",
     "Notes": null,
     "employment_url_status_code": 200,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Plainville",
-    "Town Website": "https://www.plainvillect.com/",
-    "Employment Page URL": "https://www.plainvillect.com/human-resources/pages/job-opportunities",
-    "Application Form URL": "https://www.applitrack.com/plainville/onlineapp/default.aspx",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "Applitrack",
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Pomfret",
-    "Town Website": "https://www.pomfretct.gov/",
-    "Employment Page URL": "https://www.pomfretct.gov/first-selectmens-office/pages/employmentvolunteer-opportunities",
-    "Application Form URL": "https://www.pomfretct.gov/first-selectmans-office/files/application",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "Preston",
@@ -307,17 +121,9 @@
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null,
     "employment_url_status_code": 200,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Salem",
-    "Town Website": "https://www.salemct.gov/",
-    "Employment Page URL": "https://www.salemct.gov/human-resources",
-    "Application Form URL": "https://www.salemct.gov/human-resources/files/employment-application-0",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "Sharon",
@@ -327,7 +133,9 @@
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null,
     "employment_url_status_code": 200,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "Somers",
@@ -337,17 +145,9 @@
     "ATS or Platform (if known)": "egovlink",
     "Notes": null,
     "employment_url_status_code": 404,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "South Windsor",
-    "Town Website": "https://www.southwindsor-ct.gov/",
-    "Employment Page URL": "https://www.southwindsor-ct.gov/jobs",
-    "Application Form URL": null,
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "Paychex application system",
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "Southbury",
@@ -357,7 +157,9 @@
     "ATS or Platform (if known)": "Catalis",
     "Notes": null,
     "employment_url_status_code": 200,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "Southington",
@@ -367,37 +169,9 @@
     "ATS or Platform (if known)": "Revize",
     "Notes": null,
     "employment_url_status_code": 200,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Stonington",
-    "Town Website": "https://www.stonington-ct.gov/",
-    "Employment Page URL": "https://www.stonington-ct.gov/administrative-services/pages/employment-opportunities",
-    "Application Form URL": null,
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Stratford",
-    "Town Website": "https://www.townofstratford.com/",
-    "Employment Page URL": "https://townofstratfordct.sites.thrillshare.com/documents/town-hall/town-departments-%26-services/human-resources/employment-opportunities/415588",
-    "Application Form URL": "https://core-docs.s3.amazonaws.com/documents/asset/uploaded_file/3632/Stratford/2768288/APPLICATION_FOR_EMPLOYMENT.pdf",
-    "ATS or Platform (if known)": "Apptegy",
-    "Notes": null,
-    "employment_url_status_code": null,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Suffield",
-    "Town Website": "https://www.suffieldct.gov/",
-    "Employment Page URL": "https://www.suffieldct.gov/departments/hr",
-    "Application Form URL": "https://resources.finalsite.net/images/v1591199569/suffieldctgov/uastjpqguqv8mv8y9mm9/EmploymentApplication.pdf",
-    "ATS or Platform (if known)": "Finalsite",
-    "Notes": null,
-    "employment_url_status_code": null,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "Thomaston",
@@ -410,26 +184,6 @@
     "employment_url_soft404": false
   },
   {
-    "Town": "Thompson",
-    "Town Website": "https://www.thompsonct.org/",
-    "Employment Page URL": "https://www.thompsonct.org/human-resources/pages/employment-volunteer-opportunities",
-    "Application Form URL": "https://www.thompsonct.org/human-resources/files/employment-application",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": null,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Tolland",
-    "Town Website": "https://www.tollandct.gov/",
-    "Employment Page URL": "https://www.tollandct.gov/human-resources/pages/employment-opportunities",
-    "Application Form URL": "https://www.tollandct.gov/human-resources/files/town-tolland-application",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": null,
-    "employment_url_soft404": false
-  },
-  {
     "Town": "Torrington",
     "Town Website": "https://www.torringtonct.org/",
     "Employment Page URL": "https://www.torringtonct.org/human-resources-department/pages/career-opportunities",
@@ -437,17 +191,9 @@
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null,
     "employment_url_status_code": null,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Trumbull",
-    "Town Website": "https://www.trumbull-ct.gov/",
-    "Employment Page URL": "https://www.trumbull-ct.gov/210/Human-Resources-Civil-Service",
-    "Application Form URL": "https://www.governmentjobs.com/careers/trumbullct",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": "NeoGov",
-    "employment_url_status_code": null,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": null,
+    "application_url_soft404": false
   },
   {
     "Town": "Voluntown",
@@ -457,17 +203,9 @@
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null,
     "employment_url_status_code": 200,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Washington",
-    "Town Website": "https://www.washingtonct.org/",
-    "Employment Page URL": "https://www.washingtonct.org/board-of-selectmen/pages/employment",
-    "Application Form URL": "https://www.washingtonct.org/sites/g/files/vyhlif1396/f/pages/application_for_employment_-_general.pdf",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 404,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 401,
+    "application_url_soft404": false
   },
   {
     "Town": "Watertown",
@@ -477,7 +215,9 @@
     "ATS or Platform (if known)": "Revize",
     "Notes": null,
     "employment_url_status_code": 200,
-    "employment_url_soft404": false
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "West Hartford",
@@ -490,44 +230,16 @@
     "employment_url_soft404": true
   },
   {
-    "Town": "Weston",
-    "Town Website": "https://www.westonct.gov/",
-    "Employment Page URL": "https://www.westonct.gov/about-us/town-hall/municipal-job-openings",
-    "Application Form URL": "https://www.westonct.gov/home/showpublisheddocument/15257/638900795188300000",
-    "ATS or Platform (if known)": "Granicus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Westport",
-    "Town Website": "https://www.westportct.gov/",
-    "Employment Page URL": "https://www.westportct.gov/government/departments-a-z/personnel-department/town-employment-opportunities",
-    "Application Form URL": "https://www.westportct.gov/home/showpublisheddocument/100418/638702975798870000",
-    "ATS or Platform (if known)": "Granicus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
-  },
-  {
     "Town": "Willington",
     "Town Website": "https://www.willingtonct.gov/",
-    "Employment Page URL": "https://www.willingtonct.gov/home/pages/employment",
+    "Employment Page URL": "https://www.willingtonct.gov/Jobs.aspx",
     "Application Form URL": "https://www.willingtonct.gov/home/files/town-willington-employment-application",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null,
-    "employment_url_status_code": 404,
-    "employment_url_soft404": false
-  },
-  {
-    "Town": "Wilton",
-    "Town Website": "https://www.wiltonct.gov/",
-    "Employment Page URL": "https://www.wiltonct.gov/node/36/subscriber-topic/employment-opportunities",
-    "Application Form URL": "https://www.wiltonct.gov/human-resources-department/files/employment-application",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
+    "employment_url_status_code": 200,
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
   },
   {
     "Town": "Winchester",
@@ -538,15 +250,5 @@
     "Notes": null,
     "employment_url_status_code": 200,
     "employment_url_soft404": true
-  },
-  {
-    "Town": "Woodstock",
-    "Town Website": "https://www.woodstockct.gov/",
-    "Employment Page URL": "https://www.woodstockct.gov/services/employment-volunteer-opportunities",
-    "Application Form URL": "https://www.woodstockct.gov/services/employment/files/employment-application",
-    "ATS or Platform (if known)": "CivicPlus",
-    "Notes": null,
-    "employment_url_status_code": 403,
-    "employment_url_soft404": false
   }
 ]
