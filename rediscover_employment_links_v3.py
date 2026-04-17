@@ -134,6 +134,28 @@ BLOCKED_PATTERNS = [
 
 # CivicPlus page-id path pattern e.g. /354/Employment-Opportunities
 CIVICPLUS_PAGEID_RE = re.compile(r"^/\d{2,6}/", re.IGNORECASE)
+CIVICPLUS_ROUTE_HINT_PATTERNS: Dict[str, str] = {
+    "/jobs.aspx": "Jobs.aspx",
+    "/quicklinks.aspx": "QuickLinks.aspx",
+    "/documentcenter/view/": "DocumentCenter/View",
+    "/formcenter/": "FormCenter",
+    "/home/pages/": "home/pages",
+    "/files/": "files",
+    "/sites/g/files/": "sites/g/files",
+}
+CIVICPLUS_EMPLOYMENT_PATH_TERMS = [
+    "employment",
+    "job",
+    "jobs",
+    "human-resources",
+    "civil-service",
+]
+CIVICPLUS_GENERIC_EMPLOYMENT_HUB_PATTERNS = [
+    "/quicklinks.aspx",
+    "/formcenter/",
+    "/documentcenter/",
+]
+CIVICPLUS_DETECTION_MIN_SIGNALS = 2
 
 # Application PDF hints
 APPLICATION_HINTS = [
@@ -149,6 +171,8 @@ APPLICATION_NEGATIVE = [
     "building_permit",
     "permit",
     "zoning",
+    "tax",
+    "transfer station",
     "wetlands",
     "dog license",
     "marriage",
@@ -167,6 +191,13 @@ SITEMAP_GENERIC_LAST_SEGMENTS = {"", "home", "index", "index.aspx", "default.asp
 
 
 # -------------------- Helpers --------------------
+@dataclass
+class CivicPlusSignals:
+    likely: bool
+    reasons: List[str]
+    route_hits: List[str]
+
+
 def now_utc_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -242,6 +273,112 @@ def text_blob(*parts: str) -> str:
 
 def has_strong_employment_signal(url: str, label: str = "") -> bool:
     return kw_hit(text_blob(url, label))
+
+
+def civicplus_route_hits(url: str) -> List[str]:
+    if not is_url(url):
+        return []
+    parsed = urlparse(url)
+    path = (parsed.path or "").lower()
+    hits: List[str] = []
+    for pattern, name in CIVICPLUS_ROUTE_HINT_PATTERNS.items():
+        if pattern in path:
+            hits.append(name)
+    if CIVICPLUS_PAGEID_RE.match(parsed.path or ""):
+        hits.append("pageid")
+        if any(term in path for term in CIVICPLUS_EMPLOYMENT_PATH_TERMS):
+            hits.append("numbered employment page")
+    return sorted(set(hits))
+
+
+def has_civicplus_employment_term(url: str, label: str = "") -> bool:
+    blob = text_blob(url, label)
+    return any(term in blob for term in CIVICPLUS_EMPLOYMENT_PATH_TERMS)
+
+
+def is_civicplus_jobs_url(url: str) -> bool:
+    path = (urlparse(url).path or "").lower()
+    return path.endswith("/jobs.aspx") or path == "/jobs.aspx"
+
+
+def is_civicplus_numbered_employment_page(url: str, label: str = "") -> bool:
+    path = (urlparse(url).path or "").lower()
+    return bool(CIVICPLUS_PAGEID_RE.match(path)) and has_civicplus_employment_term(url, label)
+
+
+def is_civicplus_document_or_file_candidate(url: str) -> bool:
+    path = (urlparse(url).path or "").lower()
+    if is_document_file(url):
+        return True
+    return (
+        "/documentcenter/view/" in path
+        or "/files/" in path
+        or "/sites/g/files/" in path
+    )
+
+
+def is_civicplus_generic_employment_hub(url: str, label: str = "") -> bool:
+    path = (urlparse(url).path or "").lower()
+    blob = text_blob(url, label)
+    if _is_generic_home_or_index(url):
+        return True
+    if any(pattern in path for pattern in CIVICPLUS_GENERIC_EMPLOYMENT_HUB_PATTERNS):
+        return True
+    return "documentcenter" in blob and "/documentcenter/view/" not in path
+
+
+def has_unusually_strong_employment_signal(url: str, label: str = "") -> bool:
+    blob = text_blob(url, label)
+    strong_label_hits = sum(1 for kw in KW_STRONG_LABELS if kw in blob)
+    if is_civicplus_jobs_url(url):
+        return True
+    if is_civicplus_numbered_employment_page(url, label):
+        return True
+    return has_strong_employment_signal(url, label) and strong_label_hits >= 2
+
+
+def get_civicplus_signals(record: Dict[str, Any], town_homepage: str, url: str) -> CivicPlusSignals:
+    known = (record.get("ATS or Platform (if known)") or "").strip().lower()
+    platform_field_signal = "civicplus" in known
+
+    probe_values = [
+        town_homepage or "",
+        url or "",
+        record.get("Employment Page URL") or "",
+        record.get("Application Form URL") or "",
+    ]
+    blob = " ".join(v.lower() for v in probe_values if isinstance(v, str))
+    domain_signal = "civicplus.com" in blob
+
+    route_hits = set()
+    for v in probe_values:
+        for hit in civicplus_route_hits(v):
+            route_hits.add(hit)
+
+    # Avoid single-pattern detection at the final decision level. Route patterns
+    # can contribute one signal category, but "likely" still requires >=2 categories.
+    route_signal = len(route_hits) >= 2 or any(
+        h in route_hits for h in {"Jobs.aspx", "numbered employment page", "DocumentCenter/View", "sites/g/files"}
+    )
+
+    reasons: List[str] = []
+    signal_count = 0
+    if platform_field_signal:
+        reasons.append("platform field")
+        signal_count += 1
+    if domain_signal:
+        reasons.append("civicplus domain")
+        signal_count += 1
+    if route_signal:
+        reasons.append("route patterns: " + ", ".join(sorted(route_hits)[:4]))
+        signal_count += 1
+
+    likely = signal_count >= CIVICPLUS_DETECTION_MIN_SIGNALS
+    return CivicPlusSignals(likely=likely, reasons=reasons, route_hits=sorted(route_hits))
+
+
+def is_likely_civicplus(record: Dict[str, Any], town_homepage: str, url: str) -> bool:
+    return get_civicplus_signals(record, town_homepage, url).likely
 
 
 def is_generic_navigation_candidate(url: str, label: str = "") -> bool:
@@ -549,7 +686,7 @@ def detect_platform(rec: Dict[str, Any]) -> str:
     return "other"
 
 
-def score_candidate(url: str, label: str, base_home: str, source: str) -> int:
+def score_candidate(url: str, label: str, base_home: str, source: str, civicplus_likely: bool = False) -> int:
     """
     Higher is better.
     Prefers same-site employment pages, allows ATS vendors, avoids social.
@@ -601,6 +738,17 @@ def score_candidate(url: str, label: str, base_home: str, source: str) -> int:
         s += 18
     if "application" in u or "application" in t:
         s -= 35
+
+    if civicplus_likely:
+        if is_civicplus_jobs_url(url) and strong_signal:
+            s += 15
+        if is_civicplus_numbered_employment_page(url, label):
+            s += 10
+        if is_civicplus_generic_employment_hub(url, label):
+            if has_unusually_strong_employment_signal(url, label):
+                s -= 80
+            else:
+                s -= 220
 
     if any(bad in u for bad in GENERIC_DEPARTMENT_TERMS) and not strong_signal:
         s -= 40
@@ -671,7 +819,13 @@ def validate_candidate(url: str, base_home: str) -> Tuple[bool, Optional[str], s
     return True, final, "ok", None
 
 
-def score_application_candidate(url: str, label: str, base_home: str, source: str) -> int:
+def score_application_candidate(
+    url: str,
+    label: str,
+    base_home: str,
+    source: str,
+    civicplus_likely: bool = False,
+) -> int:
     if is_social(url):
         return -10_000
     if has_application_negative_signal(url, label):
@@ -697,6 +851,18 @@ def score_application_candidate(url: str, label: str, base_home: str, source: st
         score += 12
     if "quicklinks" in source:
         score -= 6
+
+    if civicplus_likely:
+        low = (url or "").lower()
+        strong_app_or_emp = has_application_signal(url, label) or has_strong_employment_signal(url, label)
+        if is_civicplus_document_or_file_candidate(url) and strong_app_or_emp:
+            score += 10
+        if "/formcenter/" in low and not strong_app_or_emp:
+            score -= 130
+        if "/quicklinks.aspx" in low:
+            score -= 90
+        if "documentcenter" in low and "/documentcenter/view/" not in low:
+            score -= 120
 
     return score
 
@@ -735,6 +901,7 @@ def gather_application_candidates(
     base_home: str,
     employment_url: Optional[str],
     employment_candidates: List[Tuple[str, str, str]],
+    civicplus_likely: bool = False,
 ) -> List[Tuple[str, str, str]]:
     candidates: List[Tuple[str, str, str]] = []
     seed_pages: List[Tuple[str, str]] = []
@@ -757,12 +924,24 @@ def gather_application_candidates(
             continue
         for u, t in extract_links(final_page, resp.text or ""):
             blob = text_blob(u, t)
-            if is_document_file(u) or "application" in blob or has_strong_employment_signal(u, t):
+            civicplus_doc_or_file = civicplus_likely and is_civicplus_document_or_file_candidate(u)
+            if (
+                is_document_file(u)
+                or "application" in blob
+                or has_strong_employment_signal(u, t)
+                or (civicplus_doc_or_file and (has_application_signal(u, t) or has_strong_employment_signal(u, t)))
+            ):
                 candidates.append((u, t, source))
 
     for u, t, src in employment_candidates[:20]:
         blob = text_blob(u, t)
-        if is_document_file(u) or "application" in blob or has_application_signal(u, t):
+        civicplus_doc_or_file = civicplus_likely and is_civicplus_document_or_file_candidate(u)
+        if (
+            is_document_file(u)
+            or "application" in blob
+            or has_application_signal(u, t)
+            or (civicplus_doc_or_file and (has_application_signal(u, t) or has_strong_employment_signal(u, t)))
+        ):
             candidates.append((u, t, f"employment_candidate:{src}"))
 
     for u, t, src in employment_candidates:
@@ -793,19 +972,28 @@ def find_application_document(
     base_home: str,
     employment_url: Optional[str],
     employment_candidates: List[Tuple[str, str, str]],
+    civicplus_likely: bool = False,
+    town: str = "",
 ) -> Tuple[Optional[str], str, int, str]:
-    candidates = gather_application_candidates(base_home, employment_url, employment_candidates)
+    candidates = gather_application_candidates(
+        base_home,
+        employment_url,
+        employment_candidates,
+        civicplus_likely=civicplus_likely,
+    )
     if not candidates:
         return None, "no_application_candidates", 0, ""
 
     scored = [
-        (score_application_candidate(u, t, base_home, src), u, t, src)
+        (score_application_candidate(u, t, base_home, src, civicplus_likely=civicplus_likely), u, t, src)
         for u, t, src in candidates
     ]
     scored.sort(reverse=True, key=lambda x: x[0])
 
     for score, u, t, src in scored[:60]:
         if score < 35:
+            if civicplus_likely and "/formcenter/" in (u or "").lower():
+                print(f"CIVICPLUS: {town or '(unknown)'} -> FormCenter rejected as generic employment hub ({u})")
             continue
         if has_application_negative_signal(u, t):
             continue
@@ -814,6 +1002,8 @@ def find_application_document(
             continue
         if not has_application_signal(final, t) and not (is_ats(final) and has_strong_employment_signal(final, t)):
             continue
+        if civicplus_likely and is_civicplus_document_or_file_candidate(final):
+            print(f"CIVICPLUS: {town or '(unknown)'} -> civicplus application document accepted ({final})")
         return final, reason, score, src
 
     return None, "no_valid_application_candidate", 0, ""
@@ -890,6 +1080,35 @@ def discover_civicplus(base_home: str) -> List[Tuple[str, str, str]]:
                 cand.append((u, t, "civicplus_search"))
 
     return cand
+
+
+def generate_civicplus_heuristic_candidates(
+    base_home: str,
+    existing_candidates: List[Tuple[str, str, str]],
+) -> List[Tuple[str, str, str]]:
+    out: List[Tuple[str, str, str]] = []
+
+    # Keep a direct CivicPlus jobs guess in the pool, but still validate/score later.
+    out.append((urljoin(base_home, "Jobs.aspx"), "CIVICPLUS_HEURISTIC:/Jobs.aspx", "civicplus_heuristic"))
+
+    for u, t, src in existing_candidates:
+        if not is_url(u):
+            continue
+        if is_civicplus_numbered_employment_page(u, t):
+            out.append((u, t or "CIVICPLUS_NUMBERED_EMPLOYMENT", f"civicplus_numbered:{src}"))
+            continue
+        if has_civicplus_employment_term(u, t):
+            out.append((u, t or "CIVICPLUS_EMPLOYMENT_HINT", f"civicplus_employment_hint:{src}"))
+
+    deduped: List[Tuple[str, str, str]] = []
+    seen = set()
+    for u, t, src in out:
+        key = (u.strip(), (t or "").strip().lower(), src)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append((u.strip(), t, src))
+    return deduped
 
 
 def discover_civiclift(base_home: str) -> List[Tuple[str, str, str]]:
@@ -1046,6 +1265,10 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
 
     platform = detect_platform(rec)
     rec["platform_detected"] = platform
+    civicplus_signals = get_civicplus_signals(rec, base_home, rec.get("Employment Page URL") or "")
+    civicplus_likely = platform == "civicplus" or civicplus_signals.likely
+    if civicplus_signals.likely:
+        print(f"CIVICPLUS: {town} -> detected via {' + '.join(civicplus_signals.reasons)}")
 
     employment_attempt = should_attempt(rec)
     application_attempt = should_attempt_application(rec, employment_attempted=employment_attempt)
@@ -1070,6 +1293,11 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
     sitemap_candidates = filter_sitemap_candidates(sitemap_urls)
     print(f"SITEMAP: {town} -> {len(sitemap_urls)} URLs, {len(sitemap_candidates)} candidates accepted")
     cand.extend(sitemap_candidates)
+    if civicplus_likely:
+        civicplus_extra = generate_civicplus_heuristic_candidates(base_home, cand)
+        if civicplus_extra:
+            cand.extend(civicplus_extra)
+            print(f"CIVICPLUS: {town} -> added {len(civicplus_extra)} heuristic candidates")
 
     # De-dupe URLs
     seen = set()
@@ -1084,7 +1312,10 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
         deduped.append((u, t, src))
 
     # Score + validate best employment candidates
-    scored = [(score_candidate(u, t, base_home, src), u, t, src) for (u, t, src) in deduped]
+    scored = [
+        (score_candidate(u, t, base_home, src, civicplus_likely=civicplus_likely), u, t, src)
+        for (u, t, src) in deduped
+    ]
     scored.sort(reverse=True, key=lambda x: x[0])
 
     chosen: Optional[Tuple[int, str, str, str]] = None
@@ -1092,6 +1323,12 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
 
     if employment_attempt:
         for s, u, t, src in scored[:50]:
+            if civicplus_likely and is_civicplus_generic_employment_hub(u, t) and not has_unusually_strong_employment_signal(u, t):
+                if "/formcenter/" in (u or "").lower():
+                    print(f"CIVICPLUS: {town} -> FormCenter rejected as generic employment hub ({u})")
+                elif "/quicklinks.aspx" in (u or "").lower():
+                    print(f"CIVICPLUS: {town} -> QuickLinks rejected as generic employment hub ({u})")
+                continue
             if s < 0:
                 continue
             if not is_ats(u) and not has_strong_employment_signal(u, t):
@@ -1118,6 +1355,11 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
 
     if chosen:
         s, new_emp, src, why = chosen
+        if civicplus_likely:
+            if is_civicplus_jobs_url(new_emp):
+                print(f"CIVICPLUS: {town} -> Jobs.aspx candidate accepted ({new_emp})")
+            elif is_civicplus_numbered_employment_page(new_emp):
+                print(f"CIVICPLUS: {town} -> numbered employment page candidate accepted ({new_emp})")
         conf = 70
         low = new_emp.lower()
         if has_strong_employment_signal(new_emp):
@@ -1157,6 +1399,8 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
             base_home=base_home,
             employment_url=rec.get("Employment Page URL") if is_url(rec.get("Employment Page URL")) else None,
             employment_candidates=deduped,
+            civicplus_likely=civicplus_likely,
+            town=town,
         )
         if app and app != old_app and not has_application_negative_signal(app):
             update_application_record(
