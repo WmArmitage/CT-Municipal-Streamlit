@@ -348,18 +348,18 @@ def recently_checked_count(frame):
 st.markdown('<div class="main-header">Connecticut Municipal Employment Directory</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="sub-header">
-    Quick access to employment opportunities across all 169 Connecticut municipalities
-</div>
-<div class="sub-note">
-    "Not Available" does not necessarily indicate missing or broken information.
-    Connecticut municipalities use a wide variety of website structures and hiring systems,
-    including third-party applicant tracking platforms where the employment page itself serves as the application.
-    In these cases, a separate application form does not exist and will always appear as "Not Available."
-    <br><br>
-    In other instances, data may be unavailable due to non-standard page layouts, dynamically generated content,
-    or frequent structural changes on municipal websites.
+    Quick access to employment opportunities across all 169 Connecticut municipalities.
 </div>
 """, unsafe_allow_html=True)
+st.info(
+    """
+"Not Available" does not necessarily indicate missing or broken information. Connecticut municipalities use a wide range of website structures and hiring systems, including third-party applicant tracking platforms where the employment page itself serves as the application. In these cases, a separate application form does not exist.
+
+In other instances, information may be unavailable due to non-standard page layouts, dynamically generated content, or frequent structural changes on municipal websites.
+
+This directory provides Connecticut-wide hiring visibility, including verified employment links, application availability where applicable, platform or ATS identification, and ongoing maintenance tracking.
+"""
+)
 
 
 # Load data
