@@ -19,9 +19,8 @@ def _env_url(name):
 
 
 DATASET_CTA_LINKS = {
-    "request_full_dataset": _env_url("CT_DATASET_REQUEST_URL"),
+    "get_full_export": _env_url("CT_DATASET_REQUEST_URL"),
     "get_verified_export": _env_url("CT_VERIFIED_EXPORT_URL"),
-    "custom_filtered_list": _env_url("CT_CUSTOM_LIST_CONTACT_URL"),
 }
 
 # Custom CSS
@@ -409,26 +408,24 @@ if not df.empty:
         checked_label = f"{towns_recently_checked}" if towns_recently_checked > 0 else "Unavailable"
         st.metric("Recently Checked Towns", checked_label)
 
-    st.markdown("#### Dataset Access")
-    cta_cols = st.columns(3)
+    st.markdown("### Download the Full Directory")
+    st.caption(
+        "Download the complete Connecticut municipal employment directory as a clean, ready-to-use dataset."
+    )
+    cta_cols = st.columns(2)
     with cta_cols[0]:
-        if DATASET_CTA_LINKS["request_full_dataset"]:
-            st.link_button("Request Full Dataset", DATASET_CTA_LINKS["request_full_dataset"])
+        if DATASET_CTA_LINKS["get_full_export"]:
+            st.link_button("Get Full Export", DATASET_CTA_LINKS["get_full_export"])
         else:
-            st.caption("Request link not configured.")
+            st.caption("Coming soon")
     with cta_cols[1]:
         if DATASET_CTA_LINKS["get_verified_export"]:
             st.link_button("Get Verified Export", DATASET_CTA_LINKS["get_verified_export"])
         else:
-            st.caption("Verified export link not configured.")
-    with cta_cols[2]:
-        if DATASET_CTA_LINKS["custom_filtered_list"]:
-            st.link_button("Contact for Custom List", DATASET_CTA_LINKS["custom_filtered_list"])
-        else:
-            st.caption("Custom list contact link not configured.")
+            st.caption("Coming soon")
     st.caption(
-        "Configure dataset-access links via environment variables: "
-        "CT_DATASET_REQUEST_URL, CT_VERIFIED_EXPORT_URL, CT_CUSTOM_LIST_CONTACT_URL."
+        "Configure export links via environment variables: "
+        "CT_DATASET_REQUEST_URL and CT_VERIFIED_EXPORT_URL."
     )
 
     # Sidebar - Filters
