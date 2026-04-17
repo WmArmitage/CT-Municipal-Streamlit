@@ -73,6 +73,8 @@ def classify_validation_status(
     soft404: bool,
     error: Optional[str],
 ) -> str:
+    if status_code == 403:
+        return "uncertain"
     if error or status_code is None or status_code >= 400:
         return "broken"
     if soft404:
@@ -218,6 +220,7 @@ def main() -> int:
         "urls_checked": len(rows),
         "working": sum(1 for row in rows if row["validation_status"] == "working"),
         "redirected": sum(1 for row in rows if row["validation_status"] == "redirected"),
+        "uncertain": sum(1 for row in rows if row["validation_status"] == "uncertain"),
         "broken": sum(1 for row in rows if row["validation_status"] == "broken"),
         "suspicious": sum(1 for row in rows if row["validation_status"] == "suspicious"),
     }
@@ -255,6 +258,7 @@ def main() -> int:
         "Counts: "
         f"working={counts['working']}, "
         f"redirected={counts['redirected']}, "
+        f"uncertain={counts['uncertain']}, "
         f"suspicious={counts['suspicious']}, "
         f"broken={counts['broken']}"
     )

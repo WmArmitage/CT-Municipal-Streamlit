@@ -208,6 +208,17 @@ def build_targeted_rediscovery_input(
             cloned.setdefault("employment_url_status_code", 200)
             cloned.setdefault("employment_url_soft404", False)
 
+        app_issue_row = pick_worst_row(issue_index[key].get("application_form", []))
+        if app_issue_row:
+            app_status = parse_int(app_issue_row.get("status_code") or app_issue_row.get("Status"))
+            app_soft404 = parse_bool(
+                app_issue_row.get("soft404")
+                if "soft404" in app_issue_row
+                else app_issue_row.get("Soft404")
+            )
+            cloned["application_url_status_code"] = app_status
+            cloned["application_url_soft404"] = app_soft404
+
         targeted_records.append(cloned)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)

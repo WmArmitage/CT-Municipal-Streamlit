@@ -1,0 +1,84 @@
+[
+  {
+    "Town": "Beacon Falls",
+    "Town Website": "https://www.beaconfalls-ct.org/",
+    "Employment Page URL": "https://www.beaconfalls-ct.org/beacon-falls-town-hall/pages/employment-opportunities-0",
+    "Application Form URL": "https://www.beaconfalls-ct.org/sites/g/files/vyhlif4141/f/pages/town_of_beacon_falls_employment_application.docx",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null,
+    "employment_url_status_code": 404,
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
+  },
+  {
+    "Town": "Chester",
+    "Town Website": "https://www.chesterct.org/",
+    "Employment Page URL": "https://www.chesterct.org/1196/Employment-Opportunities",
+    "Application Form URL": "https://www.chesterct.org/DocumentCenter/View/416/Town-of-Chester-Employment-Application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null,
+    "employment_url_status_code": 200,
+    "employment_url_soft404": true,
+    "application_url_status_code": 200,
+    "application_url_soft404": false
+  },
+  {
+    "Town": "East Hampton",
+    "Town Website": "https://www.easthamptonct.gov/",
+    "Employment Page URL": "https://www.easthamptonct.gov/human-resources/pages/job-openings",
+    "Application Form URL": "https://www.easthamptonct.gov/human-resources/files/job-application",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null,
+    "employment_url_status_code": 404,
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
+  },
+  {
+    "Town": "East Haven",
+    "Town Website": "https://www.easthaven-ct.gov/",
+    "Employment Page URL": "https://www.easthaven-ct.gov/civil-service/pages/job-notices-and-tests",
+    "Application Form URL": "https://www.easthaven-ct.gov/civil-service-commission/files/standard-app",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null,
+    "employment_url_status_code": 404,
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
+  },
+  {
+    "Town": "Essex",
+    "Town Website": "https://www.essexct.gov/home/pages/employment-opportunities",
+    "Employment Page URL": "https://www.essexct.gov/home/pages/employment-opportunities",
+    "Application Form URL": "https://www.essexct.gov/sites/g/files/vyhlif3116/f/pages/application_for_employment_-_fillable_2.pdf",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null,
+    "employment_url_status_code": 404,
+    "employment_url_soft404": false,
+    "application_url_status_code": 404,
+    "application_url_soft404": false
+  },
+  {
+    "Town": "Franklin",
+    "Town Website": "https://www.franklinct.gov/",
+    "Employment Page URL": "https://www.franklinct.gov/home/pages/job-openings",
+    "Application Form URL": null,
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": null,
+    "employment_url_status_code": 404,
+    "employment_url_soft404": false
+  },
+  {
+    "Town": "Trumbull",
+    "Town Website": "https://www.trumbull-ct.gov/",
+    "Employment Page URL": "https://www.trumbull-ct.gov/210/Human-Resources-Civil-Service",
+    "Application Form URL": "https://www.governmentjobs.com/careers/trumbullct",
+    "ATS or Platform (if known)": "CivicPlus",
+    "Notes": "NeoGov",
+    "employment_url_status_code": null,
+    "employment_url_soft404": false,
+    "application_url_status_code": 200,
+    "application_url_soft404": false
+  }
+]

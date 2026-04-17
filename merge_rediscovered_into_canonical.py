@@ -43,6 +43,54 @@ ATS_HINTS = (
     "applitrack.com",
 )
 
+EMPLOYMENT_SIGNAL_TERMS = (
+    "employment",
+    "job",
+    "jobs",
+    "career",
+    "careers",
+    "human-resources",
+    "human resources",
+    "civil-service",
+    "civil service",
+    "vacancies",
+    "job-openings",
+    "employment-opportunities",
+    "jobs.aspx",
+)
+GENERIC_NAV_TERMS = (
+    "quicklinks",
+    "formcenter",
+    "documentcenter",
+    "/home",
+    "/index",
+    "/departments",
+    "/department",
+)
+APPLICATION_HINTS = (
+    "application for employment",
+    "employment application",
+    "job application",
+    "civil service application",
+    "employment-app",
+    "employment_app",
+)
+APPLICATION_NEGATIVE_TERMS = (
+    "building permit",
+    "building_permit",
+    "permit",
+    "zoning",
+    "wetlands",
+    "dog license",
+    "marriage",
+    "birth certificate",
+    "death certificate",
+    "parking permit",
+    "septic",
+    "blight",
+)
+DOC_EXTENSIONS = (".pdf", ".doc", ".docx")
+
 FIELD_RULES: Dict[str, Dict[str, str]] = {
     "Employment Page URL": {
         "report_field_name": "employment_page",
@@ -163,7 +211,9 @@ def validate_url_live(url: str, cache: Dict[str, LiveURLCheck]) -> LiveURLCheck:
                 soft404 = detect_soft404(text)
 
             redirected = normalize_url_for_compare(url) != normalize_url_for_compare(final_url)
-            if status_code >= 400:
+            if status_code == 403:
+                validation_status = "uncertain"
+            elif status_code >= 400:
                 validation_status = "broken"
             elif soft404:
                 validation_status = "suspicious"
@@ -183,13 +233,14 @@ def validate_url_live(url: str, cache: Dict[str, LiveURLCheck]) -> LiveURLCheck:
             )
     except HTTPError as exc:
         final_url = exc.geturl() or url
+        status = "uncertain" if exc.code == 403 else "broken"
         result = LiveURLCheck(
             url=url,
             final_url=final_url,
             status_code=exc.code,
             redirected=normalize_url_for_compare(url) != normalize_url_for_compare(final_url),
             soft404=False,
-            validation_status="broken",
+            validation_status=status,
             error=str(exc),
         )
     except URLError as exc:
@@ -236,6 +287,75 @@ def is_ats(url: str) -> bool:
     return any(hint in lower for hint in ATS_HINTS)
 
 
+def text_blob(*parts: Any) -> str:
+    return " ".join(str(part or "").strip().lower() for part in parts)
+
+
+def has_strong_employment_signal(url: str) -> bool:
+    blob = text_blob(url)
+    return any(term in blob for term in EMPLOYMENT_SIGNAL_TERMS)
+
+
+def is_generic_navigation_url(url: str) -> bool:
+    blob = text_blob(url)
+    generic = any(term in blob for term in GENERIC_NAV_TERMS)
+    if not generic:
+        return False
+    return not has_strong_employment_signal(url)
+
+
+def is_document_file(url: str) -> bool:
+    normalized = normalize_url_for_compare(url).lower().split("?", 1)[0]
+    return any(normalized.endswith(ext) for ext in DOC_EXTENSIONS)
+
+
+def has_application_negative_signal(url: str) -> bool:
+    blob = text_blob(url)
+    if "employment application" in blob or "application for employment" in blob:
+        return False
+    return any(term in blob for term in APPLICATION_NEGATIVE_TERMS)
+
+
+def has_application_signal(url: str) -> bool:
+    blob = text_blob(url)
+    if any(term in blob for term in APPLICATION_HINTS):
+        return True
+    return "application" in blob and any(term in blob for term in ("employment", "job", "civil service"))
+
+
+def employment_specificity_score(url: str) -> int:
+    score = 0
+    lower = text_blob(url)
+    if has_strong_employment_signal(url):
+        score += 4
+    if "jobs.aspx" in lower:
+        score += 2
+    if is_ats(url):
+        score += 3
+    if is_generic_navigation_url(url):
+        score -= 4
+    if "application" in lower:
+        score -= 2
+    if is_document_file(url):
+        score -= 3
+    return score
+
+
+def application_specificity_score(url: str) -> int:
+    score = 0
+    if has_application_negative_signal(url):
+        score -= 6
+    if has_application_signal(url):
+        score += 4
+    if is_document_file(url):
+        score += 4
+    if is_ats(url) and has_strong_employment_signal(url):
+        score += 2
+    if is_generic_navigation_url(url):
+        score -= 2
+    return score
+
+
 def canonical_field_name(name: str) -> Optional[str]:
     normalized = (name or "").strip().lower()
     if normalized in {"employment_page", "employment_page_url", "employment"}:
@@ -255,7 +375,7 @@ def report_field_from_legacy_label(label: str) -> Optional[str]:
 
 def row_validation_status(row: Dict[str, Any]) -> str:
     status = str(row.get("validation_status") or "").strip().lower()
-    if status in {"working", "redirected", "broken", "suspicious"}:
+    if status in {"working", "redirected", "broken", "suspicious", "uncertain"}:
         return status
 
     status_code = parse_int(row.get("status_code") or row.get("Status"))
@@ -263,6 +383,8 @@ def row_validation_status(row: Dict[str, Any]) -> str:
     error = str(row.get("error") or row.get("Error") or "").strip()
     redirected = parse_bool(row.get("redirected"))
 
+    if status_code == 403:
+        return "uncertain"
     if error or status_code is None or status_code >= 400:
         return "broken"
     if soft404:
@@ -280,7 +402,7 @@ def load_link_health(
     if not os.path.exists(csv_path):
         return {}
 
-    severity = {"working": 0, "redirected": 0, "suspicious": 1, "broken": 2}
+    severity = {"working": 0, "redirected": 0, "suspicious": 1, "uncertain": 1, "broken": 2}
     out: Dict[Tuple[str, str], Dict[str, Any]] = {}
 
     with open(csv_path, "r", encoding="utf-8", newline="") as f:
@@ -413,6 +535,8 @@ def broken_or_suspicious_evidence(
         status_code = parse_int(canonical_rec.get(status_key))
         if status_code is None:
             return True, "canonical_status_missing_after_check"
+        if status_code == 403:
+            return False, "canonical_status_403_uncertain"
         if status_code >= 400:
             return True, f"canonical_status_{status_code}"
 
@@ -468,6 +592,32 @@ def decide_field_action(
     same_town_host = looks_like_url(town_site) and same_host(candidate, str(town_site))
     ats_candidate = is_ats(candidate)
 
+    candidate_specificity = 0
+    canonical_specificity = 0
+    if field_name == "employment_page":
+        candidate_specificity = employment_specificity_score(str(candidate))
+        canonical_specificity = employment_specificity_score(str(original)) if looks_like_url(original) else 0
+        if is_document_file(str(candidate)):
+            return "skipped", "candidate_is_document_not_employment_page", evidence
+        if is_generic_navigation_url(str(candidate)) and not has_strong_employment_signal(str(candidate)):
+            return "skipped", "candidate_is_generic_navigation_page", evidence
+        if not (has_strong_employment_signal(str(candidate)) or ats_candidate):
+            return "skipped", "candidate_missing_strong_employment_signal", evidence
+        if (
+            looks_like_url(original)
+            and has_strong_employment_signal(str(original))
+            and not is_generic_navigation_url(str(original))
+            and is_generic_navigation_url(str(candidate))
+        ):
+            return "skipped", "keep_direct_canonical_over_navigation_hub", evidence
+    else:
+        candidate_specificity = application_specificity_score(str(candidate))
+        canonical_specificity = application_specificity_score(str(original)) if looks_like_url(original) else 0
+        if has_application_negative_signal(str(candidate)):
+            return "skipped", "candidate_is_unrelated_municipal_form", evidence
+        if candidate_specificity < 2:
+            return "manual_review_needed", "candidate_not_confident_application_form", evidence
+
     # Missing/blank original can be filled with a valid candidate.
     if not looks_like_url(original):
         candidate_live = validate_url_live(str(candidate), live_cache)
@@ -476,7 +626,11 @@ def decide_field_action(
             str(candidate_live.status_code) if candidate_live.status_code is not None else ""
         )
         evidence["candidate_live_final_url"] = candidate_live.final_url or ""
-        if candidate_live.validation_status in {"working", "redirected"} and (same_town_host or ats_candidate):
+        if (
+            candidate_live.validation_status in {"working", "redirected"}
+            and (same_town_host or ats_candidate)
+            and candidate_specificity >= 4
+        ):
             return "applied", "original_missing_with_validated_safe_candidate", evidence
         return "manual_review_needed", "original_missing_candidate_not_safe_or_not_working", evidence
 
@@ -495,12 +649,27 @@ def decide_field_action(
 
     canonical_ok = canonical_live.validation_status in {"working", "redirected"}
     candidate_ok = candidate_live.validation_status in {"working", "redirected"}
+    canonical_uncertain = canonical_live.validation_status == "uncertain"
+    candidate_uncertain = candidate_live.validation_status == "uncertain"
 
-    status_rank = {"working": 3, "redirected": 3, "suspicious": 2, "broken": 1}
+    status_rank = {"working": 4, "redirected": 4, "suspicious": 3, "uncertain": 2, "broken": 1}
     canonical_rank = status_rank.get(canonical_live.validation_status, 1)
     candidate_rank = status_rank.get(candidate_live.validation_status, 1)
     if candidate_rank < canonical_rank:
         return "skipped", "candidate_weaker_than_canonical", evidence
+
+    if canonical_uncertain and candidate_uncertain:
+        return "manual_review_needed", "both_urls_uncertain", evidence
+    if canonical_uncertain and candidate_ok:
+        if field_name == "employment_page" and is_generic_navigation_url(str(candidate)):
+            return "skipped", "candidate_not_clearly_stronger_than_uncertain_canonical", evidence
+        if candidate_specificity >= canonical_specificity + 2:
+            return "manual_review_needed", "canonical_uncertain_candidate_appears_stronger_manual_confirmation", evidence
+        return "skipped", "candidate_not_clearly_stronger_than_uncertain_canonical", evidence
+    if canonical_uncertain and not candidate_ok:
+        return "manual_review_needed", "canonical_uncertain_candidate_not_working", evidence
+    if candidate_uncertain and canonical_ok:
+        return "skipped", "candidate_uncertain_canonical_working", evidence
 
     # Protect known/manual canonical links from weaker candidates.
     if canonical_ok and not candidate_ok:
@@ -519,12 +688,35 @@ def decide_field_action(
             and normalize_url_for_compare(str(candidate)) == candidate_final
         ):
             return "applied", "candidate_is_direct_stable_target_of_canonical_redirect", evidence
+
+        if field_name == "employment_page":
+            if (
+                has_strong_employment_signal(str(original))
+                and not is_generic_navigation_url(str(original))
+                and is_generic_navigation_url(str(candidate))
+            ):
+                return "skipped", "keep_direct_canonical_over_navigation_hub", evidence
+            if (
+                ats_candidate
+                and has_strong_employment_signal(str(original))
+                and canonical_specificity >= candidate_specificity
+            ):
+                return "skipped", "preserve_official_gateway_over_ats_candidate", evidence
+
+        if field_name == "application_form":
+            if is_document_file(str(original)) and not is_document_file(str(candidate)):
+                return "skipped", "keep_direct_application_document_over_non_document_candidate", evidence
+
+        if candidate_specificity >= canonical_specificity + 2 and (same_original_host or same_town_host or ats_candidate):
+            return "applied", "candidate_more_specific_than_canonical", evidence
         return "skipped", "candidate_not_clearly_better_than_canonical", evidence
 
     # If canonical is not working, candidate must be working and reasonably safe.
     if not canonical_ok and candidate_ok:
-        if same_original_host or same_town_host or ats_candidate:
-            return "applied", "candidate_stronger_than_broken_canonical", evidence
+        if field_name == "employment_page" and is_generic_navigation_url(str(candidate)):
+            return "manual_review_needed", "candidate_generic_navigation_not_safe_for_auto_replace", evidence
+        if (same_original_host or same_town_host or ats_candidate) and candidate_specificity >= 4:
+            return "applied", "candidate_stronger_than_nonworking_canonical", evidence
 
         confidence = numeric_evidence(rediscovered_rec, rule.get("confidence_key", ""))
         score = numeric_evidence(rediscovered_rec, rule.get("score_key", ""))
@@ -539,6 +731,9 @@ def decide_field_action(
         return "manual_review_needed", "candidate_working_but_not_safe_enough", evidence
 
     # If both fail live checks, keep prior conservative fallback evidence.
+    if canonical_uncertain or candidate_uncertain:
+        return "manual_review_needed", "both_urls_nonworking_or_uncertain", evidence
+
     broken, broken_reason = broken_or_suspicious_evidence(
         town_norm=town_norm,
         canonical_rec=canonical_rec,

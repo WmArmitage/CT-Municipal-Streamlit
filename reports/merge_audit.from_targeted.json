@@ -1,0 +1,73 @@
+{
+  "generated_at": "2026-04-16T21:44:25",
+  "applied": {},
+  "manual_review_needed": {
+    "Brookfield::Employment Page URL": {
+      "before": "https://www.brookfieldct.gov/human-resources/pages/job-opportunities",
+      "after": "https://www.brookfieldct.gov/Jobs.aspx",
+      "reason": "both_urls_not_working:link_health_broken"
+    },
+    "Brooklyn::Employment Page URL": {
+      "before": "https://www.brooklynct.org/home/pages/employment-opportunities",
+      "after": "https://www.brooklynct.org/Jobs.aspx",
+      "reason": "both_urls_not_working:link_health_broken"
+    },
+    "East Haven::Employment Page URL": {
+      "before": "https://www.easthaven-ct.gov/civil-service/pages/job-notices-and-tests",
+      "after": "https://www.easthaven-ct.gov/Jobs.aspx",
+      "reason": "both_urls_not_working:link_health_broken"
+    },
+    "Essex::Employment Page URL": {
+      "before": "https://www.essexct.gov/home/pages/employment-opportunities",
+      "after": "https://www.essexct.gov/354/Employment-Opportunities",
+      "reason": "both_urls_not_working:link_health_broken"
+    },
+    "Old Saybrook::Employment Page URL": {
+      "before": "https://www.oldsaybrookct.gov/selectmans-office/town-employee-information/pages/employment-opportunities",
+      "after": "https://www.oldsaybrookct.gov/Jobs.aspx",
+      "reason": "both_urls_not_working:link_health_broken"
+    },
+    "Oxford::Employment Page URL": {
+      "before": "https://www.oxford-ct.gov/home/pages/employment-opportunities",
+      "after": "https://www.oxford-ct.gov/1197/Employment-Opportunities",
+      "reason": "both_urls_not_working:link_health_broken"
+    },
+    "Trumbull::Employment Page URL": {
+      "before": "https://www.trumbull-ct.gov/210/Human-Resources-Civil-Service",
+      "after": "https://www.trumbull-ct.gov/Jobs.aspx",
+      "reason": "both_urls_not_working:link_health_broken"
+    },
+    "Washington::Employment Page URL": {
+      "before": "https://www.washingtonct.org/board-of-selectmen/pages/employment",
+      "after": "https://www.washingtonct.org/1359/Employment",
+      "reason": "both_urls_not_working:link_health_broken"
+    },
+    "Willington::Employment Page URL": {
+      "before": "https://www.willingtonct.gov/home/pages/employment",
+      "after": "https://www.willingtonct.gov/Jobs.aspx",
+      "reason": "both_urls_not_working:link_health_broken"
+    }
+  },
+  "skipped": {
+    "Beacon Falls::Employment Page URL": {
+      "before": "https://www.beaconfalls-ct.org/beacon-falls-town-hall/pages/employment-opportunities-0",
+      "after": "https://www.beaconfalls-ct.org/formcenter",
+      "reason": "candidate_is_generic_navigation_page"
+    },
+    "Chester::Employment Page URL": {
+      "before": "https://www.chesterct.org/1196/Employment-Opportunities",
+      "after": "https://www.chesterct.org/QuickLinks.aspx",
+      "reason": "candidate_is_generic_navigation_page"
+    },
+    "East Hampton::Employment Page URL": {
+      "before": "https://www.easthamptonct.gov/human-resources/pages/job-openings",
+      "after": "https://www.easthamptonct.gov/QuickLinks.aspx",
+      "reason": "candidate_is_generic_navigation_page"
+    },
+    "Franklin::Employment Page URL": {
+      "before": "https://www.franklinct.gov/home/pages/job-openings",
+      "after": "https://www.franklinct.gov/sites/g/files/vyhlif586/f/uploads/building_permit_app_form-7-19-24_portrait_fillable.pdf",
+      "reason": "candidate_is_document_not_employment_page"
+    }
+  }
+}

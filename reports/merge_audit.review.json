@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-04-16T21:44:02",
+  "applied": {},
+  "manual_review_needed": {
+    "East Haven::Employment Page URL": {
+      "before": "https://www.easthaven-ct.gov/civil-service/pages/job-notices-and-tests",
+      "after": "https://www.easthaven-ct.gov/Jobs.aspx",
+      "reason": "both_urls_not_working:link_health_broken"
+    },
+    "Essex::Employment Page URL": {
+      "before": "https://www.essexct.gov/home/pages/employment-opportunities",
+      "after": "https://www.essexct.gov/354/Employment-Opportunities",
+      "reason": "both_urls_not_working:link_health_broken"
+    },
+    "Essex::Application Form URL": {
+      "before": "https://www.essexct.gov/sites/g/files/vyhlif3116/f/pages/application_for_employment_-_fillable_2.pdf",
+      "after": "https://www.essexct.gov/DocumentCenter/View/873/Application-for-Employment---FillablePDF",
+      "reason": "both_urls_not_working:link_health_broken"
+    }
+  },
+  "skipped": {}
+}

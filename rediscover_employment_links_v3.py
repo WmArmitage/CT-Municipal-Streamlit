@@ -52,7 +52,7 @@ USER_AGENT = (
 # Only attempt rediscovery if current employment URL is "broken-ish"
 REDISCOVER_IF_STATUS_IN = {404, 410, None, -1}
 REDISCOVER_IF_SOFT404_TRUE = True
-DO_NOT_REWRITE_IF_STATUS_IN = {401, 403}  # bot-block likely
+DO_NOT_REWRITE_IF_STATUS_IN = {401}  # keep 403 as uncertain
 
 # CivicPlus endpoints / patterns
 CIVICPLUS_COMMON_PATHS = [
@@ -67,32 +67,37 @@ CIVICPLUS_COMMON_PATHS = [
 
 # Discovery keywords
 KW_EMPLOYMENT = [
-    "employment", "employment opportunities",
-    "jobs", "job", "job openings", "job opportunities",
-    "careers", "career opportunities",
-    "human resources", "hr",
-    "vacancies", "openings",
-    "apply", "application",
+    "employment",
+    "employment opportunities",
+    "jobs",
+    "job",
+    "job openings",
+    "job opportunities",
+    "careers",
+    "career opportunities",
+    "human resources",
+    "civil service",
+    "hr",
+    "vacancies",
+    "openings",
 ]
 KW_STRONG_LABELS = [
     "employment opportunities",
     "job openings",
     "career opportunities",
     "human resources",
+    "civil service",
 ]
-KW_NEGATIVE = [
+GENERIC_NAV_TERMS = [
+    "quicklinks",
+    "formcenter",
+    "documentcenter",
+    "home",
+    "index",
+]
+GENERIC_DEPARTMENT_TERMS = [
     "departments",
     "department",
-    "about",
-    "contact",
-    "news",
-    "calendar",
-    "events",
-    "agenda",
-    "minutes",
-    "meetings",
-    "boards",
-    "commissions",
 ]
 
 # ATS/Vendor hints (allow off-site canonical if it matches)
@@ -130,9 +135,28 @@ CIVICPLUS_PAGEID_RE = re.compile(r"^/\d{2,6}/", re.IGNORECASE)
 
 # Application PDF hints
 APPLICATION_HINTS = [
-    "application for employment", "employment application", "job application",
-    "application", "fillable", "empapp", "employment-app",
+    "application for employment",
+    "employment application",
+    "job application",
+    "civil service application",
+    "employment-app",
+    "employment_app",
 ]
+APPLICATION_NEGATIVE = [
+    "building permit",
+    "building_permit",
+    "permit",
+    "zoning",
+    "wetlands",
+    "dog license",
+    "marriage",
+    "birth certificate",
+    "death certificate",
+    "parking permit",
+    "septic",
+    "blight",
+]
+DOC_EXTENSIONS = (".pdf", ".doc", ".docx")
 
 
 # -------------------- Helpers --------------------
@@ -140,8 +164,22 @@ def now_utc_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def parse_int(value: Any) -> Optional[int]:
+    if value in (None, ""):
+        return None
+    try:
+        return int(float(str(value).strip()))
+    except Exception:
+        return None
+
+
 def is_pdf(url: str) -> bool:
     return (url or "").lower().split("?")[0].endswith(".pdf")
+
+
+def is_document_file(url: str) -> bool:
+    low = (url or "").lower().split("?", 1)[0]
+    return any(low.endswith(ext) for ext in DOC_EXTENSIONS)
 
 
 def blocked_reason(html: str) -> Optional[str]:
@@ -189,6 +227,46 @@ def is_ats(url: str) -> bool:
 def kw_hit(s: str) -> bool:
     s = (s or "").lower()
     return any(k in s for k in KW_EMPLOYMENT)
+
+
+def text_blob(*parts: str) -> str:
+    return " ".join((p or "").strip().lower() for p in parts if isinstance(p, str))
+
+
+def has_strong_employment_signal(url: str, label: str = "") -> bool:
+    return kw_hit(text_blob(url, label))
+
+
+def is_generic_navigation_candidate(url: str, label: str = "") -> bool:
+    parsed = urlparse(url)
+    path = (parsed.path or "").strip("/").lower()
+    segments = [seg for seg in path.split("/") if seg]
+    last = segments[-1] if segments else ""
+    blob = text_blob(url, label)
+
+    generic = any(term in blob for term in GENERIC_NAV_TERMS)
+    if last in {"", "home", "index", "index.aspx", "default.aspx"}:
+        generic = True
+    if any(term in blob for term in GENERIC_DEPARTMENT_TERMS):
+        generic = True
+
+    if not generic:
+        return False
+    return not has_strong_employment_signal(url, label)
+
+
+def has_application_signal(url: str, label: str = "") -> bool:
+    blob = text_blob(url, label)
+    if any(term in blob for term in APPLICATION_HINTS):
+        return True
+    return "application" in blob and any(term in blob for term in ["employment", "job", "civil service"])
+
+
+def has_application_negative_signal(url: str, label: str = "") -> bool:
+    blob = text_blob(url, label)
+    if "employment application" in blob or "application for employment" in blob:
+        return False
+    return any(term in blob for term in APPLICATION_NEGATIVE)
 
 
 def get(url: str) -> Tuple[Optional[requests.Response], Optional[str]]:
@@ -300,43 +378,51 @@ def score_candidate(url: str, label: str, base_home: str, source: str) -> int:
 
     u = (url or "").lower()
     t = (label or "").lower()
+    strong_signal = has_strong_employment_signal(url, label)
+    generic_nav = is_generic_navigation_candidate(url, label)
     s = 0
 
     if same_site(url, base_home):
-        s += 40
+        s += 35
     if is_ats(url):
         s += 45
 
     if source in {"civicplus_path", "civiclift_path", "granicus_path"}:
-        s += 20
+        s += 12
+    if source in {"quicklinks", "nav_footer_link"}:
+        s -= 10
 
-    if kw_hit(u) or kw_hit(t):
-        s += 50
+    if strong_signal:
+        s += 60
+    else:
+        s -= 120
     if any(k in t for k in KW_STRONG_LABELS):
-        s += 15
+        s += 12
+    if generic_nav:
+        s -= 140
 
     # CivicPlus page-id is a strong signal for real content pages
     try:
         path = urlparse(url).path or ""
-        if CIVICPLUS_PAGEID_RE.match(path) and ("employment" in u or "job" in u or "career" in u):
-            s += 30
+        if CIVICPLUS_PAGEID_RE.match(path) and strong_signal:
+            s += 20
     except Exception:
         pass
 
     # prefer HTML pages over PDFs
-    if is_pdf(url):
-        s -= 25
+    if is_document_file(url):
+        s -= 80
 
     # prefer "employment/jobs/careers" in path
-    if any(x in u for x in ["employment", "jobs", "careers", "human-resources"]):
+    if any(x in u for x in ["employment", "jobs", "careers", "human-resources", "civil-service"]):
         s += 10
     if "jobs.aspx" in u:
-        s += 20
+        s += 18
+    if "application" in u or "application" in t:
+        s -= 35
 
-    if any(bad in u for bad in KW_NEGATIVE) and not kw_hit(u):
-        s -= 15
-    if any(bad in t for bad in KW_NEGATIVE) and not kw_hit(t):
-        s -= 10
+    if any(bad in u for bad in GENERIC_DEPARTMENT_TERMS) and not strong_signal:
+        s -= 40
 
     return s
 
@@ -371,6 +457,8 @@ def validate_candidate(url: str, base_home: str) -> Tuple[bool, Optional[str], s
     if splash_target and is_ats(splash_target):
         return True, splash_target, "ok_granicus_splash_to_ats", None
 
+    if resp.status_code == 403:
+        return False, final, "status_403_uncertain", None
     if resp.status_code >= 400:
         return False, final, f"status_{resp.status_code}", None
 
@@ -402,51 +490,141 @@ def validate_candidate(url: str, base_home: str) -> Tuple[bool, Optional[str], s
     return True, final, "ok", None
 
 
-def find_application_pdf(employment_url: str, base_home: str) -> Tuple[Optional[str], str]:
-    """
-    Look for a plausible application PDF on an employment page.
-    Prefer same-site PDFs. Don't overwrite with dead off-domain PDFs.
-    """
-    resp, err = get(employment_url)
+def score_application_candidate(url: str, label: str, base_home: str, source: str) -> int:
+    if is_social(url):
+        return -10_000
+    if has_application_negative_signal(url, label):
+        return -300
+
+    score = 0
+    if same_site(url, base_home):
+        score += 30
+    if is_document_file(url):
+        score += 45
+    if has_application_signal(url, label):
+        score += 55
+    elif "application" in text_blob(url, label):
+        score += 15
+    else:
+        score -= 60
+
+    if has_strong_employment_signal(url, label):
+        score += 20
+    if is_ats(url) and has_strong_employment_signal(url, label):
+        score += 12
+    if source.startswith("employment"):
+        score += 12
+    if "quicklinks" in source:
+        score -= 6
+
+    return score
+
+
+def validate_application_candidate(url: str, base_home: str) -> Tuple[bool, Optional[str], str]:
+    resp, err = get(url)
     time.sleep(SLEEP_BETWEEN_REQUESTS_SECS)
     if resp is None:
-        return None, f"employment_fetch_error: {err}"
-    if resp.status_code >= 400 or looks_soft404(resp):
-        return None, f"employment_not_ok: {resp.status_code}"
+        return False, None, f"fetch_error:{err}"
+
+    final = resp.url or url
+    if resp.status_code == 403:
+        return False, final, "status_403_uncertain"
+    if resp.status_code >= 400:
+        return False, final, f"status_{resp.status_code}"
+    if looks_soft404(resp):
+        return False, final, "soft404"
+    if is_social(final):
+        return False, final, "social_blocked"
+    if has_application_negative_signal(final):
+        return False, final, "unrelated_form"
+    if not same_site(final, base_home) and not is_ats(final):
+        return False, final, "offsite_not_ats"
 
     ctype = (resp.headers.get("Content-Type") or "").lower()
-    if "text/html" not in ctype and ctype != "":
-        return None, "employment_not_html"
+    if is_document_file(final):
+        return True, final, "ok_document"
+    if "application/pdf" in ctype:
+        return True, final, "ok_pdf_content_type"
+    if is_ats(final) and has_strong_employment_signal(final):
+        return True, final, "ok_ats_application_entry"
+    return False, final, "not_application_document"
 
-    links = extract_links(resp.url or employment_url, resp.text or "")
-    pdfs = [(u, t) for u, t in links if is_pdf(u)]
-    if not pdfs:
-        return None, "no_pdf_links"
 
-    best = None
-    best_score = -999
-    for u, t in pdfs:
-        hay = (u + " " + t).lower()
-        s = 0
-        if same_site(u, base_home):
-            s += 20
-        for hint in APPLICATION_HINTS:
-            if hint in hay:
-                s += 25
-        if "application" in hay:
-            s += 10
-        if s > best_score:
-            best_score = s
-            best = u
+def gather_application_candidates(
+    base_home: str,
+    employment_url: Optional[str],
+    employment_candidates: List[Tuple[str, str, str]],
+) -> List[Tuple[str, str, str]]:
+    candidates: List[Tuple[str, str, str]] = []
+    seed_pages: List[Tuple[str, str]] = []
+    if is_url(employment_url):
+        seed_pages.append((employment_url or "", "employment_page"))
+    seed_pages.append((base_home, "town_home"))
+    seed_pages.append((urljoin(base_home, "QuickLinks.aspx"), "quicklinks"))
 
-    if best and best_score >= 35:
-        # validate the pdf is alive
-        ok, final, reason, _ = validate_candidate(best, base_home)
-        if ok:
-            return final, "application_pdf_found_on_employment_page"
-        return None, f"application_pdf_candidate_invalid:{reason}"
+    for page_url, source in seed_pages:
+        resp, _ = get(page_url)
+        time.sleep(SLEEP_BETWEEN_REQUESTS_SECS)
+        if not resp or resp.status_code >= 400 or looks_soft404(resp):
+            continue
+        final_page = resp.url or page_url
+        ctype = (resp.headers.get("Content-Type") or "").lower()
+        if is_document_file(final_page):
+            candidates.append((final_page, f"{source}:direct_document", f"{source}_direct"))
+            continue
+        if "text/html" not in ctype and ctype != "":
+            continue
+        for u, t in extract_links(final_page, resp.text or ""):
+            blob = text_blob(u, t)
+            if is_document_file(u) or "application" in blob or has_strong_employment_signal(u, t):
+                candidates.append((u, t, source))
 
-    return None, "no_confident_application_pdf_found"
+    for u, t, src in employment_candidates[:20]:
+        blob = text_blob(u, t)
+        if is_document_file(u) or "application" in blob or has_application_signal(u, t):
+            candidates.append((u, t, f"employment_candidate:{src}"))
+
+    deduped: List[Tuple[str, str, str]] = []
+    seen = set()
+    for u, t, src in candidates:
+        if not is_url(u):
+            continue
+        key = (u.strip(), (t or "").strip().lower(), src)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append((u.strip(), t, src))
+    return deduped
+
+
+def find_application_document(
+    base_home: str,
+    employment_url: Optional[str],
+    employment_candidates: List[Tuple[str, str, str]],
+) -> Tuple[Optional[str], str, int, str]:
+    candidates = gather_application_candidates(base_home, employment_url, employment_candidates)
+    if not candidates:
+        return None, "no_application_candidates", 0, ""
+
+    scored = [
+        (score_application_candidate(u, t, base_home, src), u, t, src)
+        for u, t, src in candidates
+    ]
+    scored.sort(reverse=True, key=lambda x: x[0])
+
+    for score, u, t, src in scored[:60]:
+        if score < 35:
+            continue
+        if has_application_negative_signal(u, t):
+            continue
+        ok, final, reason = validate_application_candidate(u, base_home)
+        if not ok or not final:
+            continue
+        if not has_application_signal(final, t) and not (is_ats(final) and has_strong_employment_signal(final, t)):
+            continue
+        return final, reason, score, src
+
+    return None, "no_valid_application_candidate", 0, ""
 
 # NeoGov specific
 def unwrap_granicus_splash(url: str) -> Optional[str]:
@@ -463,12 +641,6 @@ def unwrap_granicus_splash(url: str) -> Optional[str]:
     except Exception:
         return None
 
-def granicus_ats_fallback_candidates(town: str) -> List[Tuple[str, str, str]]:
-    """
-    If a Granicus site blocks requests (403), try common GovernmentJobs (NEOGOV) patterns.
-    This is a best-effort fallback; some towns use different slugs.
-    """
-    slug = re.sub(r"[^a-z0-9]+", "", (town or "").lower())
 def granicus_ats_fallback_candidates(town: str) -> List[Tuple[str, str, str]]:
     """
     If a Granicus site blocks requests (403), try common GovernmentJobs (NEOGOV) patterns.
@@ -500,10 +672,10 @@ def discover_civicplus(base_home: str) -> List[Tuple[str, str, str]]:
         html = h_resp.text or ""
         for u, t in extract_links(page_url, html):
             # keep anything with keyword OR civicplus page-id
-            if kw_hit(u) or kw_hit(t) or CIVICPLUS_PAGEID_RE.match(urlparse(u).path or ""):
+            if has_strong_employment_signal(u, t) or CIVICPLUS_PAGEID_RE.match(urlparse(u).path or ""):
                 cand.append((u, t, "homepage_link"))
         for u, t in extract_links_with_selector(page_url, html, "nav a[href], footer a[href]"):
-            if kw_hit(u) or kw_hit(t) or CIVICPLUS_PAGEID_RE.match(urlparse(u).path or ""):
+            if has_strong_employment_signal(u, t) or CIVICPLUS_PAGEID_RE.match(urlparse(u).path or ""):
                 cand.append((u, t, "nav_footer_link"))
 
     # 3) quicklinks page crawl (often contains Jobs.aspx)
@@ -512,7 +684,7 @@ def discover_civicplus(base_home: str) -> List[Tuple[str, str, str]]:
     time.sleep(SLEEP_BETWEEN_REQUESTS_SECS)
     if q_resp and q_resp.status_code < 400 and not looks_soft404(q_resp):
         for u, t in extract_links(q_resp.url, q_resp.text or ""):
-            if kw_hit(u) or kw_hit(t) or "jobs.aspx" in u.lower():
+            if has_strong_employment_signal(u, t) or "jobs.aspx" in u.lower():
                 cand.append((u, t, "quicklinks"))
 
     # 4) civicplus search crawl (this should catch Essex)
@@ -522,7 +694,7 @@ def discover_civicplus(base_home: str) -> List[Tuple[str, str, str]]:
         if not s_resp or s_resp.status_code >= 400 or looks_soft404(s_resp):
             continue
         for u, t in extract_links(s_resp.url, s_resp.text or ""):
-            if kw_hit(u) or kw_hit(t) or CIVICPLUS_PAGEID_RE.match(urlparse(u).path or ""):
+            if has_strong_employment_signal(u, t) or CIVICPLUS_PAGEID_RE.match(urlparse(u).path or ""):
                 cand.append((u, t, "civicplus_search"))
 
     return cand
@@ -545,10 +717,10 @@ def discover_civiclift(base_home: str) -> List[Tuple[str, str, str]]:
         page_url = h_resp.url or base_home
         html = h_resp.text or ""
         for u, t in extract_links(page_url, html):
-            if kw_hit(u) or kw_hit(t):
+            if has_strong_employment_signal(u, t):
                 cand.append((u, t, "homepage_link"))
         for u, t in extract_links_with_selector(page_url, html, "nav a[href], footer a[href]"):
-            if kw_hit(u) or kw_hit(t):
+            if has_strong_employment_signal(u, t):
                 cand.append((u, t, "nav_footer_link"))
 
     # civic lift often has a site search; generic fallback: use internal civicplus-style Search if present
@@ -570,10 +742,10 @@ def discover_granicus(base_home: str) -> List[Tuple[str, str, str]]:
         page_url = h_resp.url or base_home
         html = h_resp.text or ""
         for u, t in extract_links(page_url, html):
-            if is_ats(u) or kw_hit(u) or kw_hit(t):
+            if is_ats(u) or has_strong_employment_signal(u, t):
                 cand.append((u, t, "homepage_link"))
         for u, t in extract_links_with_selector(page_url, html, "nav a[href], footer a[href]"):
-            if is_ats(u) or kw_hit(u) or kw_hit(t):
+            if is_ats(u) or has_strong_employment_signal(u, t):
                 cand.append((u, t, "nav_footer_link"))
 
     # also try common HR/jobs pages
@@ -595,24 +767,37 @@ def discover_other(base_home: str) -> List[Tuple[str, str, str]]:
         html = h_resp.text or ""
         for u, t in extract_links(page_url, html):
             lt = (t or "").lower()
-            if kw_hit(u) or kw_hit(t) or "human resources" in lt:
+            if has_strong_employment_signal(u, t) or "human resources" in lt:
                 cand.append((u, t, "homepage_link"))
         for u, t in extract_links_with_selector(page_url, html, "nav a[href], footer a[href]"):
             lt = (t or "").lower()
-            if kw_hit(u) or kw_hit(t) or "human resources" in lt:
+            if has_strong_employment_signal(u, t) or "human resources" in lt:
                 cand.append((u, t, "nav_footer_link"))
     return cand
 
 
 # -------------------- Main per-town logic --------------------
 def should_attempt(rec: Dict[str, Any]) -> bool:
-    status = rec.get("employment_url_status_code")
+    status = parse_int(rec.get("employment_url_status_code"))
     soft404 = bool(rec.get("employment_url_soft404"))
     if status in DO_NOT_REWRITE_IF_STATUS_IN:
         return False
     if status in REDISCOVER_IF_STATUS_IN:
         return True
     if REDISCOVER_IF_SOFT404_TRUE and soft404:
+        return True
+    return False
+
+
+def should_attempt_application(rec: Dict[str, Any], employment_attempted: bool) -> bool:
+    if employment_attempted:
+        return True
+    app_status = parse_int(rec.get("application_url_status_code"))
+    app_soft404 = bool(rec.get("application_url_soft404"))
+    current_app = rec.get("Application Form URL")
+    if app_status in {404, 410, -1} or app_soft404:
+        return True
+    if not is_url(current_app):
         return True
     return False
 
@@ -638,6 +823,21 @@ def update_record(
     rec["employment_url_validation_reason"] = validation_reason
 
 
+def update_application_record(
+    rec: Dict[str, Any],
+    new_app: str,
+    reason: str,
+    score: int,
+) -> None:
+    if "Application Form URL (original)" not in rec and isinstance(rec.get("Application Form URL"), str):
+        rec["Application Form URL (original)"] = rec["Application Form URL"]
+    rec["Application Form URL"] = new_app
+    rec["application_url_final"] = new_app
+    rec["application_url_last_checked_at"] = now_utc_iso()
+    rec["application_url_change_reason"] = reason
+    rec["application_url_confidence"] = max(75, min(95, score))
+
+
 def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
     town = rec.get("Town") or "(unknown)"
 
@@ -655,12 +855,10 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
     platform = detect_platform(rec)
     rec["platform_detected"] = platform
 
-    status = rec.get("employment_url_status_code")
-    if status in DO_NOT_REWRITE_IF_STATUS_IN:
-        return {"Town": town, "action": "no_change", "reason": f"status_{status}_bot_block_likely", "platform": platform}
-
-    if not should_attempt(rec):
-        return {"Town": town, "action": "no_change", "reason": "employment_not_marked_broken", "platform": platform}
+    employment_attempt = should_attempt(rec)
+    application_attempt = should_attempt_application(rec, employment_attempted=employment_attempt)
+    if not employment_attempt and not application_attempt:
+        return {"Town": town, "action": "no_change", "reason": "not_marked_for_rediscovery", "platform": platform}
 
     # Gather candidates
     cand: List[Tuple[str, str, str]] = []
@@ -688,121 +886,123 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
         seen.add(u)
         deduped.append((u, t, src))
 
-    # Score + validate best candidates
+    # Score + validate best employment candidates
     scored = [(score_candidate(u, t, base_home, src), u, t, src) for (u, t, src) in deduped]
     scored.sort(reverse=True, key=lambda x: x[0])
 
-    best_html: Optional[Tuple[int, str, str, str]] = None  # (score, final_url, src, reason)
-    best_pdf: Optional[Tuple[int, str, str, str]] = None
+    chosen: Optional[Tuple[int, str, str, str]] = None
     last_blocked_reason: Optional[str] = None
 
-    # Validate up to top N
-    for s, u, t, src in scored[:40]:
-        if s < 0:
-            continue
-        if is_social(u):
-            continue
+    if employment_attempt:
+        for s, u, t, src in scored[:50]:
+            if s < 0:
+                continue
+            if not is_ats(u) and not has_strong_employment_signal(u, t):
+                continue
+            if is_generic_navigation_candidate(u, t):
+                continue
+            if is_document_file(u):
+                continue
+            if "application" in text_blob(u, t):
+                continue
 
-        ok, final, why, blocked = validate_candidate(u, base_home)
-        if blocked:
-            last_blocked_reason = blocked
-        if not ok or not final:
-            continue
+            ok, final, why, blocked = validate_candidate(u, base_home)
+            if blocked:
+                last_blocked_reason = blocked
+            if not ok or not final:
+                continue
+            chosen = (s, final, src, why)
+            break
 
-        # Keep ATS even if offsite; otherwise same-site enforced by validate_candidate
-        if is_pdf(final):
-            # only accept PDF as last resort
-            if best_pdf is None or s > best_pdf[0]:
-                best_pdf = (s, final, src, why)
+    old_emp = rec.get("Employment Page URL") or ""
+    old_app = rec.get("Application Form URL") or ""
+    employment_updated = False
+    application_updated = False
+
+    if chosen:
+        s, new_emp, src, why = chosen
+        conf = 70
+        low = new_emp.lower()
+        if has_strong_employment_signal(new_emp):
+            conf += 15
+        if CIVICPLUS_PAGEID_RE.match(urlparse(new_emp).path or ""):
+            conf += 10
+        if is_ats(new_emp):
+            conf = max(conf, 85)
+        conf = min(conf, 95)
+
+        if is_ats(new_emp):
+            rec["employment_page_type"] = "ats_vendor"
+        elif platform == "civicplus" and ("jobs.aspx" in low or CIVICPLUS_PAGEID_RE.match(urlparse(new_emp).path or "")):
+            rec["employment_page_type"] = "module_page"
+        elif "human-resources" in low or "civil-service" in low:
+            rec["employment_page_type"] = "hr_page"
         else:
-            if best_html is None or s > best_html[0]:
-                best_html = (s, final, src, why)
+            rec["employment_page_type"] = "page"
 
-    chosen = best_html or best_pdf
-    if not chosen:
-        # CivicLift fallback: mark as ephemeral_posts instead of failure if nothing found
-        if platform == "civiclift":
-            rec["employment_page_type"] = "ephemeral_posts"
-            return {
-                "Town": town,
-                "action": "updated",
-                "platform": platform,
-                "reason": "no_stable_employment_page_detected_ephemeral_posts",
-                "new_employment_url": base_home,
-                "confidence": 60,
-                "employment_page_type": "ephemeral_posts",
-            }
+        if new_emp != old_emp:
+            update_record(
+                rec,
+                new_emp,
+                platform,
+                f"rediscovered_from_{src}",
+                conf,
+                src,
+                s,
+                why,
+            )
+            employment_updated = True
+
+    if application_attempt:
+        app, app_reason, app_score, app_source = find_application_document(
+            base_home=base_home,
+            employment_url=rec.get("Employment Page URL") if is_url(rec.get("Employment Page URL")) else None,
+            employment_candidates=deduped,
+        )
+        if app and app != old_app and not has_application_negative_signal(app):
+            update_application_record(
+                rec=rec,
+                new_app=app,
+                reason=f"{app_reason}:{app_source}" if app_source else app_reason,
+                score=app_score,
+            )
+            application_updated = True
+
+    if employment_updated or application_updated:
+        return {
+            "Town": town,
+            "action": "updated",
+            "platform": platform,
+            "old_employment_url": old_emp,
+            "new_employment_url": rec.get("Employment Page URL") or "",
+            "old_application_url": old_app,
+            "new_application_url": rec.get("Application Form URL") or "",
+            "employment_updated": employment_updated,
+            "application_updated": application_updated,
+            "source": rec.get("employment_url_discovery_method") or "",
+            "employment_page_type": rec.get("employment_page_type") or "",
+        }
+
+    if employment_attempt:
+        reason = "no_candidate_validated"
         if last_blocked_reason:
-            rec["employment_url_last_blocked_reason"] = last_blocked_reason
-            return {
-                "Town": town,
-                "action": "needs_review",
-                "reason": "no_candidate_validated",
-                "platform": platform,
-                "blocked_reason": last_blocked_reason,
-            }
-        return {"Town": town, "action": "needs_review", "reason": "no_candidate_validated", "platform": platform}
-
-    s, new_emp, src, why = chosen
-    old_emp = rec.get("Employment Page URL")
-
-    # Confidence
-    conf = 70
-    low = new_emp.lower()
-    if any(k in low for k in ["employment", "jobs", "careers", "human-resources"]):
-        conf += 15
-    if CIVICPLUS_PAGEID_RE.match(urlparse(new_emp).path or ""):
-        conf += 10
-    if is_ats(new_emp):
-        conf = max(conf, 85)
-    if is_pdf(new_emp):
-        conf = min(conf, 75)
-    conf = min(conf, 95)
-
-    # Employment page type
-    if is_ats(new_emp):
-        rec["employment_page_type"] = "ats_vendor"
-    elif platform == "civicplus" and ("jobs.aspx" in new_emp.lower() or CIVICPLUS_PAGEID_RE.match(urlparse(new_emp).path or "")):
-        rec["employment_page_type"] = "module_page"
-    elif "human-resources" in new_emp.lower() or "human resources" in (rec.get("Notes") or "").lower():
-        rec["employment_page_type"] = "hr_page"
-    elif is_pdf(new_emp):
-        rec["employment_page_type"] = "pdf_posting"
-    else:
-        rec["employment_page_type"] = "page"
-
-    update_record(
-        rec,
-        new_emp,
-        platform,
-        f"rediscovered_from_{src}",
-        conf,
-        src,
-        s,
-        why,
-    )
-
-    # Optionally refresh application PDF if employment is HTML and same-site
-    if not is_pdf(new_emp) and same_site(new_emp, base_home):
-        pdf, pdf_reason = find_application_pdf(new_emp, base_home)
-        if pdf:
-            if "Application Form URL (original)" not in rec and isinstance(rec.get("Application Form URL"), str):
-                rec["Application Form URL (original)"] = rec["Application Form URL"]
-            rec["Application Form URL"] = pdf
-            rec["application_url_final"] = pdf
-            rec["application_url_last_checked_at"] = now_utc_iso()
-            rec["application_url_change_reason"] = pdf_reason
-            rec["application_url_confidence"] = 85
+            reason = f"no_candidate_validated:{last_blocked_reason}"
+        return {
+            "Town": town,
+            "action": "needs_review",
+            "reason": reason,
+            "platform": platform,
+            "employment_updated": False,
+            "application_updated": False,
+        }
 
     return {
         "Town": town,
-        "action": "updated",
+        "action": "no_change",
+        "reason": "application_not_improved",
         "platform": platform,
-        "old_employment_url": old_emp or "",
-        "new_employment_url": new_emp,
-        "confidence": conf,
-        "source": src,
-        "employment_page_type": rec.get("employment_page_type") or "",
+        "employment_updated": False,
+        "application_updated": False,
     }
 
 
