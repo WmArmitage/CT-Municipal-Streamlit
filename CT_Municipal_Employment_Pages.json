@@ -138,7 +138,7 @@
   {
     "Town": "Brookfield",
     "Town Website": "https://www.brookfieldct.gov/",
-    "Employment Page URL": "https://www.brookfieldct.gov/human-resources/pages/job-opportunities",
+    "Employment Page URL": "https://www.brookfieldct.gov/Jobs.aspx",
     "Application Form URL": "https://brookfieldct.seamlessdocs.com/f/empapp",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
@@ -146,7 +146,7 @@
   {
     "Town": "Brooklyn",
     "Town Website": "https://www.brooklynct.org/",
-    "Employment Page URL": "https://www.brooklynct.org/home/pages/employment-opportunities",
+    "Employment Page URL": "https://www.brooklynct.org/Jobs.aspx",
     "Application Form URL": "https://brooklynct.seamlessdocs.com/f/ooqk8nzgsrv5",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
@@ -322,8 +322,8 @@
   {
     "Town": "East Hampton",
     "Town Website": "https://www.easthamptonct.gov/",
-    "Employment Page URL": "https://www.easthamptonct.gov/human-resources/pages/job-openings",
-    "Application Form URL": "https://www.easthamptonct.gov/human-resources/files/job-application",
+    "Employment Page URL": "https://easthamptonct.gov/1281/Job-Openings",
+    "Application Form URL": "https://easthamptonct.gov/DocumentCenter/View/951/Employment-Application-2-6-2019-PDF",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
   },
@@ -338,7 +338,7 @@
   {
     "Town": "East Haven",
     "Town Website": "https://www.easthaven-ct.gov/",
-    "Employment Page URL": "https://www.easthaven-ct.gov/civil-service/pages/job-notices-and-tests",
+    "Employment Page URL": "https://www.easthaven-ct.gov/Jobs.aspx",
     "Application Form URL": "https://www.easthaven-ct.gov/civil-service-commission/files/standard-app",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
@@ -393,9 +393,9 @@
   },
   {
     "Town": "Essex",
-    "Town Website": "https://www.essexct.gov/home/pages/employment-opportunities",
-    "Employment Page URL": "https://www.essexct.gov/home/pages/employment-opportunities",
-    "Application Form URL": "https://www.essexct.gov/sites/g/files/vyhlif3116/f/pages/application_for_employment_-_fillable_2.pdf",
+    "Town Website": "https://www.essexct.gov",
+    "Employment Page URL": "https://www.essexct.gov/354/Employment-Opportunities",
+    "Application Form URL": "https://www.essexct.gov/DocumentCenter/View/873/Application-for-Employment---FillablePDF",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
   },
@@ -842,8 +842,8 @@
   {
     "Town": "Old Saybrook",
     "Town Website": "https://www.oldsaybrookct.gov/",
-    "Employment Page URL": "https://www.oldsaybrookct.gov/selectmans-office/town-employee-information/pages/employment-opportunities",
-    "Application Form URL": "https://www.oldsaybrookct.gov/selectmans-office/files/employmentapplicationv2024-05-30writablepdf",
+    "Employment Page URL": "https://www.oldsaybrookct.gov/Jobs.aspx",
+    "Application Form URL": "https://www.oldsaybrookct.gov/Jobs.aspx#docaccess-faae6cead39d9468d1c57eecc4aefc59ddb236cadf447b8bbd4082cf99028323",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
   },
@@ -858,8 +858,8 @@
   {
     "Town": "Oxford",
     "Town Website": "https://www.oxford-ct.gov/",
-    "Employment Page URL": "https://www.oxford-ct.gov/home/pages/employment-opportunities",
-    "Application Form URL": "https://www.oxford-ct.gov/selectmans-office/files/employment-application",
+    "Employment Page URL": "https://www.oxford-ct.gov/1197/Employment-Opportunities",
+    "Application Form URL": "https://www.oxford-ct.gov/DocumentCenter/View/703/simple-job-application_3_0",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
   },
@@ -1195,8 +1195,8 @@
   {
     "Town": "Washington",
     "Town Website": "https://www.washingtonct.org/",
-    "Employment Page URL": "https://www.washingtonct.org/board-of-selectmen/pages/employment",
-    "Application Form URL": "https://www.washingtonct.org/sites/g/files/vyhlif1396/f/pages/application_for_employment_-_general.pdf",
+    "Employment Page URL": "https://www.washingtonct.org/1359/Employment",
+    "Application Form URL": "https://www.washingtonct.org/DocumentCenter/View/2127/Application-For-Employment",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
   },
@@ -1275,7 +1275,7 @@
   {
     "Town": "Willington",
     "Town Website": "https://www.willingtonct.gov/",
-    "Employment Page URL": "https://www.willingtonct.gov/home/pages/employment",
+    "Employment Page URL": "https://www.willingtonct.gov/Jobs.aspx",
     "Application Form URL": "https://www.willingtonct.gov/home/files/town-willington-employment-application",
     "ATS or Platform (if known)": "CivicPlus",
     "Notes": null
