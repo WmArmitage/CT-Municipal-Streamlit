@@ -249,15 +249,19 @@ def get_link_meta(row, url_field, prefix):
 def status_badge_html(status):
     styles = {
         "verified": ("Verified", "#e8f5e9", "#2e7d32"),
-        "redirected": ("Redirected", "#e3f2fd", "#1565c0"),
-        "suspicious": ("Suspicious", "#fff3e0", "#ef6c00"),
+        "redirected": ("Verified", "#e3f2fd", "#1565c0"),
+        "suspicious": ("Check link", "#fff3e0", "#ef6c00"),
         "unavailable": ("Unavailable", "#f1f3f5", "#6c757d"),
-        "unverified": ("Unverified", "#f8f9fa", "#6c757d"),
+        "unverified": ("Available", "#f8f9fa", "#6c757d"),
     }
-    label, bg, fg = styles.get(status, ("Unverified", "#f8f9fa", "#6c757d"))
+    tooltips = {
+        "suspicious": "Link may require manual verification",
+    }
+    label, bg, fg = styles.get(status, ("Available", "#f8f9fa", "#6c757d"))
+    title_attr = f' title="{tooltips.get(status)}"' if status in tooltips else ""
     return (
         f'<span style="display:inline-block;padding:2px 8px;border-radius:999px;'
-        f'background:{bg};color:{fg};font-weight:600;font-size:0.8rem;">{label}</span>'
+        f'background:{bg};color:{fg};font-weight:600;font-size:0.8rem;"{title_attr}>{label}</span>'
     )
 
 
@@ -273,7 +277,7 @@ def _parse_checked_at(value):
 def format_checked_at(value):
     dt = _parse_checked_at(value)
     if dt is None:
-        return "Unverified"
+        return "Not available"
     now_utc = pd.Timestamp.now(tz="UTC")
     if dt.year == now_utc.year:
         return f"{dt.strftime('%b')} {dt.day}"
@@ -283,14 +287,14 @@ def format_checked_at(value):
 def freshness_label(value):
     dt = _parse_checked_at(value)
     if dt is None:
-        return "Needs verification"
+        return "Available"
     days_old = (pd.Timestamp.now(tz="UTC").normalize() - dt.normalize()).days
     days_old = max(0, int(days_old))
     if days_old <= 7:
         return "Verified"
     if days_old <= 30:
         return "Recently checked"
-    return "Needs verification"
+    return "Available"
 
 
 def verification_summary_html(meta):
@@ -299,7 +303,7 @@ def verification_summary_html(meta):
     freshness_colors = {
         "Verified": "#2e7d32",
         "Recently checked": "#1565c0",
-        "Needs verification": "#6c757d",
+        "Available": "#6c757d",
     }
     freshness_color = freshness_colors.get(freshness, "#6c757d")
     return (
@@ -353,7 +357,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.info(
     """
-"Not Available" does not necessarily indicate missing or broken information. Connecticut municipalities use a wide range of website structures and hiring systems, including third-party applicant tracking platforms where the employment page itself serves as the application. In these cases, a separate application form does not exist.
+"Unavailable" does not necessarily indicate missing or broken information. Connecticut municipalities use a wide range of website structures and hiring systems, including third-party applicant tracking platforms where the employment page itself serves as the application. In these cases, a separate application form does not exist.
 
 In other instances, information may be unavailable due to non-standard page layouts, dynamically generated content, or frequent structural changes on municipal websites.
 
@@ -402,7 +406,7 @@ if not df.empty:
     with signal_cols[2]:
         st.metric("Towns Using ATS/Platforms", f"{towns_with_platform}")
     with signal_cols[3]:
-        checked_label = f"{towns_recently_checked}" if towns_recently_checked > 0 else "Not Available"
+        checked_label = f"{towns_recently_checked}" if towns_recently_checked > 0 else "Unavailable"
         st.metric("Recently Checked Towns", checked_label)
 
     st.markdown("#### Dataset Access")
@@ -457,19 +461,19 @@ if not df.empty:
         verified_links_only = st.checkbox(
             "Verified links only",
             value=False,
-            help="Keep only towns where available links are verified or redirected.",
+            help="Keep only towns where available links are shown as Verified.",
         )
         hide_suspicious_links = st.checkbox(
-            "Hide suspicious links",
+            "Hide \"Check link\" statuses",
             value=False,
-            help="Exclude towns with suspicious/broken employment or application links.",
+            help="Exclude towns where a link may require manual verification.",
         )
 
         st.subheader("Advanced Use Cases")
         filter_verified_employment = st.checkbox(
             "Verified employment links",
             value=False,
-            help="Show municipalities where the employment link is verified or redirected.",
+            help="Show municipalities where the employment link is shown as Verified.",
         )
         filter_application_pdf = st.checkbox(
             "Application PDF available",
@@ -647,7 +651,7 @@ if not df.empty:
         # Function to create clickable links with trust context
         def make_clickable(url, text, meta, color="#007bff"):
             if pd.isna(url) or url == '' or meta['status'] == 'unavailable':
-                return '<span style="color: #999; font-style: italic;">Not Available</span>'
+                return '<span style="color: #999; font-style: italic;">Unavailable</span>'
 
             link_color = color if meta['status'] in {'verified', 'redirected'} else '#b85c00'
             link_html = (
@@ -669,7 +673,7 @@ if not df.empty:
 
             caution_note = ""
             if meta['status'] == 'suspicious':
-                caution_note = '<div style="font-size:0.78rem;color:#6c757d;">Needs verification.</div>'
+                caution_note = '<div style="font-size:0.78rem;color:#6c757d;">Link may require manual verification.</div>'
 
             return f"{link_html}{final_note}{caution_note}"
         # Create display columns
@@ -731,8 +735,9 @@ if not df.empty:
             unsafe_allow_html=True
         )
         st.caption(
-            "Status legend: Verified = recently working, Redirected = valid redirect, "
-            "Suspicious = broken/soft-404 or uncertain, Unavailable = no link in dataset."
+            "Status legend: Verified = link confirmed and includes valid redirects, "
+            "Available = link is listed but may not have recent verification, "
+            "Check link = link may require manual verification, Unavailable = no link in dataset."
         )
     
     # --- Donation button CSS (define once) ---
