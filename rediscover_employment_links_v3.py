@@ -26,6 +26,8 @@ import json
 import re
 import sys
 import time
+import xml.etree.ElementTree as ET
+from collections import deque
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -157,6 +159,11 @@ APPLICATION_NEGATIVE = [
     "blight",
 ]
 DOC_EXTENSIONS = (".pdf", ".doc", ".docx")
+SITEMAP_TIMEOUT_SECS = 5
+SITEMAP_MAX_URLS_PER_TOWN = 200
+SITEMAP_INCLUDE_TERMS = ["jobs", "employment", "career", "human-resources", "civil-service"]
+SITEMAP_HARD_REJECT_TERMS = ["quicklinks", "formcenter"]
+SITEMAP_GENERIC_LAST_SEGMENTS = {"", "home", "index", "index.aspx", "default.aspx"}
 
 
 # -------------------- Helpers --------------------
@@ -285,6 +292,180 @@ def get(url: str) -> Tuple[Optional[requests.Response], Optional[str]]:
         return r, None
     except requests.RequestException as e:
         return None, str(e)
+
+
+def _get_sitemap_response(url: str) -> Optional[requests.Response]:
+    try:
+        return requests.get(
+            url,
+            timeout=SITEMAP_TIMEOUT_SECS,
+            allow_redirects=True,
+            headers={
+                "User-Agent": USER_AGENT,
+                "Accept": "application/xml,text/xml,text/plain;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.9",
+            },
+            verify=VERIFY_TLS,
+        )
+    except requests.RequestException:
+        return None
+
+
+def _xml_tag_name(tag: str) -> str:
+    if "}" in tag:
+        return tag.rsplit("}", 1)[-1].lower()
+    return (tag or "").lower()
+
+
+def _extract_sitemap_locs(xml_text: str) -> Tuple[str, List[str]]:
+    root = ET.fromstring(xml_text)
+    root_name = _xml_tag_name(root.tag)
+    locs: List[str] = []
+    for elem in root.iter():
+        if _xml_tag_name(elem.tag) != "loc":
+            continue
+        val = (elem.text or "").strip()
+        if val:
+            locs.append(val)
+    if root_name == "sitemapindex":
+        return "index", locs
+    if root_name == "urlset":
+        return "urlset", locs
+    return "unknown", locs
+
+
+def _get_robot_sitemaps(base_url: str) -> List[str]:
+    robots_url = urljoin(base_url, "/robots.txt")
+    resp = _get_sitemap_response(robots_url)
+    if not resp or resp.status_code >= 400:
+        return []
+    out: List[str] = []
+    seen = set()
+    for line in (resp.text or "").splitlines():
+        stripped = line.strip()
+        if not stripped.lower().startswith("sitemap:"):
+            continue
+        raw = stripped.split(":", 1)[1].strip()
+        if not raw:
+            continue
+        sm_url = urljoin(resp.url or base_url, raw)
+        if not is_url(sm_url) or sm_url in seen:
+            continue
+        seen.add(sm_url)
+        out.append(sm_url)
+    return out
+
+
+def get_sitemap_urls(base_url: str) -> List[str]:
+    if not is_url(base_url):
+        return []
+
+    try:
+        seeds = [urljoin(base_url, "/sitemap.xml"), urljoin(base_url, "/sitemap_index.xml")]
+        seeds.extend(_get_robot_sitemaps(base_url))
+
+        sitemap_queue: deque[str] = deque()
+        queued = set()
+        for s in seeds:
+            if not is_url(s):
+                continue
+            s = s.strip()
+            if s in queued:
+                continue
+            queued.add(s)
+            sitemap_queue.append(s)
+
+        visited_sitemaps = set()
+        discovered: List[str] = []
+        seen_urls = set()
+
+        while sitemap_queue and len(discovered) < SITEMAP_MAX_URLS_PER_TOWN:
+            sitemap_url = sitemap_queue.popleft()
+            if sitemap_url in visited_sitemaps:
+                continue
+            visited_sitemaps.add(sitemap_url)
+
+            resp = _get_sitemap_response(sitemap_url)
+            if not resp or resp.status_code >= 400 or not (resp.text or "").strip():
+                continue
+
+            try:
+                kind, locs = _extract_sitemap_locs(resp.text or "")
+            except Exception:
+                continue
+
+            for loc in locs:
+                candidate = urljoin(resp.url or base_url, loc)
+                if not is_url(candidate):
+                    continue
+                candidate = candidate.strip()
+
+                is_child_sitemap = kind == "index" or candidate.lower().split("?", 1)[0].endswith(".xml")
+                if is_child_sitemap:
+                    if candidate not in visited_sitemaps and candidate not in queued:
+                        queued.add(candidate)
+                        sitemap_queue.append(candidate)
+                    continue
+
+                if candidate in seen_urls:
+                    continue
+                seen_urls.add(candidate)
+                discovered.append(candidate)
+                if len(discovered) >= SITEMAP_MAX_URLS_PER_TOWN:
+                    break
+
+        return discovered[:SITEMAP_MAX_URLS_PER_TOWN]
+    except Exception:
+        return []
+
+
+def _is_generic_home_or_index(url: str) -> bool:
+    parsed = urlparse(url)
+    path = (parsed.path or "").strip("/").lower()
+    if not path:
+        return True
+    last = path.split("/")[-1]
+    return last in SITEMAP_GENERIC_LAST_SEGMENTS
+
+
+def filter_sitemap_candidates(sitemap_urls: List[str]) -> List[Tuple[str, str, str]]:
+    accepted: List[Tuple[str, str, str]] = []
+    seen = set()
+
+    for raw in sitemap_urls[:SITEMAP_MAX_URLS_PER_TOWN]:
+        if not is_url(raw):
+            continue
+        u = raw.strip()
+        if not u or u in seen:
+            continue
+        seen.add(u)
+
+        low = u.lower()
+        blob = text_blob(u)
+
+        if any(term in low for term in SITEMAP_HARD_REJECT_TERMS):
+            continue
+        if _is_generic_home_or_index(u):
+            continue
+
+        if "documentcenter" in low:
+            if not is_document_file(u):
+                continue
+            if "employment" not in blob and "application" not in blob:
+                continue
+
+        if is_document_file(u):
+            if has_application_negative_signal(u):
+                continue
+            if "application" in blob or "employment" in blob:
+                accepted.append((u, "SITEMAP_APPLICATION", "sitemap"))
+                continue
+
+        if not any(term in low for term in SITEMAP_INCLUDE_TERMS):
+            continue
+        accepted.append((u, "SITEMAP_URL", "sitemap"))
+
+    return accepted
 
 
 def extract_links(base_url: str, html: str) -> List[Tuple[str, str]]:
@@ -584,6 +765,17 @@ def gather_application_candidates(
         if is_document_file(u) or "application" in blob or has_application_signal(u, t):
             candidates.append((u, t, f"employment_candidate:{src}"))
 
+    for u, t, src in employment_candidates:
+        if src != "sitemap":
+            continue
+        blob = text_blob(u, t)
+        if not is_document_file(u):
+            continue
+        if has_application_negative_signal(u, t):
+            continue
+        if "application" in blob or "employment" in blob:
+            candidates.append((u, t, "employment_candidate:sitemap"))
+
     deduped: List[Tuple[str, str, str]] = []
     seen = set()
     for u, t, src in candidates:
@@ -874,6 +1066,11 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
     else:
         cand = discover_other(base_home)
 
+    sitemap_urls = get_sitemap_urls(base_home)
+    sitemap_candidates = filter_sitemap_candidates(sitemap_urls)
+    print(f"SITEMAP: {town} -> {len(sitemap_urls)} URLs, {len(sitemap_candidates)} candidates accepted")
+    cand.extend(sitemap_candidates)
+
     # De-dupe URLs
     seen = set()
     deduped: List[Tuple[str, str, str]] = []
@@ -929,6 +1126,8 @@ def rediscover_for_town(rec: Dict[str, Any]) -> Dict[str, Any]:
             conf += 10
         if is_ats(new_emp):
             conf = max(conf, 85)
+        if src == "sitemap":
+            conf += 1
         conf = min(conf, 95)
 
         if is_ats(new_emp):
