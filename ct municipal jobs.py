@@ -271,7 +271,7 @@ st.title("Connecticut Municipal Employment Directory")
 st.markdown("""
 Save hours of manual searching across 169 municipal websites, hiring portals, and application pages.
 
-Use the free directory below to explore municipal employment links, or download the full dataset if you need everything in one structured file.
+Use the free directory below to explore municipal employment links, or get the full directory in one structured file.
 """)
 st.caption("Built for recruiting, outreach, research, and vendor prospecting.")
 
@@ -287,8 +287,13 @@ Includes:
 - Verification status
 - Last checked dates
 """)
-st.link_button("Download Full Dataset ($49)", DATASET_PURCHASE_URL)
-st.caption("The full dataset is the fastest way to work with multiple towns without copying links manually.")
+st.link_button(
+    "Download Full Dataset ($49)",
+    DATASET_PURCHASE_URL,
+    type="primary",
+)
+st.caption("Avoid manually opening 169 municipal websites. The full dataset gives you everything in one file.")
+st.markdown("---")
 
 
 # Load data
@@ -447,6 +452,7 @@ if not df.empty:
     col3.metric("With Applications", applications_count)
     col4.metric("Platforms Used", platforms_count)
     st.caption("This directory is useful for free browsing. The paid dataset is for faster professional use.")
+    st.caption("Covers all 169 Connecticut municipalities with verified employment links where available.")
 
     # Active filter summary
     if search_term or selected_platform != 'All Platforms':
@@ -463,7 +469,7 @@ if not df.empty:
     st.markdown("""
     Search by town, filter by platform, and go directly to official job pages and application forms.
     """)
-    st.caption("Working with multiple towns? The dataset is faster than copying results manually.")
+    st.caption("Working across multiple towns? Copying this manually gets tedious quickly.")
     st.caption(f"{len(filtered_df)} result{'s' if len(filtered_df) != 1 else ''}")
     
     if len(filtered_df) == 0:
@@ -564,13 +570,22 @@ if not df.empty:
             "Check link = link may require manual verification, Unavailable = no link in dataset."
         )
 
+    if len(filtered_df) > 0:
+        st.warning("If you're working across multiple towns, doing this manually gets slow quickly.")
+
     st.markdown("---")
     st.markdown("## Need the Full Directory in One File?")
     st.markdown("""
-    If you're using this for recruiting, outreach, consulting, or research, downloading the full dataset is significantly faster than working town-by-town inside the app.
+    Avoid manually opening, checking, and copying from 169 separate municipal websites.
+
+    The full dataset gives you the complete directory in one structured file for recruiting, outreach, consulting, and research.
     """)
-    st.link_button("Download Full Dataset ($49)", DATASET_PURCHASE_URL)
-    st.caption("Equivalent to manually reviewing 169 separate municipal websites.")
+    st.link_button(
+        "Download Full Dataset ($49)",
+        DATASET_PURCHASE_URL,
+        type="primary",
+    )
+    st.caption("Without the dataset, this means opening, checking, and copying from 169 separate sites.")
 
     st.info("""
 Some municipalities use third-party hiring systems where the job page itself serves as the application.
@@ -582,8 +597,12 @@ This directory reflects how municipal hiring systems actually operate across Con
 
     st.markdown("---")
     st.markdown("### Need the structured version?")
-    st.link_button("Download Full Dataset ($49)", DATASET_PURCHASE_URL)
-    st.caption("For internal use, outreach lists, municipal market research, and recruiting workflows.")
+    st.link_button(
+        "Download Full Dataset ($49)",
+        DATASET_PURCHASE_URL,
+        type="primary",
+    )
+    st.caption("Use it for outreach lists, municipal market research, recruiting workflows, and internal reference.")
 
 else:
     st.error("Unable to load employment data. Please check that the data file exists.")
