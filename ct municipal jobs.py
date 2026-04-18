@@ -14,32 +14,12 @@ st.set_page_config(
 
 DATASET_PURCHASE_URL = "https://ko-fi.com/s/814c806c0b"
 
-# Custom CSS
+# Hide Streamlit chrome
 st.markdown("""
 <style>
-    .stats-box {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 10px;
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-    .stats-box h2 {
-        margin: 0;
-        font-size: 2.5rem;
-    }
-    .stats-box p {
-        margin: 0.5rem 0 0 0;
-        font-size: 0.95rem;
-    }
-    .search-info {
-        background: #e3f2fd;
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
-        border-left: 4px solid #2196f3;
-    }
+#MainMenu {visibility: hidden;}
+header {visibility: hidden;}
+footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -286,35 +266,29 @@ def manual_or_pdf_process(row):
     return has_application_pdf(app_url) or not is_third_party_platform(platform)
 
 
-# Main header
+# Main product header
 st.title("Connecticut Municipal Employment Directory")
 st.markdown("""
-Quickly access employment opportunities across all 169 Connecticut municipalities.
+Save hours of manual searching across 169 municipal websites, hiring portals, and application pages.
 
-Search by town, filter by platform, and go directly to official job pages and application forms.
+Use the free directory below to explore municipal employment links, or download the full dataset if you need everything in one structured file.
 """)
+st.caption("Built for recruiting, outreach, research, and vendor prospecting.")
 
-st.markdown("## Get the Full Dataset")
+st.markdown("## Download the Full Dataset")
 st.markdown("""
-This directory saves hours of manually checking 169 separate municipal websites.
-
-Instead of clicking town-by-town, get the complete dataset in one structured file.
+Get the complete Connecticut municipal employment directory in one structured file.
 
 Includes:
 - All 169 municipalities
 - Employment page links
 - Application availability
 - Platform / ATS used
-- Verification status and last checked dates
-
-Built for:
-- recruiters
-- consultants
-- vendors selling into municipalities
-- researchers and analysts
+- Verification status
+- Last checked dates
 """)
 st.link_button("Download Full Dataset ($49)", DATASET_PURCHASE_URL)
-st.caption("The full dataset supports ongoing updates and verification across all municipalities.")
+st.caption("The full dataset is the fastest way to work with multiple towns without copying links manually.")
 
 
 # Load data
@@ -324,6 +298,7 @@ LINK_HEALTH_LOOKUP = load_link_health_lookup()
 if not df.empty:
     # Sidebar - Filters
     with st.sidebar:
+        st.caption("Free browsing tool • Full dataset available in-app")
         st.header("Search & Filter")
         
         # Search box
@@ -381,25 +356,7 @@ if not df.empty:
             value=False,
             help="Show municipalities that appear to use a manual or PDF application workflow.",
         )
-        
-        st.markdown("---")
-        
-        # About section
-        st.header("About")
-        st.markdown("""
-        This directory provides quick access to employment resources for all Connecticut municipalities.
-        
-        **Features:**
-        - Direct links to town websites
-        - Employment/career pages
-        - Downloadable application forms
-        - Platform information
-        
-        
-        """)
-        
-        st.markdown("---")
-        
+
 
         
         
@@ -480,58 +437,33 @@ if not df.empty:
     
     # Statistics
     col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.markdown(f"""
-        <div class="stats-box">
-            <h2>{len(filtered_df)}</h2>
-            <p>Municipalities</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        with_jobs = len(filtered_df[filtered_df['Employment Page URL'].notna()])
-        st.markdown(f"""
-        <div class="stats-box">
-            <h2>{with_jobs}</h2>
-            <p>With Job Pages</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        with_apps = len(filtered_df[filtered_df['Application Form URL'].notna()])
-        st.markdown(f"""
-        <div class="stats-box">
-            <h2>{with_apps}</h2>
-            <p>With Applications</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col4:
-        platforms_count = filtered_df['ATS or Platform (if known)'].nunique()
-        st.markdown(f"""
-        <div class="stats-box">
-            <h2>{platforms_count}</h2>
-            <p>Platforms Used</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Search info box
+    municipalities_count = len(filtered_df)
+    job_pages_count = len(filtered_df[filtered_df['Employment Page URL'].notna()])
+    applications_count = len(filtered_df[filtered_df['Application Form URL'].notna()])
+    platforms_count = filtered_df['ATS or Platform (if known)'].nunique()
+
+    col1.metric("Municipalities", municipalities_count)
+    col2.metric("With Job Pages", job_pages_count)
+    col3.metric("With Applications", applications_count)
+    col4.metric("Platforms Used", platforms_count)
+    st.caption("This directory is useful for free browsing. The paid dataset is for faster professional use.")
+
+    # Active filter summary
     if search_term or selected_platform != 'All Platforms':
         filters_applied = []
         if search_term:
             filters_applied.append(f'"{search_term}"')
         if selected_platform != 'All Platforms':
             filters_applied.append(f'Platform: {selected_platform}')
-        
-        st.markdown(f"""
-        <div class="search-info">
-            <strong>Active Filters:</strong> {', '.join(filters_applied)}
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Display results
-    st.markdown("## Browse Municipal Employment Links")
+
+        st.caption(f"Active filters: {', '.join(filters_applied)}")
+
+    st.markdown("---")
+    st.markdown("## Browse the Free Directory")
+    st.markdown("""
+    Search by town, filter by platform, and go directly to official job pages and application forms.
+    """)
+    st.caption("Working with multiple towns? The dataset is faster than copying results manually.")
     st.caption(f"{len(filtered_df)} result{'s' if len(filtered_df) != 1 else ''}")
     
     if len(filtered_df) == 0:
@@ -632,19 +564,26 @@ if not df.empty:
             "Check link = link may require manual verification, Unavailable = no link in dataset."
         )
 
+    st.markdown("---")
+    st.markdown("## Need the Full Directory in One File?")
+    st.markdown("""
+    If you're using this for recruiting, outreach, consulting, or research, downloading the full dataset is significantly faster than working town-by-town inside the app.
+    """)
+    st.link_button("Download Full Dataset ($49)", DATASET_PURCHASE_URL)
+    st.caption("Equivalent to manually reviewing 169 separate municipal websites.")
+
     st.info("""
 Some municipalities use third-party hiring systems where the job page itself serves as the application.
 
-In these cases, a separate application form will appear as "Unavailable."
+In those cases, a separate application form may appear as unavailable.
 
 This directory reflects how municipal hiring systems actually operate across Connecticut.
 """)
 
-    st.markdown("## Need the Full Dataset?")
-    st.markdown("""
-Skip manual searching and get the complete dataset covering all 169 municipalities in one structured file.
-""")
-    st.link_button("Download Full Dataset", DATASET_PURCHASE_URL)
+    st.markdown("---")
+    st.markdown("### Need the structured version?")
+    st.link_button("Download Full Dataset ($49)", DATASET_PURCHASE_URL)
+    st.caption("For internal use, outreach lists, municipal market research, and recruiting workflows.")
 
 else:
     st.error("Unable to load employment data. Please check that the data file exists.")
