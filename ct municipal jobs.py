@@ -291,29 +291,30 @@ st.title("Connecticut Municipal Employment Directory")
 st.markdown("""
 Quickly access employment opportunities across all 169 Connecticut municipalities.
 
-Search by town, filter by hiring platform, and go directly to official job pages and application forms.
-
-If you need the full structured dataset for research, outreach, or internal use, a complete export is available below.
+Search by town, filter by platform, and go directly to official job pages and application forms.
 """)
 
 st.markdown("## Get the Full Dataset")
 st.markdown("""
-Download the complete Connecticut Municipal Employment Directory as a clean, ready-to-use dataset.
+This directory saves hours of manually checking 169 separate municipal websites.
+
+Instead of clicking town-by-town, get the complete dataset in one structured file.
 
 Includes:
 - All 169 municipalities
-- Direct employment page links
-- Application form availability
-- Platform / ATS identification
-- Link verification status and last checked dates
+- Employment page links
+- Application availability
+- Platform / ATS used
+- Verification status and last checked dates
 
-Designed for:
-- Sales and outreach
-- Policy and research
-- Recruiting and job aggregation
-- Data analysis and automation
+Built for:
+- recruiters
+- consultants
+- vendors selling into municipalities
+- researchers and analysts
 """)
-st.link_button("Get Full Dataset ($49)", DATASET_PURCHASE_URL)
+st.link_button("Download Full Dataset ($49)", DATASET_PURCHASE_URL)
+st.caption("The full dataset supports ongoing updates and verification across all municipalities.")
 
 
 # Load data
