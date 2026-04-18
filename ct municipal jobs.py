@@ -415,7 +415,7 @@ if not df.empty:
     cta_cols = st.columns(2)
     with cta_cols[0]:
         if DATASET_CTA_LINKS["get_full_export"]:
-            st.link_button("Get Full Export", DATASET_CTA_LINKS["get_full_export"])
+            st.link_button("Get Full Export", DATASET_CTA_LINKS=https://ko-fi.com/s/814c806c0b["get_full_export"])
         else:
             st.caption("Coming soon")
     with cta_cols[1]:
@@ -425,7 +425,7 @@ if not df.empty:
             st.caption("Coming soon")
     st.caption(
         "Configure export links via environment variables: "
-        "CT_DATASET_REQUEST_URL and CT_VERIFIED_EXPORT_URL=https://buy.stripe.com/28E9AS90VesterOdWw0co00."
+        "CT_DATASET_REQUEST_URL and CT_VERIFIED_EXPORT_URL."
     )
 
     # Sidebar - Filters
