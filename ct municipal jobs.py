@@ -313,7 +313,7 @@ Designed for:
 - Recruiting and job aggregation
 - Data analysis and automation
 """)
-st.link_button("Get Full Dataset ($25)", DATASET_PURCHASE_URL)
+st.link_button("Get Full Dataset ($49)", DATASET_PURCHASE_URL)
 
 
 # Load data
