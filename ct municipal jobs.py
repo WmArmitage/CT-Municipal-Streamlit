@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import json
-import os
 import csv
 import urllib.request
 
@@ -13,32 +12,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-def _env_url(name):
-    value = (os.getenv(name) or "").strip()
-    return value if value else None
-
-
-DATASET_CTA_LINKS = {
-    "get_full_export": _env_url("CT_DATASET_REQUEST_URL"),
-    "get_verified_export": _env_url("CT_VERIFIED_EXPORT_URL"),
-}
+DATASET_PURCHASE_URL = "https://ko-fi.com/s/814c806c0b"
 
 # Custom CSS
 st.markdown("""
 <style>
-    .main-header {
-        font-size: 2.8rem;
-        font-weight: bold;
-        color: #1f4788;
-        text-align: center;
-        margin-bottom: 0.5rem;
-    }
-    .sub-header {
-        font-size: 1.3rem;
-        color: #666;
-        text-align: center;
-        margin-bottom: 2rem;
-    }
     .stats-box {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -54,33 +32,6 @@ st.markdown("""
     .stats-box p {
         margin: 0.5rem 0 0 0;
         font-size: 0.95rem;
-    }
-    .donate-section {
-        background: #f8f9fa;
-        padding: 2rem;
-        border-radius: 12px;
-        text-align: center;
-        margin: 2rem 0;
-        border: 2px solid #e9ecef;
-    }
-    .donate-button {
-        display: inline-block;
-        padding: 12px 30px;
-        margin: 10px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1.1rem;
-        transition: transform 0.2s;
-    }
-    .donate-button:hover {
-        transform: translateY(-2px);
-    }
-    .kofi-button {
-        background: #29abe0;
-        color: white;
-    }
-
     }
     .search-info {
         background: #e3f2fd;
@@ -335,34 +286,34 @@ def manual_or_pdf_process(row):
     return has_application_pdf(app_url) or not is_third_party_platform(platform)
 
 
-def recently_checked_count(frame):
-    if frame.empty:
-        return 0
-    checked = frame.apply(
-        lambda row: (
-            get_link_meta(row, 'Employment Page URL', 'employment')['checked_at'] not in (None, "")
-            or get_link_meta(row, 'Application Form URL', 'application')['checked_at'] not in (None, "")
-        ),
-        axis=1
-    )
-    return int(checked.sum())
-
 # Main header
-st.markdown('<div class="main-header">Connecticut Municipal Employment Directory</div>', unsafe_allow_html=True)
+st.title("Connecticut Municipal Employment Directory")
 st.markdown("""
-<div class="sub-header">
-    Quick access to employment opportunities across all 169 Connecticut municipalities.
-</div>
-""", unsafe_allow_html=True)
-st.info(
-    """
-"Unavailable" does not necessarily indicate missing or broken information. Connecticut municipalities use a wide range of website structures and hiring systems, including third-party applicant tracking platforms where the employment page itself serves as the application. In these cases, a separate application form does not exist.
+Quickly access employment opportunities across all 169 Connecticut municipalities.
 
-In other instances, information may be unavailable due to non-standard page layouts, dynamically generated content, or frequent structural changes on municipal websites.
+Search by town, filter by hiring platform, and go directly to official job pages and application forms.
 
-This directory provides Connecticut-wide hiring visibility, including verified employment links, application availability where applicable, platform or ATS identification, and ongoing maintenance tracking.
-"""
-)
+If you need the full structured dataset for research, outreach, or internal use, a complete export is available below.
+""")
+
+st.markdown("## Get the Full Dataset")
+st.markdown("""
+Download the complete Connecticut Municipal Employment Directory as a clean, ready-to-use dataset.
+
+Includes:
+- All 169 municipalities
+- Direct employment page links
+- Application form availability
+- Platform / ATS identification
+- Link verification status and last checked dates
+
+Designed for:
+- Sales and outreach
+- Policy and research
+- Recruiting and job aggregation
+- Data analysis and automation
+""")
+st.link_button("Get Full Dataset ($25)", DATASET_PURCHASE_URL)
 
 
 # Load data
@@ -370,64 +321,6 @@ df = load_employment_data()
 LINK_HEALTH_LOOKUP = load_link_health_lookup()
 
 if not df.empty:
-    # Dataset-wide product signals for positioning
-    profile_df = df.copy()
-    profile_df['__employment_status'] = profile_df.apply(
-        lambda row: get_link_meta(row, 'Employment Page URL', 'employment')['status'],
-        axis=1
-    )
-    profile_df['__application_status'] = profile_df.apply(
-        lambda row: get_link_meta(row, 'Application Form URL', 'application')['status'],
-        axis=1
-    )
-    profile_df['__has_application_pdf'] = profile_df['Application Form URL'].apply(has_application_pdf)
-    profile_df['__is_third_party_platform'] = profile_df['ATS or Platform (if known)'].apply(is_third_party_platform)
-
-    towns_total = len(profile_df)
-    towns_verified_employment = int(profile_df['__employment_status'].isin(['verified', 'redirected']).sum())
-    towns_with_application = int(profile_df['Application Form URL'].apply(lambda v: isinstance(v, str) and v.strip() != "").sum())
-    towns_with_platform = int(profile_df['__is_third_party_platform'].sum())
-    towns_recently_checked = recently_checked_count(profile_df)
-
-    st.markdown("""
-    <div style="background:#f8f9fa;border:1px solid #e9ecef;border-radius:10px;padding:0.9rem 1rem;margin-bottom:1rem;">
-        <strong>Connecticut-wide hiring intelligence</strong><br>
-        169-municipality coverage with verified employment/application links, ATS or platform visibility,
-        and maintenance metadata where available.
-    </div>
-    """, unsafe_allow_html=True)
-
-    signal_cols = st.columns(4)
-    with signal_cols[0]:
-        st.metric("Verified Employment Links", f"{towns_verified_employment}/{towns_total}")
-    with signal_cols[1]:
-        st.metric("Towns With Application Forms", f"{towns_with_application}")
-    with signal_cols[2]:
-        st.metric("Towns Using ATS/Platforms", f"{towns_with_platform}")
-    with signal_cols[3]:
-        checked_label = f"{towns_recently_checked}" if towns_recently_checked > 0 else "Unavailable"
-        st.metric("Recently Checked Towns", checked_label)
-
-    st.markdown("### Download the Full Directory")
-    st.caption(
-        "Download the complete Connecticut municipal employment directory as a clean, ready-to-use dataset."
-    )
-    cta_cols = st.columns(2)
-    with cta_cols[0]:
-        if DATASET_CTA_LINKS["get_full_export"]:
-            st.link_button("Get Full Export", DATASET_CTA_LINKS["get_full_export"])
-        else:
-            st.caption("Coming soon")
-    with cta_cols[1]:
-        if DATASET_CTA_LINKS["get_verified_export"]:
-            st.link_button("Get Verified Export", DATASET_CTA_LINKS["get_verified_export"])
-        else:
-            st.caption("Coming soon")
-    st.caption(
-        "Configure export links via environment variables: "
-        "CT_DATASET_REQUEST_URL and CT_VERIFIED_EXPORT_URL."
-    )
-
     # Sidebar - Filters
     with st.sidebar:
         st.header("Search & Filter")
@@ -637,7 +530,8 @@ if not df.empty:
         """, unsafe_allow_html=True)
     
     # Display results
-    st.subheader(f"{len(filtered_df)} Result{'s' if len(filtered_df) != 1 else ''}")
+    st.markdown("## Browse Municipal Employment Links")
+    st.caption(f"{len(filtered_df)} result{'s' if len(filtered_df) != 1 else ''}")
     
     if len(filtered_df) == 0:
         st.warning("No municipalities match your current filters. Try adjusting your search criteria.")
@@ -736,118 +630,20 @@ if not df.empty:
             "Available = link is listed but may not have recent verification, "
             "Check link = link may require manual verification, Unavailable = no link in dataset."
         )
-    
-    # --- Donation button CSS (define once) ---
+
+    st.info("""
+Some municipalities use third-party hiring systems where the job page itself serves as the application.
+
+In these cases, a separate application form will appear as "Unavailable."
+
+This directory reflects how municipal hiring systems actually operate across Connecticut.
+""")
+
+    st.markdown("## Need the Full Dataset?")
     st.markdown("""
-    <style>
-    .donate-section {
-        text-align: center;
-        padding: 2rem 1rem;
-    }
-
-    .donate-button {
-        display: inline-block;
-        padding: 0.9rem 1.4rem;
-        margin: 0.5rem;
-        border-radius: 8px;
-        font-weight: 700;
-        font-size: 1rem;
-        text-decoration: none !important;
-        color: #ffffff !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .donate-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    .kofi-button {
-        background-color: #29abe0;
-    }
-
- 
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    
-    
-    
-    # Large donation section at bottom
-    st.markdown("---")
-    st.markdown("""
-    <div class="donate-section">
-        <h2 style="color: #1f4788; margin-bottom: 1rem;"> Support This Free Resource</h2>
-        <p style="font-size: 1.1rem; color: #444; max-width: 700px; margin: 0 auto 1.5rem;">
-            This directory is independently built and maintained. 
-                If you found it useful, you are welcome to support its continued development with a donation.
-        </p>
-        <div>
-            <a href="https://ko-fi.com/wmarmitage" target="_blank" class="donate-button kofi-button">
-                Support on Ko-fi
-            </a>
-        </div>
-        <p style="font-size: 0.9rem; color: #444; margin-top: 1.5rem;">
-            Donations support the time and effort required to maintain and improve this directory.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Streamlit "For Agencies" section
-    st.markdown("---")
-    st.markdown("### For Agencies, Researchers, and Vendors")
-
-    st.markdown(
-    """
-    This directory is provided as a free public resource for job seekers.
-
-    For professional, research, or commercial use, a **licensed dataset snapshot**
-    of the Connecticut Municipal Employment Directory is available.
-    
-    Purchases are handled securely through Ko-fi and include immediate access to
-    the dataset, documentation, and license.
-    """
-)
-
-    st.link_button(
-    "Purchase Licensed Dataset",
-    "https://ko-fi.com/s/814c806c0b"
-)
-
-    st.caption(
-    "Ko-fi provides receipts and handles applicable taxes for digital purchases."
-    )
-
-
-
-    # Footer
-    st.markdown("---")
-
-    st.caption("Employment page links may change periodically as municipalities update their websites.")
-    
-    st.markdown("""
-    <div style='text-align: center; color: #666; padding: 2rem 0;'>
-    <p><strong>Connecticut Municipal Employment Directory</strong></p>
-    <p style="margin: 0.5rem 0;">
-        Coverage includes all 169 Connecticut municipalities
-    </p>
-
-    <!--
-    <p style="margin: 1rem 0 0.5rem;">
-        Found a broken link or outdated information?
-    </p>
-    <p style="margin: 0;">
-        Submit with this form: <a href='https://tally.so/r/eqR5Dq' style='color: #007bff;'>Form</a>
-    </p>
-    -->
-
-    <p style='font-size: 0.85rem; color: #999; margin-top: 1.5rem;'>
-        Applicants should always confirm details directly on official municipal websites before applying
-    </p>
-    </div>
-    """, unsafe_allow_html=True)
+Skip manual searching and get the complete dataset covering all 169 municipalities in one structured file.
+""")
+    st.link_button("Download Full Dataset", DATASET_PURCHASE_URL)
 
 else:
     st.error("Unable to load employment data. Please check that the data file exists.")
