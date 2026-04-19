@@ -8,7 +8,7 @@ import urllib.request
 st.set_page_config(
     page_title="Connecticut Municipal Employment Directory",
     page_icon="",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="expanded"
 )
 
@@ -26,25 +26,31 @@ footer {visibility: hidden;}
 st.markdown(
     """
     <style>
-    /* Main app width and breathing room */
+    /* Main content area */
     .block-container {
-        padding-top: 2rem;
-        padding-bottom: 3rem;
-        max-width: 1400px;
+        padding-top: 1.5rem;
+        padding-bottom: 2.5rem;
+        max-width: 1100px;
     }
 
-    /* Sidebar spacing */
+    /* Keep sidebar readable and clearly separate */
+    section[data-testid="stSidebar"] {
+        background-color: #F1F5F9;
+        border-right: 1px solid #E2E8F0;
+    }
+
     section[data-testid="stSidebar"] .block-container {
         padding-top: 1.25rem;
     }
 
-    /* Headings tighter and more product-like */
+    /* Typography */
     h1, h2, h3 {
         letter-spacing: -0.02em;
+        color: #0F172A;
     }
 
     h1 {
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.35rem;
     }
 
     h2 {
@@ -52,42 +58,56 @@ st.markdown(
         margin-bottom: 0.5rem;
     }
 
-    /* Muted text readability */
+    p, li, label, .stMarkdown, .stCaption {
+        color: #334155;
+    }
+
+    /* Caption readability */
     .stCaption {
-        opacity: 0.9;
+        opacity: 0.95;
     }
 
     /* Buttons */
     div.stLinkButton > a {
         border-radius: 10px !important;
-        padding: 0.7rem 1.1rem !important;
+        padding: 0.72rem 1.15rem !important;
         font-weight: 600 !important;
         text-decoration: none !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
     }
 
-    /* Metrics feel more intentional */
+    /* Metric cards */
     [data-testid="stMetric"] {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.08);
-        padding: 1rem 1rem 0.75rem 1rem;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        padding: 1rem 1rem 0.8rem 1rem;
         border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
     }
 
-    /* Info/warning blocks softer corners */
+    /* Alerts/info/warning boxes */
     [data-testid="stAlert"] {
         border-radius: 12px;
+        border: 1px solid #DBEAFE;
     }
 
-    /* Horizontal rule spacing */
+    /* Horizontal rules */
     hr {
         margin-top: 2rem !important;
         margin-bottom: 2rem !important;
+        border-color: #E2E8F0 !important;
     }
 
     /* Dataframe/table container */
     [data-testid="stDataFrame"], .stTable {
         border-radius: 12px;
         overflow: hidden;
+        border: 1px solid #E2E8F0;
+    }
+
+    /* Inputs and selects feel cleaner */
+    input, textarea, [data-baseweb="select"] {
+        border-radius: 10px !important;
     }
     </style>
     """,
