@@ -7,7 +7,7 @@ import urllib.request
 # Page configuration
 st.set_page_config(
     page_title="Connecticut Municipal Employment Directory",
-    page_icon="CT",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -22,6 +22,77 @@ header {visibility: hidden;}
 footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
+
+st.markdown(
+    """
+    <style>
+    /* Main app width and breathing room */
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+        max-width: 1400px;
+    }
+
+    /* Sidebar spacing */
+    section[data-testid="stSidebar"] .block-container {
+        padding-top: 1.25rem;
+    }
+
+    /* Headings tighter and more product-like */
+    h1, h2, h3 {
+        letter-spacing: -0.02em;
+    }
+
+    h1 {
+        margin-bottom: 0.4rem;
+    }
+
+    h2 {
+        margin-top: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Muted text readability */
+    .stCaption {
+        opacity: 0.9;
+    }
+
+    /* Buttons */
+    div.stLinkButton > a {
+        border-radius: 10px !important;
+        padding: 0.7rem 1.1rem !important;
+        font-weight: 600 !important;
+        text-decoration: none !important;
+    }
+
+    /* Metrics feel more intentional */
+    [data-testid="stMetric"] {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 1rem 1rem 0.75rem 1rem;
+        border-radius: 14px;
+    }
+
+    /* Info/warning blocks softer corners */
+    [data-testid="stAlert"] {
+        border-radius: 12px;
+    }
+
+    /* Horizontal rule spacing */
+    hr {
+        margin-top: 2rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    /* Dataframe/table container */
+    [data-testid="stDataFrame"], .stTable {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # Load data
 @st.cache_data
@@ -266,33 +337,38 @@ def manual_or_pdf_process(row):
     return has_application_pdf(app_url) or not is_third_party_platform(platform)
 
 
-# Main product header
-st.title("Connecticut Municipal Employment Directory")
-st.markdown("""
-Save hours of manual searching across 169 municipal websites, hiring portals, and application pages.
+left_col, right_col = st.columns([1.5, 1], gap="large")
 
-Use the free directory below to explore municipal employment links, or get the full directory in one structured file.
-""")
-st.caption("Built for recruiting, outreach, research, and vendor prospecting.")
+with left_col:
+    # Main product header
+    st.title("Connecticut Municipal Employment Directory")
+    st.markdown("""
+    Save hours of manual searching across 169 municipal websites, hiring portals, and application pages.
 
-st.markdown("## Download the Full Dataset")
-st.markdown("""
-Get the complete Connecticut municipal employment directory in one structured file.
+    Use the free directory below to explore municipal employment links, or get the full directory in one structured file.
+    """)
+    st.caption("Built for recruiting, outreach, research, and vendor prospecting.")
 
-Includes:
-- All 169 municipalities
-- Employment page links
-- Application availability
-- Platform / ATS used
-- Verification status
-- Last checked dates
-""")
-st.link_button(
-    "Download Full Dataset ($49)",
-    DATASET_PURCHASE_URL,
-    type="primary",
-)
-st.caption("Avoid manually opening 169 municipal websites. The full dataset gives you everything in one file.")
+with right_col:
+    st.markdown("## Download the Full Dataset")
+    st.markdown("""
+    Get the complete Connecticut municipal employment directory in one structured file.
+
+    Includes:
+    - All 169 municipalities
+    - Employment page links
+    - Application availability
+    - Platform / ATS used
+    - Verification status
+    - Last checked dates
+    """)
+    st.link_button(
+        "Download Full Dataset ($49)",
+        DATASET_PURCHASE_URL,
+        type="primary",
+        use_container_width=True,
+    )
+    st.caption("Avoid manually opening 169 municipal websites. The full dataset gives you everything in one file.")
 st.markdown("---")
 
 
@@ -304,6 +380,7 @@ if not df.empty:
     # Sidebar - Filters
     with st.sidebar:
         st.caption("Free browsing tool • Full dataset available in-app")
+        st.sidebar.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
         st.header("Search & Filter")
         
         # Search box
@@ -441,6 +518,7 @@ if not df.empty:
             filtered_df = filtered_df[filtered_df['__manual_pdf_process']]
     
     # Statistics
+    st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
     col1, col2, col3, col4 = st.columns(4)
     municipalities_count = len(filtered_df)
     job_pages_count = len(filtered_df[filtered_df['Employment Page URL'].notna()])
@@ -453,6 +531,7 @@ if not df.empty:
     col4.metric("Platforms Used", platforms_count)
     st.caption("This directory is useful for free browsing. The paid dataset is for faster professional use.")
     st.caption("Covers all 169 Connecticut municipalities with verified employment links where available.")
+    st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
 
     # Active filter summary
     if search_term or selected_platform != 'All Platforms':
@@ -584,6 +663,7 @@ if not df.empty:
         "Download Full Dataset ($49)",
         DATASET_PURCHASE_URL,
         type="primary",
+        use_container_width=True,
     )
     st.caption("Without the dataset, this means opening, checking, and copying from 169 separate sites.")
 
@@ -601,6 +681,7 @@ This directory reflects how municipal hiring systems actually operate across Con
         "Download Full Dataset ($49)",
         DATASET_PURCHASE_URL,
         type="primary",
+        use_container_width=True,
     )
     st.caption("Use it for outreach lists, municipal market research, recruiting workflows, and internal reference.")
 
