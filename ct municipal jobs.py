@@ -67,15 +67,20 @@ st.markdown(
 
     /* Buttons */
     div.stLinkButton > a {
-        border-radius: 10px !important;
-        padding: 0.72rem 1.15rem !important;
+        border-radius: 12px !important;
+        padding: 0.85rem 1.25rem !important;
         font-weight: 700 !important;
         text-decoration: none !important;
         color: #FFFFFF !important;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+        background-color: #EA580C !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: all 0.15s ease-in-out;
     }
 
     div.stLinkButton > a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+        background-color: #C2410C !important;
         color: #FFFFFF !important;
     }
 
@@ -87,6 +92,15 @@ st.markdown(
     div.stLinkButton [data-testid="stMarkdownContainer"],
     div.stLinkButton [data-testid="stMarkdownContainer"] p {
         color: #FFFFFF !important;
+    }
+
+    /* Right-side product card */
+    div[data-testid="stHorizontalBlock"]:first-of-type > div[data-testid="column"]:last-child > div[data-testid="stVerticalBlock"] {
+        background: #FFFFFF;
+        border: 1px solid #E5E7EB !important;
+        border-radius: 12px !important;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        padding: 1.5rem;
     }
 
     /* Metric cards */
@@ -101,7 +115,18 @@ st.markdown(
     /* Alerts/info/warning boxes */
     [data-testid="stAlert"] {
         border-radius: 12px;
+    }
+
+    div[data-baseweb="notification"][kind="warning"] {
+        background-color: #FEF3C7;
+        border: 1px solid #FDE68A;
+        border-left: 4px solid #F59E0B;
+    }
+
+    div[data-baseweb="notification"][kind="info"] {
+        background-color: #EFF6FF;
         border: 1px solid #DBEAFE;
+        border-left: 4px solid #60A5FA;
     }
 
     /* Horizontal rules */
@@ -374,11 +399,17 @@ left_col, right_col = st.columns([1.5, 1], gap="large")
 
 with left_col:
     # Main product header
-    st.title("Connecticut Municipal Employment Directory")
     st.markdown("""
+    <h1 style='font-size: 2.4rem; font-weight: 800; margin-bottom: 0.5rem;'>
+    Connecticut Municipal Employment Directory
+    </h1>
+    """, unsafe_allow_html=True)
+    st.markdown("""
+    <div style="max-width: 650px;">
     Save hours of manual searching across 169 municipal websites, hiring portals, and application pages.
 
     Use the free directory below to explore municipal employment links, or get the full directory in one structured file.
+    </div>
     """)
     st.caption("Built for recruiting, outreach, research, and vendor prospecting.")
 
@@ -402,7 +433,7 @@ with right_col:
         use_container_width=True,
     )
     st.caption("Avoid manually opening 169 municipal websites. The full dataset gives you everything in one file.")
-st.markdown("---")
+st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
 
 
 # Load data
@@ -576,7 +607,7 @@ if not df.empty:
 
         st.caption(f"Active filters: {', '.join(filters_applied)}")
 
-    st.markdown("---")
+    st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
     st.markdown("## Browse the Free Directory")
     st.markdown("""
     Search by town, filter by platform, and go directly to official job pages and application forms.
@@ -685,7 +716,7 @@ if not df.empty:
     if len(filtered_df) > 0:
         st.warning("If you're working across multiple towns, doing this manually gets slow quickly.")
 
-    st.markdown("---")
+    st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
     st.markdown("## Need the Full Directory in One File?")
     st.markdown("""
     Avoid manually opening, checking, and copying from 169 separate municipal websites.
@@ -708,7 +739,7 @@ In those cases, a separate application form may appear as unavailable.
 This directory reflects how municipal hiring systems actually operate across Connecticut.
 """)
 
-    st.markdown("---")
+    st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
     st.markdown("### Need the structured version?")
     st.link_button(
         "Download Full Dataset ($49)",
@@ -720,4 +751,3 @@ This directory reflects how municipal hiring systems actually operate across Con
 
 else:
     st.error("Unable to load employment data. Please check that the data file exists.")
-
