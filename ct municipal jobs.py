@@ -19,6 +19,21 @@ st.markdown("""
 <style>
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
+
+/* Hide top toolbar actions such as Fork/GitHub links when present */
+header [data-testid="stToolbar"],
+header .stAppToolbar,
+header a[href*="github.com"],
+header a[title*="GitHub"],
+header button[title*="Fork"],
+header [aria-label*="Fork"] {
+    display: none !important;
+}
+
+/* Keep sidebar collapsed-control visible above any header layer */
+div[data-testid="collapsedControl"] {
+    z-index: 1001 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
