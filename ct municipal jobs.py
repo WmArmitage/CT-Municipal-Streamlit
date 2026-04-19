@@ -754,15 +754,5 @@ In those cases, a separate application form may appear as unavailable.
 This directory reflects how municipal hiring systems actually operate across Connecticut.
 """)
 
-    st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
-    st.markdown("### Need the structured version?")
-    st.link_button(
-        "Download Full Dataset ($49)",
-        DATASET_PURCHASE_URL,
-        type="primary",
-        use_container_width=True,
-    )
-    st.caption("Use it for outreach lists, municipal market research, recruiting workflows, and internal reference.")
-
 else:
     st.error("Unable to load employment data. Please check that the data file exists.")
