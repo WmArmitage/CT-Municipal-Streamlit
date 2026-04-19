@@ -8,7 +8,7 @@ import urllib.request
 st.set_page_config(
     page_title="Connecticut Municipal Employment Directory",
     page_icon="",
-    layout="centered",
+    layout="wide",
     initial_sidebar_state="expanded"
 )
 
@@ -18,7 +18,6 @@ DATASET_PURCHASE_URL = "https://ko-fi.com/s/814c806c0b"
 st.markdown("""
 <style>
 #MainMenu {visibility: hidden;}
-header {visibility: hidden;}
 footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
@@ -30,7 +29,6 @@ st.markdown(
     .block-container {
         padding-top: 1.5rem;
         padding-bottom: 2.5rem;
-        max-width: 1100px;
     }
 
     /* Keep sidebar readable and clearly separate */
@@ -71,9 +69,24 @@ st.markdown(
     div.stLinkButton > a {
         border-radius: 10px !important;
         padding: 0.72rem 1.15rem !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         text-decoration: none !important;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+        color: #FFFFFF !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    }
+
+    div.stLinkButton > a:hover {
+        color: #FFFFFF !important;
+    }
+
+    div.stLinkButton > a:visited {
+        color: #FFFFFF !important;
+    }
+
+    div.stLinkButton > a *,
+    div.stLinkButton [data-testid="stMarkdownContainer"],
+    div.stLinkButton [data-testid="stMarkdownContainer"] p {
+        color: #FFFFFF !important;
     }
 
     /* Metric cards */
