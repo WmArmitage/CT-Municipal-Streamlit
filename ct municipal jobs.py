@@ -410,7 +410,7 @@ with left_col:
 
     Use the free directory below to explore municipal employment links, or get the full directory in one structured file.
     </div>
-    """)
+    """, unsafe_allow_html=True)
     st.caption("Built for recruiting, outreach, research, and vendor prospecting.")
 
 with right_col:
