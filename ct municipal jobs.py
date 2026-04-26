@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import json
 import csv
-import os
 import urllib.request
 
 # Page configuration
@@ -14,25 +13,7 @@ st.set_page_config(
 )
 
 DATASET_PURCHASE_URL = "https://ko-fi.com/s/814c806c0b"
-
-
-def get_support_project_url():
-    keys = ("SUPPORT_PROJECT_URL", "support_project_url", "SUPPORT_URL", "support_url")
-    for key in keys:
-        try:
-            value = st.secrets.get(key)
-        except Exception:
-            value = None
-        if isinstance(value, str) and value.strip():
-            return value.strip()
-    for key in keys:
-        value = os.environ.get(key)
-        if isinstance(value, str) and value.strip():
-            return value.strip()
-    return None
-
-
-SUPPORT_PROJECT_URL = get_support_project_url()
+SUPPORT_URL = "https://ko-fi.com/wmarmitage"
 
 # Hide Streamlit chrome
 st.markdown("""
@@ -577,11 +558,11 @@ def render_directory_table(source_df, view_mode):
     )
 
 
-def render_optional_support_message():
-    if not SUPPORT_PROJECT_URL:
+def render_support_message():
+    if not SUPPORT_URL:
         return
     st.caption("This directory is free to use. If it saves you time, you can support the project.")
-    st.markdown(f"[Support the project]({SUPPORT_PROJECT_URL})")
+    st.markdown(f"[Support the project]({SUPPORT_URL})")
 
 
 left_col, right_col = st.columns([1.5, 1], gap="large")
@@ -601,6 +582,7 @@ with left_col:
     </div>
     """, unsafe_allow_html=True)
     st.caption("Built for recruiting, outreach, research, and vendor prospecting.")
+    render_support_message()
 
 with right_col:
     st.markdown("## Download the Full Dataset")
@@ -802,6 +784,7 @@ if not df.empty:
     Search by town, filter by platform, and go directly to official job pages and application forms.
     """)
     st.caption("Working across multiple towns? Copying this manually gets tedious quickly.")
+    render_support_message()
     st.caption(f"{len(filtered_df)} result{'s' if len(filtered_df) != 1 else ''}")
     table_view_mode = st.radio(
         "Table view",
@@ -832,7 +815,6 @@ if not df.empty:
         use_container_width=True,
     )
     st.caption("Without the dataset, this means opening, checking, and copying from 169 separate sites.")
-    render_optional_support_message()
 
     st.info("""
 Some municipalities use third-party hiring systems where the job page itself serves as the application.
