@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import json
 import csv
+import os
 import urllib.request
 
 # Page configuration
@@ -13,6 +14,25 @@ st.set_page_config(
 )
 
 DATASET_PURCHASE_URL = "https://ko-fi.com/s/814c806c0b"
+
+
+def get_support_project_url():
+    keys = ("SUPPORT_PROJECT_URL", "support_project_url", "SUPPORT_URL", "support_url")
+    for key in keys:
+        try:
+            value = st.secrets.get(key)
+        except Exception:
+            value = None
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    for key in keys:
+        value = os.environ.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return None
+
+
+SUPPORT_PROJECT_URL = get_support_project_url()
 
 # Hide Streamlit chrome
 st.markdown("""
@@ -324,14 +344,14 @@ def status_badge_html(status):
     styles = {
         "verified": ("Verified", "#e8f5e9", "#2e7d32"),
         "redirected": ("Verified", "#e3f2fd", "#1565c0"),
-        "suspicious": ("Check link", "#fff3e0", "#ef6c00"),
-        "unavailable": ("Unavailable", "#f1f3f5", "#6c757d"),
-        "unverified": ("Available", "#f8f9fa", "#6c757d"),
+        "suspicious": ("Needs review", "#fff3e0", "#ef6c00"),
+        "unavailable": ("Not listed", "#f1f3f5", "#6c757d"),
+        "unverified": ("Listed", "#f8f9fa", "#6c757d"),
     }
     tooltips = {
-        "suspicious": "Link may require manual verification",
+        "suspicious": "May require navigation on the municipal website",
     }
-    label, bg, fg = styles.get(status, ("Available", "#f8f9fa", "#6c757d"))
+    label, bg, fg = styles.get(status, ("Listed", "#f8f9fa", "#6c757d"))
     title_attr = f' title="{tooltips.get(status)}"' if status in tooltips else ""
     return (
         f'<span style="display:inline-block;padding:2px 8px;border-radius:999px;'
@@ -361,14 +381,14 @@ def format_checked_at(value):
 def freshness_label(value):
     dt = _parse_checked_at(value)
     if dt is None:
-        return "Available"
+        return "Listed"
     days_old = (pd.Timestamp.now(tz="UTC").normalize() - dt.normalize()).days
     days_old = max(0, int(days_old))
     if days_old <= 7:
         return "Verified"
     if days_old <= 30:
         return "Recently checked"
-    return "Available"
+    return "Listed"
 
 
 def verification_summary_html(meta):
@@ -377,7 +397,7 @@ def verification_summary_html(meta):
     freshness_colors = {
         "Verified": "#2e7d32",
         "Recently checked": "#1565c0",
-        "Available": "#6c757d",
+        "Listed": "#6c757d",
     }
     freshness_color = freshness_colors.get(freshness, "#6c757d")
     return (
@@ -408,6 +428,160 @@ def manual_or_pdf_process(row):
     if not isinstance(app_url, str) or not app_url.strip():
         return False
     return has_application_pdf(app_url) or not is_third_party_platform(platform)
+
+
+def make_clickable(
+    url,
+    text,
+    meta=None,
+    color="#007bff",
+    show_final_url=False,
+    show_status_note=False,
+):
+    if meta is None:
+        meta = {"status": "verified", "final_url": None}
+
+    if pd.isna(url) or url == "" or meta.get("status") == "unavailable":
+        return '<span style="color: #999; font-style: italic;">Not listed</span>'
+
+    link_color = color if meta.get("status") in {"verified", "redirected"} else "#b85c00"
+    link_html = (
+        f'<a href="{url}" target="_blank" rel="noopener noreferrer" '
+        f'style="color: {link_color}; text-decoration: none; font-weight: 500;">{text}</a>'
+    )
+
+    final_note = ""
+    if (
+        show_final_url
+        and meta.get("status") == "redirected"
+        and isinstance(meta.get("final_url"), str)
+        and _normalize_url(meta.get("final_url")) != _normalize_url(url)
+    ):
+        final_note = (
+            f'<div style="font-size:0.78rem;color:#555;">'
+            f'Final URL: <a href="{meta["final_url"]}" target="_blank" rel="noopener noreferrer">Open</a>'
+            f"</div>"
+        )
+
+    caution_note = ""
+    if show_status_note and meta.get("status") == "suspicious":
+        caution_note = (
+            '<div style="font-size:0.78rem;color:#6c757d;">'
+            "May require navigation on the municipal website."
+            "</div>"
+        )
+
+    return f"{link_html}{final_note}{caution_note}"
+
+
+def build_simple_directory_table(source_df):
+    display_df = source_df.copy()
+    display_df["Town Website"] = display_df.apply(
+        lambda row: make_clickable(
+            row["Town Website"],
+            "Visit website &rarr;",
+            {"status": "verified", "final_url": None},
+            "#1f4788",
+        ),
+        axis=1,
+    )
+    display_df["Jobs"] = display_df.apply(
+        lambda row: make_clickable(
+            row["Employment Page URL"],
+            "View jobs &rarr;",
+            get_link_meta(row, "Employment Page URL", "employment"),
+            "#007bff",
+        ),
+        axis=1,
+    )
+    display_df["Application"] = display_df.apply(
+        lambda row: make_clickable(
+            row["Application Form URL"],
+            "Apply &rarr;",
+            get_link_meta(row, "Application Form URL", "application"),
+            "#28a745",
+        ),
+        axis=1,
+    )
+    display_df["Platform/System"] = display_df["ATS or Platform (if known)"].fillna("-")
+    return display_df[["Town", "Town Website", "Jobs", "Application", "Platform/System"]]
+
+
+def build_detailed_directory_table(source_df):
+    display_df = source_df.copy()
+    display_df["Town Website"] = display_df.apply(
+        lambda row: make_clickable(
+            row["Town Website"],
+            "Visit website &rarr;",
+            {"status": "verified", "final_url": None},
+            "#1f4788",
+        ),
+        axis=1,
+    )
+    display_df["Employment Page"] = display_df.apply(
+        lambda row: make_clickable(
+            row["Employment Page URL"],
+            "View jobs &rarr;",
+            get_link_meta(row, "Employment Page URL", "employment"),
+            "#007bff",
+            show_final_url=True,
+            show_status_note=True,
+        ),
+        axis=1,
+    )
+    display_df["Application Form"] = display_df.apply(
+        lambda row: make_clickable(
+            row["Application Form URL"],
+            "Application &rarr;",
+            get_link_meta(row, "Application Form URL", "application"),
+            "#28a745",
+            show_final_url=True,
+            show_status_note=True,
+        ),
+        axis=1,
+    )
+    display_df["Employment Verification"] = display_df.apply(
+        lambda row: verification_summary_html(get_link_meta(row, "Employment Page URL", "employment")),
+        axis=1,
+    )
+    display_df["Application Verification"] = display_df.apply(
+        lambda row: verification_summary_html(get_link_meta(row, "Application Form URL", "application")),
+        axis=1,
+    )
+    display_df["Platform/System"] = display_df["ATS or Platform (if known)"].fillna("-")
+    return display_df[
+        [
+            "Town",
+            "Town Website",
+            "Employment Page",
+            "Employment Verification",
+            "Application Form",
+            "Application Verification",
+            "Platform/System",
+        ]
+    ]
+
+
+def render_directory_table(source_df, view_mode):
+    if view_mode == "Simple view":
+        final_display = build_simple_directory_table(source_df)
+        st.markdown(final_display.to_html(escape=False, index=False), unsafe_allow_html=True)
+        return
+
+    final_display = build_detailed_directory_table(source_df)
+    st.markdown(final_display.to_html(escape=False, index=False), unsafe_allow_html=True)
+    st.caption(
+        "Status legend: Verified = link recently confirmed. "
+        "Needs review = link may require manual navigation on the municipal website. "
+        "Not listed = no direct link is currently included in this dataset."
+    )
+
+
+def render_optional_support_message():
+    if not SUPPORT_PROJECT_URL:
+        return
+    st.caption("This directory is free to use. If it saves you time, you can support the project.")
+    st.markdown(f"[Support the project]({SUPPORT_PROJECT_URL})")
 
 
 left_col, right_col = st.columns([1.5, 1], gap="large")
@@ -491,9 +665,9 @@ if not df.empty:
             help="Keep only towns where available links are shown as Verified.",
         )
         hide_suspicious_links = st.checkbox(
-            "Hide \"Check link\" statuses",
+            "Hide \"Needs review\" statuses",
             value=False,
-            help="Exclude towns where a link may require manual verification.",
+            help="Exclude towns where a link may require manual navigation.",
         )
 
         st.subheader("Advanced Use Cases")
@@ -629,104 +803,17 @@ if not df.empty:
     """)
     st.caption("Working across multiple towns? Copying this manually gets tedious quickly.")
     st.caption(f"{len(filtered_df)} result{'s' if len(filtered_df) != 1 else ''}")
+    table_view_mode = st.radio(
+        "Table view",
+        ["Simple view", "Detailed view"],
+        index=0,
+        horizontal=True,
+    )
     
     if len(filtered_df) == 0:
         st.warning("No municipalities match your current filters. Try adjusting your search criteria.")
     else:
-        # Prepare display dataframe with clickable links
-        display_df = filtered_df.copy()
-        
-        # Function to create clickable links with trust context
-        def make_clickable(url, text, meta, color="#007bff"):
-            if pd.isna(url) or url == '' or meta['status'] == 'unavailable':
-                return '<span style="color: #999; font-style: italic;">Unavailable</span>'
-
-            link_color = color if meta['status'] in {'verified', 'redirected'} else '#b85c00'
-            link_html = (
-                f'<a href="{url}" target="_blank" rel="noopener noreferrer" '
-                f'style="color: {link_color}; text-decoration: none; font-weight: 500;">{text} -></a>'
-            )
-
-            final_note = ""
-            if (
-                meta['status'] == 'redirected'
-                and isinstance(meta['final_url'], str)
-                and _normalize_url(meta['final_url']) != _normalize_url(url)
-            ):
-                final_note = (
-                    f'<div style="font-size:0.78rem;color:#555;">'
-                    f'Final URL: <a href="{meta["final_url"]}" target="_blank" rel="noopener noreferrer">Open</a>'
-                    f'</div>'
-                )
-
-            caution_note = ""
-            if meta['status'] == 'suspicious':
-                caution_note = '<div style="font-size:0.78rem;color:#6c757d;">Link may require manual verification.</div>'
-
-            return f"{link_html}{final_note}{caution_note}"
-        # Create display columns
-        display_df['Town Website'] = display_df.apply(
-            lambda row: make_clickable(
-                row['Town Website'],
-                'Visit Website',
-                {'status': 'verified', 'final_url': None},
-                '#1f4788'
-            ),
-            axis=1
-        )
-        display_df['Employment Page'] = display_df.apply(
-            lambda row: make_clickable(
-                row['Employment Page URL'],
-                'View Jobs',
-                get_link_meta(row, 'Employment Page URL', 'employment'),
-                '#007bff'
-            ),
-            axis=1
-        )
-        display_df['Application Form'] = display_df.apply(
-            lambda row: make_clickable(
-                row['Application Form URL'],
-                'Download Form',
-                get_link_meta(row, 'Application Form URL', 'application'),
-                '#28a745'
-            ),
-            axis=1
-        )
-        display_df['Employment Verification'] = display_df.apply(
-            lambda row: verification_summary_html(get_link_meta(row, 'Employment Page URL', 'employment')),
-            axis=1
-        )
-        display_df['Application Verification'] = display_df.apply(
-            lambda row: verification_summary_html(get_link_meta(row, 'Application Form URL', 'application')),
-            axis=1
-        )
-        
-        # Handle platform display
-        display_df['Platform/System'] = display_df['ATS or Platform (if known)'].fillna('-')
-        
-        # Select columns for display
-        final_display = display_df[
-            [
-                'Town',
-                'Town Website',
-                'Employment Page',
-                'Employment Verification',
-                'Application Form',
-                'Application Verification',
-                'Platform/System'
-            ]
-        ]
-        
-        # Display as HTML table for clickable links
-        st.markdown(
-            final_display.to_html(escape=False, index=False), 
-            unsafe_allow_html=True
-        )
-        st.caption(
-            "Status legend: Verified = link confirmed and includes valid redirects, "
-            "Available = link is listed but may not have recent verification, "
-            "Check link = link may require manual verification, Unavailable = no link in dataset."
-        )
+        render_directory_table(filtered_df, table_view_mode)
 
     if len(filtered_df) > 0:
         st.warning("If you're working across multiple towns, doing this manually gets slow quickly.")
@@ -745,11 +832,12 @@ if not df.empty:
         use_container_width=True,
     )
     st.caption("Without the dataset, this means opening, checking, and copying from 169 separate sites.")
+    render_optional_support_message()
 
     st.info("""
 Some municipalities use third-party hiring systems where the job page itself serves as the application.
 
-In those cases, a separate application form may appear as unavailable.
+In those cases, a separate application form may appear as not listed.
 
 This directory reflects how municipal hiring systems actually operate across Connecticut.
 """)
