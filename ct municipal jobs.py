@@ -51,6 +51,16 @@ footer {visibility: hidden;}
 #ForkLink {visibility: hidden !important; display: none !important;}
 
 /* Fallbacks for Streamlit header action variants */
+[data-testid="stToolbarActionButton"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+[data-testid="stToolbarActionButtonIcon"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 header [data-testid="stHeaderActionElements"] a[href*="github.com"],
 header [data-testid="stHeaderActionElements"] [title*="GitHub"],
 header [data-testid="stHeaderActionElements"] [aria-label*="GitHub"],
