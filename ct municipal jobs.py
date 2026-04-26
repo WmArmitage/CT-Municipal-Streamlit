@@ -14,6 +14,18 @@ st.set_page_config(
 
 DATASET_PURCHASE_URL = "https://ko-fi.com/s/814c806c0b"
 SUPPORT_URL = "https://ko-fi.com/wmarmitage"
+SUPPORT_MESSAGE = "This directory is free to use. If it saves you time, you can support the project."
+SUPPORT_BUTTON_LABEL = "Support the project"
+TOP_SUPPORTING_LINE = "All Connecticut municipal job links in one place."
+TOP_BODY_LINE = (
+    "Skip checking 169 municipal websites. Use the free directory to find official job pages "
+    "and application links, or download the full dataset for professional use."
+)
+TOP_MUTED_LINE = "Built for job seekers, recruiting, outreach, research, and vendor prospecting."
+STATS_LINE_ONE = "Covers all 169 Connecticut municipalities."
+STATS_LINE_TWO = "This replaces checking 169 separate municipal websites manually."
+BROWSE_BODY_LINE = "Search by town or platform and go directly to official job pages and application forms."
+BOTTOM_DATASET_HEADER = "Get the full dataset in one file"
 
 # Hide Streamlit chrome
 st.markdown("""
@@ -110,26 +122,33 @@ st.markdown(
         color: #FFFFFF !important;
     }
 
-    /* Secondary support CTA button (blue, quieter than primary dataset CTA) */
-    a.support-cta-btn {
+    /* Secondary support CTA (blue, quieter than primary dataset CTA) */
+    div.stLinkButton > a[href*="ko-fi.com/wmarmitage"],
+    a.secondary-support-button {
         display: inline-block;
-        padding: 0.5rem 0.9rem;
+        padding: 0.58rem 0.9rem !important;
         border-radius: 10px;
-        font-weight: 600;
-        text-decoration: none;
-        color: #FFFFFF !important;
-        background-color: #2563EB;
-        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
-        transition: all 0.15s ease-in-out;
+        font-weight: 600 !important;
+        text-decoration: none !important;
+        color: #1D4ED8 !important;
+        background-color: #EFF6FF !important;
+        border: 1px solid #BFDBFE !important;
+        box-shadow: 0 1px 3px rgba(29, 78, 216, 0.12) !important;
+        transition: all 0.15s ease-in-out !important;
     }
 
-    a.support-cta-btn:hover {
-        background-color: #1D4ED8;
-        transform: translateY(-1px);
+    div.stLinkButton > a[href*="ko-fi.com/wmarmitage"]:hover,
+    a.secondary-support-button:hover {
+        background-color: #DBEAFE !important;
+        border-color: #93C5FD !important;
+        color: #1E3A8A !important;
+        box-shadow: 0 2px 5px rgba(29, 78, 216, 0.16) !important;
+        transform: none !important;
     }
 
-    a.support-cta-btn:visited {
-        color: #FFFFFF !important;
+    div.stLinkButton > a[href*="ko-fi.com/wmarmitage"]:visited,
+    a.secondary-support-button:visited {
+        color: #1D4ED8 !important;
     }
 
     /* Right-side product card */
@@ -482,7 +501,7 @@ def build_simple_directory_table(source_df):
     display_df["Town Website"] = display_df.apply(
         lambda row: make_clickable(
             row["Town Website"],
-            "Visit website &rarr;",
+            "Website &rarr;",
             {"status": "verified", "final_url": None},
             "#1f4788",
         ),
@@ -583,11 +602,11 @@ def render_directory_table(source_df, view_mode):
 def render_support_message():
     if not SUPPORT_URL:
         return
-    st.caption("This directory is free to use. If it saves you time, you can support the project.")
+    st.caption(SUPPORT_MESSAGE)
     st.markdown(
         (
             f'<a href="{SUPPORT_URL}" target="_blank" rel="noopener noreferrer" '
-            f'class="support-cta-btn">Support the project</a>'
+            f'class="secondary-support-button">{SUPPORT_BUTTON_LABEL}</a>'
         ),
         unsafe_allow_html=True,
     )
@@ -602,14 +621,9 @@ with left_col:
     Connecticut Municipal Employment Directory
     </h1>
     """, unsafe_allow_html=True)
-    st.markdown("""
-    <div style="max-width: 650px;">
-    Save hours of manual searching across 169 municipal websites, hiring portals, and application pages.
-
-    Use the free directory below to explore municipal employment links, or get the full directory in one structured file.
-    </div>
-    """, unsafe_allow_html=True)
-    st.caption("Built for recruiting, outreach, research, and vendor prospecting.")
+    st.markdown(f"**{TOP_SUPPORTING_LINE}**")
+    st.markdown(TOP_BODY_LINE)
+    st.caption(TOP_MUTED_LINE)
     render_support_message()
 
 with right_col:
@@ -625,12 +639,6 @@ with right_col:
     - Verification status
     - Last checked dates
     """)
-    st.link_button(
-        "Download Full Dataset ($49)",
-        DATASET_PURCHASE_URL,
-        type="primary",
-        use_container_width=True,
-    )
     st.caption("Avoid manually opening 169 municipal websites. The full dataset gives you everything in one file.")
 st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
 
@@ -645,15 +653,11 @@ if not df.empty:
         if hasattr(st, "logo"):
             st.logo(":material/work:", size="large")
         st.markdown("### CT Municipal Employment Directory")
-        st.markdown(
-            "[Directory](#directory-section) · "
-            "[Dataset](#dataset-section) · "
-            f"[Support]({SUPPORT_URL})"
-        )
+        st.markdown(f"[Directory](#directory-section) | [Dataset](#dataset-section) | [Support]({SUPPORT_URL})")
         st.link_button("Download full dataset", DATASET_PURCHASE_URL, use_container_width=True)
-        st.link_button("Support the project", SUPPORT_URL, use_container_width=True)
+        st.link_button(SUPPORT_BUTTON_LABEL, SUPPORT_URL, use_container_width=True)
         st.sidebar.markdown("<div style='height: 0.4rem;'></div>", unsafe_allow_html=True)
-        st.caption("Free browsing tool • Full dataset available in-app")
+        st.caption("Free browsing tool - Full dataset available in-app")
         st.sidebar.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
         st.header("Search & Filter")
         
@@ -803,8 +807,8 @@ if not df.empty:
     col2.metric("With Job Pages", job_pages_count)
     col3.metric("With Applications", applications_count)
     col4.metric("Platforms Used", platforms_count)
-    st.caption("This directory is useful for free browsing. The paid dataset is for faster professional use.")
-    st.caption("Covers all 169 Connecticut municipalities with verified employment links where available.")
+    st.caption(STATS_LINE_ONE)
+    st.caption(STATS_LINE_TWO)
     st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
 
     # Active filter summary
@@ -820,9 +824,7 @@ if not df.empty:
     st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
     st.markdown('<div id="directory-section"></div>', unsafe_allow_html=True)
     st.markdown("## Browse the Free Directory")
-    st.markdown("""
-    Search by town, filter by platform, and go directly to official job pages and application forms.
-    """)
+    st.markdown(BROWSE_BODY_LINE)
     st.caption("Working across multiple towns? Copying this manually gets tedious quickly.")
     st.caption(f"{len(filtered_df)} result{'s' if len(filtered_df) != 1 else ''}")
     table_view_mode = st.radio(
@@ -843,7 +845,7 @@ if not df.empty:
 
     st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
     st.markdown('<div id="dataset-section"></div>', unsafe_allow_html=True)
-    st.markdown("## Need the Full Directory in One File?")
+    st.markdown(f"## {BOTTOM_DATASET_HEADER}")
     st.markdown("""
     Avoid manually opening, checking, and copying from 169 separate municipal websites.
 
