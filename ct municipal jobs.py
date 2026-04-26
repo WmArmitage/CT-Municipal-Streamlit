@@ -703,7 +703,7 @@ if not df.empty:
         if hasattr(st, "logo"):
             st.logo(":material/work:", size="large")
         st.markdown("### CT Municipal Employment Directory")
-        st.markdown(f"[Directory](#directory-section) | [Dataset](#dataset-section) | [Support]({SUPPORT_URL})")
+        st.markdown("[Directory](#directory-section)")
         st.markdown("<hr style='margin: 0.55rem 0 0.75rem 0;border-color:#D1D5DB;'>", unsafe_allow_html=True)
         st.link_button("Download full dataset", DATASET_PURCHASE_URL, use_container_width=True)
         st.link_button(SUPPORT_BUTTON_LABEL, SUPPORT_URL, use_container_width=True)
