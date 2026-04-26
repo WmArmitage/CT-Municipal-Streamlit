@@ -47,7 +47,18 @@ st.markdown("""
 <style>
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
-#GithubIcon {visibility: hidden;}
+#GithubIcon {visibility: hidden !important; display: none !important;}
+#ForkLink {visibility: hidden !important; display: none !important;}
+
+/* Fallbacks for Streamlit header action variants */
+header [data-testid="stHeaderActionElements"] a[href*="github.com"],
+header [data-testid="stHeaderActionElements"] [title*="GitHub"],
+header [data-testid="stHeaderActionElements"] [aria-label*="GitHub"],
+header [data-testid="stHeaderActionElements"] [title*="Fork"],
+header [data-testid="stHeaderActionElements"] [aria-label*="Fork"] {
+    visibility: hidden !important;
+    display: none !important;
+}
 
 /* Hide top toolbar actions such as Fork/GitHub links when present */
 header [data-testid="stToolbar"] a[href*="github.com"],
