@@ -22,8 +22,6 @@ st.markdown("""
 footer {visibility: hidden;}
 
 /* Hide top toolbar actions such as Fork/GitHub links when present */
-header [data-testid="stToolbar"],
-header .stAppToolbar,
 header a[href*="github.com"],
 header a[title*="GitHub"],
 header button[title*="Fork"],
