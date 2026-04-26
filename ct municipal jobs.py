@@ -22,6 +22,8 @@ st.markdown("""
 footer {visibility: hidden;}
 
 /* Hide top toolbar actions such as Fork/GitHub links when present */
+header [data-testid="stToolbar"] a[href*="github.com"],
+header [data-testid="stToolbar"] a[title*="GitHub"],
 header a[href*="github.com"],
 header a[title*="GitHub"],
 header button[title*="Fork"],
@@ -640,6 +642,17 @@ LINK_HEALTH_LOOKUP = load_link_health_lookup()
 if not df.empty:
     # Sidebar - Filters
     with st.sidebar:
+        if hasattr(st, "logo"):
+            st.logo(":material/work:", size="large")
+        st.markdown("### CT Municipal Employment Directory")
+        st.markdown(
+            "[Directory](#directory-section) · "
+            "[Dataset](#dataset-section) · "
+            f"[Support]({SUPPORT_URL})"
+        )
+        st.link_button("Download full dataset", DATASET_PURCHASE_URL, use_container_width=True)
+        st.link_button("Support the project", SUPPORT_URL, use_container_width=True)
+        st.sidebar.markdown("<div style='height: 0.4rem;'></div>", unsafe_allow_html=True)
         st.caption("Free browsing tool • Full dataset available in-app")
         st.sidebar.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
         st.header("Search & Filter")
@@ -805,6 +818,7 @@ if not df.empty:
         st.caption(f"Active filters: {', '.join(filters_applied)}")
 
     st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
+    st.markdown('<div id="directory-section"></div>', unsafe_allow_html=True)
     st.markdown("## Browse the Free Directory")
     st.markdown("""
     Search by town, filter by platform, and go directly to official job pages and application forms.
@@ -828,6 +842,7 @@ if not df.empty:
         render_support_message()
 
     st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
+    st.markdown('<div id="dataset-section"></div>', unsafe_allow_html=True)
     st.markdown("## Need the Full Directory in One File?")
     st.markdown("""
     Avoid manually opening, checking, and copying from 169 separate municipal websites.
