@@ -27,11 +27,27 @@ STATS_LINE_TWO = "This replaces checking 169 separate municipal websites manuall
 BROWSE_BODY_LINE = "Search by town or platform and go directly to official job pages and application forms."
 BOTTOM_DATASET_HEADER = "Get the full dataset in one file"
 
+FILTER_DEFAULTS = {
+    "search_term": "",
+    "selected_platform": "All Platforms",
+    "show_job_page": True,
+    "show_no_job_page": True,
+    "show_app_form": True,
+    "show_no_app_form": True,
+    "verified_links_only": False,
+    "hide_suspicious_links": False,
+    "filter_verified_employment": False,
+    "filter_application_pdf": False,
+    "filter_third_party_platform": False,
+    "filter_manual_pdf_process": False,
+}
+
 # Hide Streamlit chrome
 st.markdown("""
 <style>
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
+#GithubIcon {visibility: hidden;}
 
 /* Hide top toolbar actions such as Fork/GitHub links when present */
 header [data-testid="stToolbar"] a[href*="github.com"],
@@ -149,6 +165,12 @@ st.markdown(
     div.stLinkButton > a[href*="ko-fi.com/wmarmitage"]:visited,
     a.secondary-support-button:visited {
         color: #1D4ED8 !important;
+    }
+
+    div.stLinkButton > a[href*="ko-fi.com/wmarmitage"] *,
+    div.stLinkButton > a[href*="ko-fi.com/wmarmitage"] [data-testid="stMarkdownContainer"],
+    div.stLinkButton > a[href*="ko-fi.com/wmarmitage"] [data-testid="stMarkdownContainer"] p {
+        color: #1E3A8A !important;
     }
 
     /* Right-side product card */
@@ -648,72 +670,90 @@ df = load_employment_data()
 LINK_HEALTH_LOOKUP = load_link_health_lookup()
 
 if not df.empty:
+    if "table_view_mode" not in st.session_state:
+        st.session_state["table_view_mode"] = "Simple view"
+
     # Sidebar - Filters
     with st.sidebar:
+        for key, default_value in FILTER_DEFAULTS.items():
+            if key not in st.session_state:
+                st.session_state[key] = default_value
+
         if hasattr(st, "logo"):
             st.logo(":material/work:", size="large")
         st.markdown("### CT Municipal Employment Directory")
         st.markdown(f"[Directory](#directory-section) | [Dataset](#dataset-section) | [Support]({SUPPORT_URL})")
+        st.markdown("<hr style='margin: 0.55rem 0 0.75rem 0;border-color:#D1D5DB;'>", unsafe_allow_html=True)
         st.link_button("Download full dataset", DATASET_PURCHASE_URL, use_container_width=True)
         st.link_button(SUPPORT_BUTTON_LABEL, SUPPORT_URL, use_container_width=True)
+        st.markdown("<hr style='margin: 0.75rem 0 0.75rem 0;border-color:#D1D5DB;'>", unsafe_allow_html=True)
         st.sidebar.markdown("<div style='height: 0.4rem;'></div>", unsafe_allow_html=True)
         st.caption("Free browsing tool - Full dataset available in-app")
         st.sidebar.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
         st.header("Search & Filter")
-        
+        if st.button("Reset filters", type="secondary", use_container_width=False):
+            for key, default_value in FILTER_DEFAULTS.items():
+                st.session_state[key] = default_value
+            st.rerun()
+        st.markdown("<hr style='margin: 0.55rem 0 0.75rem 0;border-color:#D1D5DB;'>", unsafe_allow_html=True)
+
         # Search box
+        platforms = ['All Platforms'] + sorted([p for p in df['ATS or Platform (if known)'].dropna().unique() if p])
+        if st.session_state.get("selected_platform") not in platforms:
+            st.session_state["selected_platform"] = "All Platforms"
+
         search_term = st.text_input(
-            "Search by town name:", 
+            "Search by town name:",
+            key="search_term",
             placeholder="e.g. Hartford, New Haven...",
             help="Type any town name to filter results"
         )
-        
-        # Platform filter
-        platforms = ['All Platforms'] + sorted([p for p in df['ATS or Platform (if known)'].dropna().unique() if p])
+
         selected_platform = st.selectbox(
-            "Filter by platform:", 
+            "Filter by platform:",
             platforms,
+            key="selected_platform",
             help="Filter by the employment application system used"
         )
-        
+
         # Availability filters
         st.subheader("Availability")
-        show_job_page = st.checkbox("Has employment page", value=True)
-        show_no_job_page = st.checkbox("No employment page", value=True)
-        show_app_form = st.checkbox("Has application form", value=True)
-        show_no_app_form = st.checkbox("No application form", value=True)
+        show_job_page = st.checkbox("Has employment page", key="show_job_page")
+        show_no_job_page = st.checkbox("No employment page", key="show_no_job_page")
+        show_app_form = st.checkbox("Has application form", key="show_app_form")
+        show_no_app_form = st.checkbox("No application form", key="show_no_app_form")
 
         st.subheader("Link Trust")
         verified_links_only = st.checkbox(
             "Verified links only",
-            value=False,
+            key="verified_links_only",
             help="Keep only towns where available links are shown as Verified.",
         )
         hide_suspicious_links = st.checkbox(
             "Hide \"Needs review\" statuses",
-            value=False,
+            key="hide_suspicious_links",
             help="Exclude towns where a link may require manual navigation.",
         )
 
         st.subheader("Advanced Use Cases")
         filter_verified_employment = st.checkbox(
             "Verified employment links",
-            value=False,
+            key="filter_verified_employment",
             help="Show municipalities where the employment link is shown as Verified.",
         )
         filter_application_pdf = st.checkbox(
             "Application PDF available",
-            value=False,
+            key="filter_application_pdf",
             help="Show municipalities with an application link that appears to be a PDF.",
         )
         filter_third_party_platform = st.checkbox(
             "Uses third-party ATS/platform",
-            value=False,
+            key="filter_third_party_platform",
             help="Show municipalities with a known ATS/platform vendor.",
         )
         filter_manual_pdf_process = st.checkbox(
             "Manual/PDF application process",
-            value=False,
+            key="filter_manual_pdf_process",
             help="Show municipalities that appear to use a manual or PDF application workflow.",
         )
 
@@ -830,7 +870,7 @@ if not df.empty:
     table_view_mode = st.radio(
         "Table view",
         ["Simple view", "Detailed view"],
-        index=0,
+        key="table_view_mode",
         horizontal=True,
     )
     
