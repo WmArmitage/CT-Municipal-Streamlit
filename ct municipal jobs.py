@@ -110,6 +110,28 @@ st.markdown(
         color: #FFFFFF !important;
     }
 
+    /* Secondary support CTA button (blue, quieter than primary dataset CTA) */
+    a.support-cta-btn {
+        display: inline-block;
+        padding: 0.5rem 0.9rem;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        color: #FFFFFF !important;
+        background-color: #2563EB;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        transition: all 0.15s ease-in-out;
+    }
+
+    a.support-cta-btn:hover {
+        background-color: #1D4ED8;
+        transform: translateY(-1px);
+    }
+
+    a.support-cta-btn:visited {
+        color: #FFFFFF !important;
+    }
+
     /* Right-side product card */
     div[data-testid="stHorizontalBlock"]:first-of-type > div[data-testid="column"]:last-child > div[data-testid="stVerticalBlock"] {
         background: #FFFFFF;
@@ -562,7 +584,13 @@ def render_support_message():
     if not SUPPORT_URL:
         return
     st.caption("This directory is free to use. If it saves you time, you can support the project.")
-    st.markdown(f"[Support the project]({SUPPORT_URL})")
+    st.markdown(
+        (
+            f'<a href="{SUPPORT_URL}" target="_blank" rel="noopener noreferrer" '
+            f'class="support-cta-btn">Support the project</a>'
+        ),
+        unsafe_allow_html=True,
+    )
 
 
 left_col, right_col = st.columns([1.5, 1], gap="large")
@@ -784,7 +812,6 @@ if not df.empty:
     Search by town, filter by platform, and go directly to official job pages and application forms.
     """)
     st.caption("Working across multiple towns? Copying this manually gets tedious quickly.")
-    render_support_message()
     st.caption(f"{len(filtered_df)} result{'s' if len(filtered_df) != 1 else ''}")
     table_view_mode = st.radio(
         "Table view",
@@ -800,6 +827,7 @@ if not df.empty:
 
     if len(filtered_df) > 0:
         st.warning("If you're working across multiple towns, doing this manually gets slow quickly.")
+        render_support_message()
 
     st.markdown("<hr style='margin: 2rem 0;'>", unsafe_allow_html=True)
     st.markdown("## Need the Full Directory in One File?")
